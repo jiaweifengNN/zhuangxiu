@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>装修全周期管理看板</title>
+<style>
+:root{
+  --bg:#f5f3ef; --card:#ffffff; --line:#e7e2da; --text:#2c2a26; --muted:#8a8378;
+  --accent:#2f7d5f; --accent2:#e0b94f; --danger:#c0523f; --chip:#f1ede5;
+  --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+
+/* top */
+header{background:linear-gradient(135deg,#2f7d5f,#3a9a76);color:#fff;border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+header h1{font-size:22px;font-weight:700;letter-spacing:.5px}
+header .sub{font-size:13px;opacity:.85;margin-top:4px}
+.overall{display:flex;align-items:center;gap:12px;margin-top:14px}
+.overall .bar{flex:1;height:10px;background:rgba(255,255,255,.25);border-radius:99px;overflow:hidden}
+.overall .bar i{display:block;height:100%;background:#ffe08a;border-radius:99px;transition:width .4s}
+.overall .num{font-size:14px;font-weight:700;min-width:70px;text-align:right}
+
+/* tabs */
+nav{position:sticky;top:0;z-index:50;background:var(--bg);padding:8px 0;display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--text);padding:8px 14px;border-radius:99px;cursor:pointer;font-size:13px;font-weight:600;transition:.15s}
+nav button:hover{border-color:var(--accent);color:var(--accent)}
+nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.panel{display:none}
+.panel.active{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:14px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 .cnt{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
+.progressline{height:6px;background:var(--chip);border-radius:99px;overflow:hidden;margin:0 0 12px}
+.progressline i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+
+/* checklist */
+.item{display:flex;align-items:flex-start;gap:10px;padding:8px 6px;border-bottom:1px dashed var(--line)}
+.item:last-child{border-bottom:none}
+.item input[type=checkbox]{width:17px;height:17px;margin-top:2px;accent-color:var(--accent);flex:none;cursor:pointer}
+.item .txt{flex:none;font-size:14px;padding-top:1px;cursor:pointer}
+.item.done .txt{color:var(--muted);text-decoration:line-through}
+.item input.note{flex:1;border:1px solid transparent;background:transparent;color:var(--muted);font-size:13px;padding:2px 6px;border-radius:6px;min-width:80px}
+.item input.note:focus,.item input.note:not(:placeholder-shown){border-color:var(--line);background:#fff;color:var(--text)}
+.item input.note::placeholder{color:#c5beb2}
+.item .del{flex:none;border:none;background:none;color:#d8d2c8;cursor:pointer;font-size:14px;padding:0 4px;border-radius:4px}
+.item .del:hover{color:var(--danger);background:#fbeae6}
+button.del{border:none;background:none;color:#d8d2c8;cursor:pointer;font-size:14px;padding:0 6px;border-radius:4px}
+button.del:hover{color:var(--danger);background:#fbeae6}
+.addrow{display:flex;gap:8px;margin-top:10px}
+.addrow input{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;outline:none}
+.addrow input:focus{border-color:var(--accent)}
+.addrow button{border:none;background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+.addrow button:hover{filter:brightness(1.08)}
+
+/* stage cards */
+.stages{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.stage:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.stage .head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.stage .head .ic{font-size:18px}
+.stage .head b{font-size:13px}
+.stage .bar{height:6px;background:var(--chip);border-radius:99px;overflow:hidden;margin:6px 0}
+.stage .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.stage .cnt{font-size:11px;color:var(--muted)}
+
+/* meta form */
+.metaform{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.metaform label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.metaform input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;outline:none}
+.metaform input:focus{border-color:var(--accent)}
+
+/* budget table */
+.tblwrap{overflow-x:auto}
+table.budget{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+table.budget th,table.budget td{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left;vertical-align:middle}
+table.budget th{background:var(--chip);font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}
+table.budget td input,table.budget td select{width:100%;border:1px solid transparent;background:transparent;font-size:13px;padding:4px 6px;border-radius:6px;outline:none}
+table.budget td input:focus,table.budget td select:focus{border-color:var(--accent);background:#fff}
+table.budget td input:not(:placeholder-shown){border-color:var(--line);background:#fff}
+table.budget tr.sub td{background:#fbf9f4;font-weight:700}
+table.budget tr.total td{background:var(--accent);color:#fff;font-weight:700;border:none}
+.neg{color:var(--danger)} .pos{color:var(--accent)}
+.budget-actions{display:flex;gap:10px;margin-top:12px}
+.budget-actions button,.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-weight:600}
+.budget-actions .add{background:var(--accent);color:#fff;border-color:var(--accent)}
+.budget-actions .add:hover{filter:brightness(1.08)}
+
+/* data tab */
+.data-btns{display:flex;gap:10px;flex-wrap:wrap}
+.data-btns .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.danger-btn{background:var(--danger);color:#fff;border-color:var(--danger)}
+.hint{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.7}
+
+/* static card */
+.static{background:#f7f4ec;border:1px solid #e8dfc8;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.static b{color:#7a5b1a}
+.copybtn{margin-top:8px;border:1px solid #d8c9a3;background:#fff;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer}
+.copybtn:hover{background:#f3ead2}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+.tip{font-size:12px;color:var(--muted)}
+footer{text-align:center;font-size:12px;color:var(--muted);padding:18px 0 30px}
+/* ---------- 登录门 ---------- */
+#login-screen{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#eef4f0,#f5f3ef 70%)}
+#login-screen.hidden{display:none}
+.login-card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.12);padding:36px 40px;width:340px;text-align:center}
+.login-card h2{margin:0 0 6px;font-size:20px}
+.login-card .tip{color:var(--muted);font-size:13px;margin:0 0 20px}
+.login-card input[type=password]{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;outline:none;text-align:center}
+.login-card input[type=password]:focus{border-color:var(--accent)}
+.login-card .login-btn{width:100%;margin-top:14px;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer}
+.login-card .login-btn:hover{filter:brightness(1.05)}
+.login-msg{min-height:18px;margin-top:12px;font-size:13px}
+.login-msg.err{color:var(--danger)}
+.login-msg.ok{color:var(--accent)}
+.login-hint{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);text-align:left;line-height:1.9}
+.login-loading{font-size:12px;color:var(--muted);margin-top:10px}
+/* ---------- 模式徽章 ---------- */
+.mode-badge{display:flex;align-items:center;gap:8px;margin:10px 0 0}
+.mode-badge .badge{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.mode-badge .badge.admin{background:#e4f2ea;color:#1f6b4c;border:1px solid #bfe3d0}
+.mode-badge .badge.guest{background:#f3efe4;color:#8a6d1f;border:1px solid #e6d9b0}
+.badge-btn{margin-left:auto;font-size:12px;padding:4px 12px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--muted);cursor:pointer}
+.badge-btn:hover{color:var(--danger);border-color:var(--danger)}
+#sync-status{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="login-screen">
+  <div class="login-card">
+    <h2>🏗 装修全周期看板</h2>
+    <p class="tip">输入访问密码进入 · 武汉四代宅 100㎡</p>
+    <input type="password" id="login-pwd" placeholder="请输入密码…" autocomplete="off">
+    <button class="login-btn" id="login-btn">进入看板</button>
+    <div id="login-msg" class="login-msg"></div>
+    <div class="login-hint">
+      两种密码，两种模式：<br>
+      · <b>管理密码</b> → 共享数据模式（你与家人编辑同一份数据，实时同步）<br>
+      · <b>访客密码</b> → 模板模式（只读示例，改动仅存本机，不影响共享数据）
+    </div>
+  </div>
+</div>
+<div class="wrap">
+<header>
+  <h1>🏗 装修全周期管理看板</h1>
+  <div class="sub">从自学第 1 天 → 入住最后 1 天 · 武汉四代宅 100㎡ · 米家智能家居</div>
+  <div class="mode-badge" id="mode-badge"></div>
+  <div class="overall">
+    <div class="bar"><i id="ov-bar" style="width:0%"></i></div>
+    <div class="num" id="ov-num">0%</div>
+  </div>
+</header>
+
+<nav id="nav">
+  <button data-tab="overview" class="active">总览</button>
+  <button data-tab="learn">学习清单</button>
+  <button data-tab="delivery">交房验房</button>
+  <button data-tab="plan">需求·设计·合同</button>
+  <button data-tab="build">施工管理</button>
+  <button data-tab="final">验收·入住</button>
+  <button data-tab="smart">智能家居</button>
+  <button data-tab="budget">预算管理</button>
+  <button data-tab="data">数据备份</button>
+</nav>
+
+<!-- 总览 -->
+<section class="panel active" id="panel-overview">
+  <div class="card">
+    <h3>基本信息</h3>
+    <div class="metaform">
+      <div><label>你的昵称 / 称呼</label><input data-action="meta" data-field="nickname" placeholder="例如：阿杰"></div>
+      <div><label>建筑面积</label><input data-action="meta" data-field="area" placeholder="约100㎡"></div>
+      <div><label>交付情况</label><input data-action="meta" data-field="houseType" placeholder="毛坯交付"></div>
+      <div><label>总预算（元）</label><input data-action="meta" data-field="totalBudget" type="number" placeholder="300000"></div>
+      <div><label>预计交房日期</label><input data-action="meta" data-field="deliveryDate" placeholder="2027-XX"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>六阶段进度</h3>
+    <div class="stages" id="ov-stages"></div>
+  </div>
+
+  <div class="card">
+    <h3>下一步建议 <span style="font-weight:400;font-size:12px;color:var(--muted)">（按阶段顺序，取尚未完成的事项）</span></h3>
+    <div id="ov-next" style="font-size:14px;line-height:2"></div>
+  </div>
+
+  <div class="card">
+    <h3>预算概况</h3>
+    <div id="ov-budget" style="font-size:14px;line-height:2"></div>
+  </div>
+</section>
+
+<!-- 学习清单 -->
+<section class="panel" id="panel-learn"><div id="learn-groups"></div></section>
+
+<!-- 交房验房 -->
+<section class="panel" id="panel-delivery">
+  <div class="static">📌 <b>验房纪律</b>：先验房后签字 → 所有问题书面记录+拍照+限时整改 → 整改后复验 → 拿不准就花几百块请第三方验房师。</div>
+  <div id="delivery-groups"></div>
+</section>
+
+<!-- 需求·设计·合同 -->
+<section class="panel" id="panel-plan">
+  <div class="static">📌 <b>决策顺序不能乱</b>：需求 → 预算 → 布局 → 水电点位 → 风格 → 材料 → 软装。不可逆的决策花最多时间。</div>
+  <div id="plan-groups"></div>
+</section>
+
+<!-- 施工管理 -->
+<section class="panel" id="panel-build">
+  <div class="static">📌 <b>顺序铁律</b>：主体拆改 → 水电 → 防水闭水 → 泥瓦 → 木工 → 油漆 → 安装。<b>每道工序验收合格再进下一步</b>，全程拍照留档。</div>
+  <div id="build-groups"></div>
+</section>
+
+<!-- 验收入住 -->
+<section class="panel" id="panel-final"><div id="final-groups"></div></section>
+
+<!-- 智能家居 -->
+<section class="panel" id="panel-smart">
+  <div class="static">
+    <b>水电交底话术（可复制发给电工/工长）：</b>
+    <div id="smart-script" style="margin-top:6px;padding:10px 12px;background:#fff;border-radius:8px;border:1px dashed #d8c9a3;font-size:13px">所有开关盒留零线并加深底盒；每个房间至少1根超六类网线，客厅2根；每个窗帘盒留电源；弱电箱加大（≥400×300）并留插座；厨房水槽下留2-3个插座；坐便器旁留插座；阳台预留上下水+防水插座；所有不确定的位置先留空底盒。</div>
+    <button class="copybtn" data-action="copy">复制这段话</button>
+  </div>
+  <div id="smart-groups"></div>
+</section>
+
+<!-- 预算管理 -->
+<section class="panel" id="panel-budget">
+  <div class="card">
+    <h3>预算管理 <span class="cnt">自动汇总 · 计划 vs 实际</span></h3>
+    <div class="tblwrap">
+    <table class="budget" id="budget-table"></table>
+    </div>
+    <div class="budget-actions">
+      <button class="add" data-action="budget-add">＋ 添加项目</button>
+      <span class="tip" style="align-self:center">已预置全周期采购参考清单（约80项）· 计划价可改 · 不想做的整行删除 · 实际支出随买随填</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>按类别汇总</h3>
+    <div id="budget-summary" style="font-size:13px;line-height:1.9"></div>
+  </div>
+</section>
+
+<!-- 数据 -->
+<section class="panel" id="panel-data">
+  <div class="card">
+    <h3>数据备份</h3>
+    <div class="data-btns">
+      <button class="btn primary" data-action="export">⬇ 导出备份（下载JSON）</button>
+      <button class="btn" data-action="import">⬆ 导入备份</button>
+      <input type="file" id="file-import" accept="application/json" style="display:none">
+      <button class="btn danger-btn" data-action="reset">⚠ 清空所有数据</button>
+    </div>
+    <div class="hint">
+      说明：<b>管理模式</b>下，数据实时同步到云端共享——换设备、换浏览器、甚至家人手机登录管理密码，看到的是同一份数据；<b>访客模式</b>下数据仅存本机。<br>
+      建议：管理模式下仍建议每周导出一次备份存到网盘，多一层保险。<br>
+      重要：预算、勾选状态、自定义备注都会自动保存，无需手动保存。
+    </div>
+  </div>
+</section>
+
+<footer>装修全周期管理看板 · 管理模式数据云端共享 · 访客模式仅存本机 · 建议定期导出备份</footer>
+</div>
+
+<script>
+"use strict";
+const LS_KEY = "zhuangxiu_dashboard_v1";
+
+/* ---------- 云端共享配置（部署 Worker 后填写完整地址） ---------- */
+const API_BASE = "__API_BASE__";   // 例: https://zhuangxiu-share.xxx.workers.dev
+const SESSION_KEY = "zhuangxiu_session_v1";
+let session = {mode:null, token:null}; // mode: "admin" | "guest" | null
+let serverData = null;                // admin 模式：从云端拉到的共享数据
+let booted = false;
+
+async function apiGet(path, token){
+  const res = await fetch(API_BASE+path, {headers: token?{Authorization:"Bearer "+token}:{}});
+  return res.json();
+}
+async function apiPost(path, body, token){
+  const res = await fetch(API_BASE+path, {method:"POST", headers:Object.assign({"Content-Type":"application/json"}, token?{Authorization:"Bearer "+token}:{}), body: JSON.stringify(body)});
+  return res.json();
+}
+
+/* ---------- 组定义 ---------- */
+const G = {
+  learn_books:{title:"📚 书单与阅读笔记", items:["通读《小家大变局》（先读『显大』部分：红尺蓝尺/三通）","读《小家越住越大1》收纳","读《小家越住越大2》功能","读《小家越住越大3》颜值（有需求清单后再看）","读《这样装修不后悔》（施工前精读）","读《住宅设计解剖书》（设计期）","读《照明设计终极圣经》（设计期）","每本书读完写：核心框架 + 会在哪个阶段/决策用到"]},
+  learn_topics:{title:"🎯 学习主题（阶段0 认知启蒙）", items:["完成需求清单V1（家庭人员/生活方式/未来5年变化）","确定总预算与分配比例（硬装60% 软装25% 家电15% + 备用金）","确认智能家居生态（米家/Matter，网关位置）","逛建材市场：瓷砖 + 地板（只拍照询价）","逛建材市场：橱柜 + 卫浴","逛建材市场：窗户/门/全屋定制","在户型图上画智能家居点位草图","列出『交房前待办』并同步到本看板"]},
+
+  delivery_docs:{title:"📄 交房文件（三书一证一表）", items:["《住宅质量保证书》","《住宅使用说明书》","《建筑质量认定书》","《竣工验收备案表》","核对实测面积与合同（误差超±3%要处理）","索要房屋管线图（水/电/结构）","物业联系方式 + 保修起始日建档"]},
+  delivery_tools:{title:"🛠 验房工具", items:["空鼓锤（最重要）","2米靠尺","水平尺","卷尺 / 激光测距仪","强光手电","电笔 / 相位检测器","水桶/盆（测下水）","记号笔 + 验房记录本"]},
+  delivery_checks:{title:"✅ 验房检查项", items:["墙面空鼓：单处＞0.04㎡或整墙多处 → 要求整改","墙面平整度：2米靠尺误差 ≤ 4mm","地面平整 / 空鼓","渗漏检查：顶面/窗边/阳台角（最好暴雨后去）","闭水试验48小时（通知楼下 + 物业）","门窗：开关/密封/五金/3C钢化玻璃","下水：每个地漏/下水口倒水通畅","每个插座相位检测（接线正确、有地线）","层高实测（激光测距）","所有问题书面记录 + 拍照 + 限时整改 + 复验"]},
+
+  need_spaces:{title:"🏡 空间需求清单（双击备注列填你的真实需求）", items:["玄关：收纳 / 换鞋 / 可视门铃","客餐厅横厅：是否并入次卧 / 家庭互动 / 待客","厨房：半开放 / 岛台 / 设备清单","主卧：套间 / 衣柜 / 智能","次卧1：功能定位（儿童/书房）","次卧2：魔变空间（健身/亲子/客房）","卫生间×2：干湿分离 / 智能马桶","阳台/露台：花园 / 晾晒 / 家政","洗衣家政区：洗衣机/烘干机/扫地机位置"]},
+  design_decisions:{title:"📐 设计决策", items:["横厅决策：并次卧 or 保留独立卧室（用『红尺蓝尺+三通』判断）","确认开放式厨房与燃气公司法规","灯光方案：无主灯？回路与驱动位置先出图","全屋收纳规划（利用S墙做整墙柜）","水电定位图完成（插座/开关/网口/水路全标）","智能点位图与水电图合并成一张总图","效果图核对：是否符合需求清单（不是好不好看）"]},
+  design_main:{title:"⏳ 长周期主材（不提前下单会卡施工节点）", items:["断桥铝窗下单（定制周期20-40天）","防盗门下单","全屋定制：初测 → 方案 → 下单（周期2-3月）","瓷砖/地板选定","橱柜方案确定（关系到水电定位）"]},
+  contract_list:{title:"✍️ 施工方与合同", items:["至少3家施工方比价（比对项目明细，不比总价）","审核报价单：漏项 / 材料型号 / 工艺说明","付款节点：建议 3:3:3:1（按验收付，不一次付清）","签合同：工期 / 违约责任 / 质保（水电5年整体2年）/ 增项审批流程","物业报备 + 施工许可 + 装修押金"]},
+
+  g_demolition:{title:"🔨 主体拆改", items:["确认承重墙/剪力墙/配重墙范围（红线一刀不碰）","拆非承重墙 / 砌墙","新砌墙必须挂网（防后期开裂）","铲墙皮","拆改完复测全屋尺寸核对图纸","建筑垃圾及时清运"]},
+  g_plumbing:{title:"⚡ 水电改造（全屋最重要 · 智能预埋全在此）", items:["★ 所有开关底盒留零线（2.5平方，最重要的智能预埋）","★ 开关位用加深底盒（容纳智能开关模块）","★ 每个窗帘盒留电源插座","★ 每个房间至少1根超六类网线Cat6A，客厅2根","★ 弱电箱加大（≥400×300）+ 留插座","厨房水槽下留插座×2-3（净水/垃圾处理器/水浸）","坐便器旁留插座（智能马桶）","阳台/露台留防水插座（IP65带盖）","阳台预留上下水（扫地机/家政）","水管走顶不走地，打压0.6-0.8MPa 30分钟不掉压","电路测试 + 水电全程拍照录像留档","完工索要水电路布置图（挂画打孔全靠它）"]},
+  g_waterproof:{title:"💧 防水与闭水试验", items:["淋浴区防水高度 ≥ 1.8m","洗手台区域 ≥ 1.2m，干区 ≥ 0.3m","闭水试验满48小时","通知楼下住户 + 物业一起检查渗漏","门套底部防水不能漏"]},
+  g_tile:{title:"🧱 泥瓦工程", items:["瓷砖铺贴后用空鼓锤逐片敲（单块空鼓面积≤15%）","卫生间地面做排水坡度","地漏选深水封防臭 + 大流量","美缝选聚脲/环氧（不选廉价填缝剂）","墙地砖对缝，门槛石安装"]},
+  g_wood:{title:"🪵 木工吊顶", items:["吊顶留好筒灯/灯带/投影的电源与开孔位","窗帘盒尺寸先定（电动窗帘电机位+电源）","轻钢龙骨优于木龙骨（防潮防变形）","吊顶封板前拍照留档（龙骨内管线）"]},
+  g_paint:{title:"🎨 油漆工程", items:["腻子2-3遍，每遍干透再下一遍","新砌墙/开槽处腻子挂网","底漆必刷（封闭+附着）","乳胶漆认准环保等级（甲醛释放达标）+ 索要检测报告","施工前保护地面，乳胶漆干透后再装面板"]},
+  g_install:{title:"📦 安装收尾", items:["门窗安装","地板安装","橱柜安装（量尺复尺）","卫浴安装","开关插座面板（乳胶漆干透后）","灯具安装","智能设备统一上电配网","全屋定制安装 + 尺寸复核"]},
+
+  final_check:{title:"✅ 竣工验收", items:["各工序验收记录归档","水电布置图 / 照片留档","质保凭证 + 保修卡收集","尾款按验收结果结清"]},
+  final_move:{title:"🎉 入住准备", items:["开荒保洁","空气检测（找CMA资质机构，不选手持仪）","通风1-3个月","家具软装进场（慢慢添）","搬家入住"]},
+
+  sh_ecosystem:{title:"🧠 生态备忘", items:["确认主生态：米家 / Matter","选好中枢网关位置（客厅/玄关中心，留电源+网口）","买设备优先选『Matter认证』款（未来可接HomeKit/Google）","不预埋PLC电力线（除非确定用华为全屋）"]},
+  sh_install:{title:"🔌 必装清单 L1（第一次装修就装）", items:["智能网关（中枢/Zigbee网关）","智能开关（零火版，全屋）","人体存在传感器（毫米波款需电源）","智能门锁","可视门铃 / 门口摄像头","智能窗帘电机","燃气报警器（开放式厨房尤其需要）","水浸传感器（厨房水槽下）","烟雾报警器","智能马桶盖 / 智能马桶","电动晾衣架","扫地机器人基站（电源+可选上下水）","小爱音箱（主音箱放客厅）","卧室起夜小夜灯"]},
+  sh_prewire:{title:"⚡ 预埋清单 L2（施工期做，留『电』和『网』）", items:["开关盒留零线（所有开关，最重要）","加深底盒","窗帘盒电源 × 所有窗帘位","电动晾衣架电源（阳台顶面）","智能马桶插座（坐便器旁离地40cm带防溅盒）","镜柜插座","扫地机基站电源 + 上下水","厨房水槽下插座×2-3","台面上方插座（小厨电）","高位插座（油烟机/燃气热水器/空调）","玄关柜插座（网关/路由器/可视门铃）","电视墙插座组（电视/机顶盒/音响/投影）","沙发两侧 + 床头两侧带USB插座","每房间 Cat6A 网线 / 客厅×2 / 书房×2","弱电箱加大 + POE交换机预留","中控屏/86面板位（玄关留零火线+网线）","摄像头电源 + 网线（门口/阳台）","人体存在传感器电源（天花板角/走廊）","全屋穿线管 + 拉线绳（未来拉线就靠它）"]},
+  sh_future:{title:"🔮 未来预留 L3（让房子『长脑子』）", items:["强电箱留2-3个空回路位","阳台/家政间预留上下水（未来扩展）","预留AP点位（全屋Mesh/WiFi覆盖）","背景音乐/吸顶音箱线（可选，预埋喇叭线）","不确定的位置先留空底盒 + 盖板","协议层：设备优先Matter，软件层随时切生态"]}
+};
+
+/* ---------- 阶段与组映射 ---------- */
+const STAGES = [
+  {key:"s0", name:"阶段0 认知启蒙", icon:"📚", tab:"learn", groups:["learn_books","learn_topics"]},
+  {key:"s1", name:"阶段1 交房验房", icon:"🏠", tab:"delivery", groups:["delivery_docs","delivery_tools","delivery_checks"]},
+  {key:"s2", name:"阶段2 需求与预算", icon:"💰", tab:"plan", groups:["need_spaces"]},
+  {key:"s3", name:"阶段3 设计", icon:"📐", tab:"plan", groups:["design_decisions","design_main"]},
+  {key:"s4", name:"阶段4 施工方与合同", icon:"✍️", tab:"plan", groups:["contract_list"]},
+  {key:"s5", name:"阶段5 施工", icon:"🔨", tab:"build", groups:["g_demolition","g_plumbing","g_waterproof","g_tile","g_wood","g_paint","g_install"]},
+  {key:"s6", name:"阶段6 验收与入住", icon:"🎉", tab:"final", groups:["final_check","final_move"]}
+];
+const TAB_GROUPS = {
+  learn:["learn_books","learn_topics"],
+  delivery:["delivery_docs","delivery_tools","delivery_checks"],
+  plan:["need_spaces","design_decisions","design_main","contract_list"],
+  build:["g_demolition","g_plumbing","g_waterproof","g_tile","g_wood","g_paint","g_install"],
+  final:["final_check","final_move"],
+  smart:["sh_ecosystem","sh_install","sh_prewire","sh_future"]
+};
+
+/* ---------- 状态 ---------- */
+const BUDGET_TPL_KEY = "_budget_tpl_v1";
+/* 预置全周期预算参考清单（武汉100平四代宅 · 中档参考价，单位元，可随意改/删） */
+const DEFAULT_BUDGET_ROWS = [
+  // —— 01 设计 ——
+  {category:"01 设计", item:"独立设计师设计费（可选）", planned:"8000", note:"全案约80-200元/㎡；不做可整行删除"},
+  {category:"01 设计", item:"户型优化/深化图纸（装修公司免费）", planned:"0", note:"签施工合同通常免费附送"},
+
+  // —— 02 施工 ——
+  {category:"02 施工", item:"拆改工程（拆墙/砌墙/铲墙皮）", planned:"5000", note:"四代宅承重多，先跟开发商确认可拆墙体再动工"},
+  {category:"02 施工", item:"水电改造（人工+管材+电线）", planned:"12000", note:"全改约120-180元/㎡；智能家居零线/网线必须在此阶段预留"},
+  {category:"02 施工", item:"防水工程（厨卫+阳台）", planned:"3500", note:"墙面返高+地面两遍，闭水试验48小时再做瓦工"},
+  {category:"02 施工", item:"瓦工铺贴人工", planned:"9000", note:"含贴砖/找平/阳角；大板砖、岩板、人字拼另计费"},
+  {category:"02 施工", item:"木工/吊顶/窗帘盒", planned:"6000", note:"窗帘盒必须留——智能窗帘电机就装在这里"},
+  {category:"02 施工", item:"油漆涂刷（墙顶面）", planned:"7000", note:"含腻子两遍+乳胶漆/艺术漆人工"},
+  {category:"02 施工", item:"第三方监理/节点验收（可选）", planned:"2500", note:"水电/瓦工/木工节点验收，性价比高，建议请"},
+  {category:"02 施工", item:"开荒保洁", planned:"800", note:"硬装结束、家具进场前做深度保洁"},
+
+  // —— 03 主材 ——
+  {category:"03 主材", item:"墙地砖（客餐厨卫阳台）", planned:"12000", note:"75×150通铺或80×80；含阳角条/美缝另计"},
+  {category:"03 主材", item:"木地板（卧室）", planned:"8000", note:"复合150-250元/㎡，实木更贵；先找平再铺"},
+  {category:"03 主材", item:"乳胶漆/艺术漆", planned:"4000", note:"优先选儿童房也用得起的高环保等级"},
+  {category:"03 主材", item:"踢脚线/收口条/压条", planned:"1500", note:"和地板/门套同色系更整体"},
+  {category:"03 主材", item:"门槛石/窗台石", planned:"1200", note:"天然石或岩板，颜色先选好"},
+  {category:"03 主材", item:"水泥砂/胶水/辅料杂项", planned:"2000", note:"常被漏算的加项，预留余量"},
+
+  // —— 04 全屋定制 ——
+  {category:"04 全屋定制", item:"橱柜（含台面）", planned:"18000", note:"1500-2500元/延米；先定电器尺寸再下单柜体"},
+  {category:"04 全屋定制", item:"主卧衣柜", planned:"12000", note:"投影面积800-1500元/㎡；顶天立地不积灰"},
+  {category:"04 全屋定制", item:"次卧/儿童房衣柜", planned:"9000", note:"儿童房板材环保等级最高"},
+  {category:"04 全屋定制", item:"入户鞋柜/玄关柜", planned:"5000", note:"留换鞋凳+感应灯+插座；智能除臭烘鞋机可选"},
+  {category:"04 全屋定制", item:"电视柜/餐边柜", planned:"8000", note:"电视墙预埋线管，柜后留插座+走线孔"},
+  {category:"04 全屋定制", item:"浴室柜/镜柜", planned:"4000", note:"镜柜后留插座：智能镜/电动牙刷/吹风机"},
+  {category:"04 全屋定制", item:"阳台柜/洗衣柜", planned:"3500", note:"空中花园建议做收纳+水电位"},
+  {category:"04 全屋定制", item:"书桌/书架/榻榻米（可选）", planned:"6000", note:"按需，非必做"},
+
+  // —— 05 门窗 ——
+  {category:"05 门窗", item:"卧室门×3（含门套）", planned:"6000", note:"实木复合1500-2500元/樘"},
+  {category:"05 门窗", item:"卫生间门/厨房门", planned:"4000", note:"铝镁合金/玻璃移门或折叠门"},
+  {category:"05 门窗", item:"封阳台/门窗系统", planned:"12000", note:"四代宅大阳台是大项；双层中空玻璃，先量尺再贴砖"},
+  {category:"05 门窗", item:"窗套/垭口包边", planned:"1000", note:"可选，不做更极简"},
+
+  // —— 06 厨卫设备 ——
+  {category:"06 厨卫设备", item:"油烟机", planned:"3500", note:"侧吸/顶吸；半开放厨房选大吸力低噪音"},
+  {category:"06 厨卫设备", item:"燃气灶", planned:"2500", note:"与油烟机同品牌联动，熄火保护必须有"},
+  {category:"06 厨卫设备", item:"洗碗机（嵌入式13套）", planned:"5000", note:"水电阶段预留上下水+插座，别漏！"},
+  {category:"06 厨卫设备", item:"蒸烤箱（嵌入式）", planned:"4000", note:"大功率电器，独立回路"},
+  {category:"06 厨卫设备", item:"燃气热水器（16L）", planned:"3500", note:"零冷水需水电前决定预埋回水管"},
+  {category:"06 厨卫设备", item:"净水器/前置过滤", planned:"3000", note:"前置过滤在水电阶段预装，直饮机留管线"},
+  {category:"06 厨卫设备", item:"垃圾处理器", planned:"1800", note:"水槽下方留插座"},
+  {category:"06 厨卫设备", item:"厨房水槽+龙头", planned:"2000", note:"大单槽+抽拉龙头，台下盆"},
+  {category:"06 厨卫设备", item:"卫生间花洒×2", planned:"2500", note:"恒温花洒更稳定"},
+  {category:"06 厨卫设备", item:"智能马桶", planned:"4000", note:"水电阶段留插座+角阀，坑距先量"},
+  {category:"06 厨卫设备", item:"浴室龙头/面盆", planned:"2000", note:"台下盆好打理"},
+  {category:"06 厨卫设备", item:"浴霸（暖风机）×2", planned:"1500", note:"选米家联动款，卫生间留风管"},
+  {category:"06 厨卫设备", item:"地漏/角阀/五金", planned:"800", note:"防臭地漏+洗衣机专用地漏"},
+
+  // —— 07 家电 ——
+  {category:"07 家电", item:"冰箱（十字/法式对开）", planned:"6000", note:"先量预留位尺寸，嵌入式冰箱定好尺寸再定制柜"},
+  {category:"07 家电", item:"洗衣机（10kg）", planned:"4000", note:"留专用地漏+龙头+电源"},
+  {category:"07 家电", item:"烘干机（热泵式）", planned:"5000", note:"叠放留上下电源；洗烘分体效果更好"},
+  {category:"07 家电", item:"电视（75-85寸）", planned:"7000", note:"电视墙预埋HDMI/网线管"},
+  {category:"07 家电", item:"空调（风管机+挂机）", planned:"18000", note:"风管机吊顶前装；四代宅客厅大建议3匹+卧室挂机"},
+  {category:"07 家电", item:"中央空调（替代方案·二选一）", planned:"28000", note:"做一拖多则吊顶前定方案，预算翻倍；不做请删除"},
+  {category:"07 家电", item:"新风系统（可选）", planned:"10000", note:"吊顶前决定，管道必须预埋；不做请删除"},
+  {category:"07 家电", item:"地暖（可选）", planned:"8000", note:"南方可不上；上则水电阶段布管；不做请删除"},
+  {category:"07 家电", item:"扫地机器人（含上下水）", planned:"3500", note:"新装修强烈建议预留基站位置+上下水"},
+  {category:"07 家电", item:"吸尘器/洗地机", planned:"2000", note:"入住后买即可，不进预埋"},
+  {category:"07 家电", item:"智能晾衣架", planned:"1500", note:"阳台顶留电源"},
+
+  // —— 08 智能家居 ——
+  {category:"08 智能家居", item:"路由器/Mesh组网", planned:"1200", note:"全屋WiFi；弱电箱到各房间网线已含在水电里"},
+  {category:"08 智能家居", item:"智能开关面板（零火版）", planned:"2500", note:"关键！水电阶段每个开关盒留零线，未来想加随时可加"},
+  {category:"08 智能家居", item:"智能灯/磁吸轨道/灯带", planned:"3000", note:"主灯选可调光，氛围灯带留变压器检修位"},
+  {category:"08 智能家居", item:"智能窗帘电机+轨道", planned:"3000", note:"窗帘盒内预留插座"},
+  {category:"08 智能家居", item:"智能门锁", planned:"2500", note:"选米家/HomeKit双生态兼容款"},
+  {category:"08 智能家居", item:"摄像头（玄关/客厅）", planned:"1000", note:"门口/客厅留插座+网线"},
+  {category:"08 智能家居", item:"传感器（人体/门窗/温湿度）", planned:"1500", note:"后期按需加装，网关覆盖够即可"},
+  {category:"08 智能家居", item:"智能音箱（小爱）", planned:"600", note:"客厅/卧室，后期买"},
+  {category:"08 智能家居", item:"中枢网关/蓝牙mesh", planned:"800", note:"米家中枢网关+多模网关"},
+
+  // —— 09 家具 ——
+  {category:"09 家具", item:"主卧床+床头柜×2", planned:"7000", note:"床架实体店试躺，床头预留USB/插座"},
+  {category:"09 家具", item:"次卧床（含收纳）", planned:"4500", note:"四代宅次卧可做隐藏床/地台"},
+  {category:"09 家具", item:"床垫×2", planned:"8000", note:"预算别省，主卧2000-4000元/张合理"},
+  {category:"09 家具", item:"沙发（直排+单椅）", planned:"10000", note:"先量电梯/门洞尺寸能不能进；选可拆洗"},
+  {category:"09 家具", item:"茶几/边几", planned:"2000", note:"可入住后再买"},
+  {category:"09 家具", item:"餐桌椅（1.4-1.6m）", planned:"5000", note:"岩板/实木；四代宅餐区大可考虑圆桌"},
+  {category:"09 家具", item:"书桌椅/办公椅", planned:"2500", note:"人体工学椅，可后买"},
+  {category:"09 家具", item:"梳妆台/斗柜", planned:"2500", note:"可后买"},
+  {category:"09 家具", item:"阳台休闲桌椅（空中花园）", planned:"3000", note:"藤编/铝制耐晒，四代宅亮点"},
+  {category:"09 家具", item:"入户挂衣/换鞋凳", planned:"800", note:"可后买"},
+
+  // —— 10 灯具与开关 ——
+  {category:"10 灯具与开关", item:"全屋主灯/筒灯/射灯", planned:"6000", note:"水电阶段定点位；色温客厅4000K/卧室3000K"},
+  {category:"10 灯具与开关", item:"床头/落地/台灯", planned:"1500", note:"可后买，记得留插座"},
+  {category:"10 灯具与开关", item:"全屋开关插座面板", planned:"3500", note:"数量以水电点位图为准；选86型品牌货"},
+
+  // —— 11 软装 ——
+  {category:"11 软装", item:"窗帘（全屋含轨道）", planned:"6000", note:"客厅电动纱帘+卧室遮光布"},
+  {category:"11 软装", item:"地毯", planned:"1500", note:"可后买"},
+  {category:"11 软装", item:"挂画/装饰画", planned:"2000", note:"入住后慢慢补"},
+  {category:"11 软装", item:"绿植/盆栽", planned:"1500", note:"空中花园是绿植主场"},
+  {category:"11 软装", item:"床品四件套×2", planned:"2000", note:"按床垫尺寸买"},
+  {category:"11 软装", item:"抱枕/盖毯/摆件", planned:"1500", note:"入住后添"},
+  {category:"11 软装", item:"香薰/装饰镜/其他", planned:"1000", note:"细节慢慢补"},
+
+  // —— 12 杂费与备用 ——
+  {category:"12 杂费与备用", item:"物业押金/装修保证金", planned:"2000", note:"开工前交，完工验收退"},
+  {category:"12 杂费与备用", item:"燃气开通/宽带安装", planned:"700", note:"含开户费+光猫等"},
+  {category:"12 杂费与备用", item:"甲醛检测/治理（可选）", planned:"2000", note:"空置期做CMA检测更实在"},
+  {category:"12 杂费与备用", item:"备用金（总预算5%-10%）", planned:"20000", note:"施工加项/超支保险，务必留！"}
+];
+function makeBudgetRow(t){
+  return {id:uid("b"), category:t.category, item:t.item, planned:String(t.planned), actual:"", status:"待定", note:t.note||""};
+}
+function budgetTplRows(){ return DEFAULT_BUDGET_ROWS.map(makeBudgetRow); }
+
+let state = null;
+
+function buildGroups(){
+  const out = {};
+  for(const key of Object.keys(G)){
+    out[key] = {title:G[key].title, items:G[key].items.map((t,i)=>({id:key+"_"+i, t, checked:false, note:""}))};
+  }
+  return out;
+}
+function defaultState(){
+  return {meta:{nickname:"",area:"",houseType:"",totalBudget:"",deliveryDate:""}, groups:buildGroups(), budget:{rows:budgetTplRows()}};
+}
+function normalizeState(s){
+  const groups = buildGroups();
+  for(const k of Object.keys(groups)){
+    if(s.groups && s.groups[k] && Array.isArray(s.groups[k].items)){
+      groups[k] = s.groups[k];
+      // 补上新增的默认项
+      const exist = new Set(groups[k].items.map(x=>x.id));
+      G[k].items.forEach((t,i)=>{
+        if(!exist.has(k+"_"+i)) groups[k].items.push({id:k+"_"+i, t, checked:false, note:""});
+      });
+    }
+  }
+  // 预算：已有数据则保留；首次（或标志未置）时把预置参考清单中缺失的项补进去
+  let rows = (s.budget&&Array.isArray(s.budget.rows))?s.budget.rows:[];
+  if(!localStorage.getItem(BUDGET_TPL_KEY)){
+    const seen = new Set(rows.map(r=>r.category+"||"+r.item));
+    DEFAULT_BUDGET_ROWS.forEach(t=>{
+      if(!seen.has(t.category+"||"+t.item)) rows.push(makeBudgetRow(t));
+    });
+    try{ localStorage.setItem(BUDGET_TPL_KEY,"1"); }catch(e){}
+  }
+  return {meta:Object.assign({}, defaultState().meta, s.meta||{}), groups, budget:{rows}};
+}
+function load(){
+  // admin 模式优先用云端共享数据；访客/未登录用本机 localStorage（模板）
+  let src = null;
+  if(session.mode==="admin" && serverData){
+    src = serverData;
+  }else{
+    try{ const raw = localStorage.getItem(LS_KEY); if(raw) src = JSON.parse(raw); }catch(e){}
+  }
+  state = src ? normalizeState(src) : defaultState();
+}
+let pushTimer=null;
+function save(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+  // 管理模式下防抖推送云端（多人共享）
+  if(session.mode==="admin" && session.token){
+    clearTimeout(pushTimer);
+    const snap = state;
+    pushTimer = setTimeout(async ()=>{
+      try{
+        const r = await apiPost("/api/data", {data:snap}, session.token);
+        setSyncStatus(r && r.ok ? "✓ 已同步 "+new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"}) : "⚠ 同步失败");
+      }catch(e){ setSyncStatus("⚠ 同步失败（网络）"); }
+    }, 500);
+  }
+}
+function setSyncStatus(txt){
+  const el = document.getElementById("sync-status");
+  if(el) el.textContent = txt;
+}
+
+/* ---------- 工具 ---------- */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function uid(p){ return p+"_"+Date.now()+"_"+Math.floor(Math.random()*1e5); }
+function money(n){ n=Number(n)||0; return n.toLocaleString("zh-CN",{maximumFractionDigits:0}); }
+function groupStats(g){ const t=g.items.length, d=g.items.filter(i=>i.checked).length; return {t,d}; }
+
+/* ---------- 渲染：清单组 ---------- */
+function renderGroup(key, container){
+  const g = state.groups[key];
+  if(!g) return;
+  const {t,d} = groupStats(g);
+  const pct = t? Math.round(d/t*100):0;
+  let html = `<h3>${esc(g.title)} <span class="cnt">${d}/${t} · ${pct}%</span></h3>
+    <div class="progressline"><i style="width:${pct}%"></i></div>`;
+  g.items.forEach(it=>{
+    html += `<div class="item${it.checked?" done":""}">
+      <input type="checkbox" data-action="toggle" data-gid="${key}" data-id="${it.id}" ${it.checked?"checked":""}>
+      <span class="txt" data-action="toggle" data-gid="${key}" data-id="${it.id}">${esc(it.t)}</span>
+      <input class="note" data-action="note" data-gid="${key}" data-id="${it.id}" value="${esc(it.note)}" placeholder="备注…">
+      <button class="del" data-action="del-item" data-gid="${key}" data-id="${it.id}" title="删除">✕</button>
+    </div>`;
+  });
+  html += `<div class="addrow">
+    <input id="input-add-${key}" placeholder="添加自定义事项…（例如：你家特有的事）">
+    <button data-action="add-item" data-gid="${key}">添加</button>
+  </div>`;
+  container.innerHTML = html;
+}
+function renderTabGroups(tab){
+  const keys = TAB_GROUPS[tab];
+  const container = document.getElementById(tab+"-groups");
+  if(!container) return;
+  container.innerHTML = "";
+  keys.forEach(k=>{
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.group = k;
+    renderGroup(k, card);
+    container.appendChild(card);
+  });
+}
+
+/* ---------- 渲染：总览 ---------- */
+function renderStages(){
+  const el = document.getElementById("ov-stages");
+  let html = "";
+  STAGES.forEach(st=>{
+    let t=0,d=0;
+    st.groups.forEach(k=>{ const g=state.groups[k]; if(g){t+=g.items.length; d+=g.items.filter(i=>i.checked).length;} });
+    const pct = t? Math.round(d/t*100):0;
+    html += `<div class="stage" data-goto-tab="${st.tab}" title="点击进入「${st.name}」对应清单">
+      <div class="head"><span class="ic">${st.icon}</span><b>${st.name}</b></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="cnt">${d}/${t} · ${pct}%</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+function renderNext(){
+  const el = document.getElementById("ov-next");
+  const next = [];
+  for(const st of STAGES){
+    for(const k of st.groups){
+      const g = state.groups[k];
+      if(!g) continue;
+      for(const it of g.items){
+        if(!it.checked && next.length<6){ next.push(`· ${esc(g.title.split(" ")[0])}｜${esc(it.t)}`); }
+      }
+    }
+  }
+  el.innerHTML = next.length? next.join("<br>") : "<b>恭喜，所有清单事项都完成了 🎉 进入下一个阶段吧！</b>";
+}
+function renderBudgetOverview(){
+  const el = document.getElementById("ov-budget");
+  const rows = state.budget.rows;
+  const p = rows.reduce((s,r)=>s+(Number(r.planned)||0),0);
+  const a = rows.reduce((s,r)=>s+(Number(r.actual)||0),0);
+  const metaB = Number(state.meta.totalBudget)||0;
+  let html = "";
+  if(metaB) html += `<div>总预算：<b>${money(metaB)}</b> 元</div>`;
+  html += `<div>预算表计划合计：<b>${money(p)}</b> 元</div>`;
+  html += `<div>已支出（实际）：<b>${money(a)}</b> 元${a>p?' <span class="neg">⚠ 已超计划</span>':""}</div>`;
+  if(metaB) html += `<div>剩余可支配：<b>${money(metaB-a)}</b> 元</div>`;
+  el.innerHTML = html;
+}
+function updateProgress(){
+  let t=0,d=0;
+  STAGES.forEach(st=>st.groups.forEach(k=>{const g=state.groups[k]; if(g){t+=g.items.length; d+=g.items.filter(i=>i.checked).length;}}));
+  const pct = t? Math.round(d/t*100):0;
+  document.getElementById("ov-bar").style.width = pct+"%";
+  document.getElementById("ov-num").textContent = pct+"%";
+}
+
+/* ---------- 渲染：预算 ---------- */
+const BUDGET_STATUS = ["待定","已询价","已下单","已付款","已验收"];
+function renderBudget(){
+  const rows = state.budget.rows;
+  const table = document.getElementById("budget-table");
+  let html = `<thead><tr><th style="width:110px">类别</th><th>项目</th><th style="width:100px">计划(元)</th><th style="width:100px">实际(元)</th><th style="width:90px">差额</th><th style="width:80px">状态</th><th style="width:170px">备注</th><th></th></tr></thead><tbody>`;
+  if(rows.length===0){
+    html += `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:18px">还没有预算项目，点击下方「添加项目」开始规划</td></tr>`;
+  }
+  rows.forEach((r,i)=>{
+    const diff = (Number(r.actual)||0)-(Number(r.planned)||0);
+    const cls = diff>0?"neg":(diff<0?"pos":"");
+    html += `<tr>
+      <td><input data-action="budget" data-idx="${i}" data-field="category" value="${esc(r.category)}" placeholder="类别"></td>
+      <td><input data-action="budget" data-idx="${i}" data-field="item" value="${esc(r.item)}" placeholder="项目名称"></td>
+      <td><input data-action="budget" data-idx="${i}" data-field="planned" type="number" value="${r.planned!==''?esc(r.planned):""}" placeholder="0"></td>
+      <td><input data-action="budget" data-idx="${i}" data-field="actual" type="number" value="${r.actual!==''?esc(r.actual):""}" placeholder="0"></td>
+      <td class="${cls}">${r.planned!==''||r.actual!==''? (diff>0?"+"+money(diff):money(diff)) : ""}</td>
+      <td><select data-action="budget" data-idx="${i}" data-field="status">${BUDGET_STATUS.map(s=>`<option ${r.status===s?"selected":""}>${s}</option>`).join("")}</select></td>
+      <td><input data-action="budget" data-idx="${i}" data-field="note" value="${esc(r.note)}" placeholder="备注/品牌/商家"></td>
+      <td><button class="del" data-action="budget-del" data-idx="${i}" title="删除">✕</button></td>
+    </tr>`;
+  });
+  html += `</tbody>`;
+  table.innerHTML = html;
+  updateBudgetSummary();
+}
+function updateBudgetSummary(){
+  const rows = state.budget.rows;
+  const byCat = {};
+  rows.forEach(r=>{
+    const c = r.category.trim()||"未分类";
+    byCat[c] = byCat[c]||{p:0,a:0,n:0};
+    byCat[c].p += Number(r.planned)||0;
+    byCat[c].a += Number(r.actual)||0;
+    byCat[c].n++;
+  });
+  let p=0,a=0;
+  Object.values(byCat).forEach(v=>{p+=v.p;a+=v.a;});
+  const el = document.getElementById("budget-summary");
+  let html = "";
+  Object.keys(byCat).forEach(c=>{
+    const v=byCat[c]; const diff=v.a-v.p;
+    html += `<div style="display:flex;gap:10px;border-bottom:1px dashed var(--line);padding:4px 0">
+      <span style="width:90px;font-weight:600">${esc(c)}</span>
+      <span style="flex:1;color:var(--muted)">${v.n} 项</span>
+      <span>计划 <b>${money(v.p)}</b></span>
+      <span>实际 <b>${money(v.a)}</b></span>
+      <span class="${diff>0?'neg':'pos'}">${diff>0?"+":""}${money(diff)}</span>
+    </div>`;
+  });
+  if(rows.length===0) html = '<div style="color:var(--muted)">暂无数据</div>';
+  const diff = a-p;
+  html += `<div style="display:flex;gap:10px;padding:8px 0;font-weight:700;border-top:2px solid var(--text)">
+    <span style="width:90px">合计</span><span style="flex:1">${rows.length} 项</span>
+    <span>计划 <b>${money(p)}</b></span><span>实际 <b>${money(a)}</b></span>
+    <span class="${diff>0?'neg':'pos'}">${diff>0?"+":""}${money(diff)}</span>
+  </div>`;
+  el.innerHTML = html;
+  // 同步总览
+  const ov = document.getElementById("ov-budget");
+  if(ov) renderBudgetOverview();
+}
+
+/* ---------- 渲染全部 ---------- */
+function renderAll(){
+  Object.keys(TAB_GROUPS).forEach(renderTabGroups);
+  renderStages();
+  renderNext();
+  renderBudgetOverview();
+  renderBudget();
+  updateProgress();
+}
+
+/* ---------- 事件 ---------- */
+function toggleItem(gid,id){
+  const g = state.groups[gid]; if(!g) return;
+  const it = g.items.find(x=>x.id===id); if(!it) return;
+  it.checked = !it.checked; save();
+  // 更新DOM
+  const card = document.querySelector(`[data-group="${gid}"]`);
+  if(card){ renderGroup(gid, card); }
+  updateProgress();
+  renderStages();
+  renderNext();
+}
+document.addEventListener("click", e=>{
+  const el = e.target.closest("[data-action]");
+  if(!el) return;
+  const act = el.dataset.action;
+
+  if(act==="toggle"){
+    toggleItem(el.dataset.gid, el.dataset.id);
+  }else if(act==="del-item"){
+    const gid=el.dataset.gid, id=el.dataset.id;
+    const g=state.groups[gid]; if(!g) return;
+    if(confirm("确定删除这条事项？")){
+      g.items = g.items.filter(x=>x.id!==id); save();
+      renderGroup(gid, document.querySelector(`[data-group="${gid}"]`));
+      renderStages(); renderNext(); updateProgress();
+    }
+  }else if(act==="add-item"){
+    const gid=el.dataset.gid;
+    const inp=document.getElementById("input-add-"+gid);
+    const txt=(inp.value||"").trim(); if(!txt) return;
+    state.groups[gid].items.push({id:uid(gid),t:txt,checked:false,note:""}); save();
+    inp.value="";
+    renderGroup(gid, document.querySelector(`[data-group="${gid}"]`));
+    renderStages(); renderNext(); updateProgress();
+  }else if(act==="budget-add"){
+    state.budget.rows.push({id:uid("b"),category:"",item:"",planned:"",actual:"",status:"待定",note:""});
+    save(); renderBudget();
+  }else if(act==="budget-del"){
+    const i=Number(el.dataset.idx);
+    if(confirm("删除该预算项目？")){ state.budget.rows.splice(i,1); save(); renderBudget(); }
+  }else if(act==="export"){
+    const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    const d=new Date(); const ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    a.href=URL.createObjectURL(blob); a.download="装修看板备份_"+ds+".json"; a.click();
+    URL.revokeObjectURL(a.href);
+  }else if(act==="import"){
+    document.getElementById("file-import").click();
+  }else if(act==="reset"){
+    if(confirm("确认清空看板所有数据？此操作不可恢复，建议先导出备份。")){
+      localStorage.removeItem(LS_KEY); localStorage.removeItem(BUDGET_TPL_KEY);
+      const fresh = defaultState();
+      state = fresh;
+      if(session.mode==="admin") serverData = fresh; // 同步清空云端
+      save();
+      renderAll();
+    }
+  }else if(act==="copy"){
+    const txt=document.getElementById("smart-script").innerText;
+    if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>alert("已复制，发给水电工/工长！")).catch(()=>fallbackCopy(txt)); }
+    else fallbackCopy(txt);
+  }
+});
+function fallbackCopy(txt){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); alert("已复制！"); }
+
+document.addEventListener("input", e=>{
+  const el=e.target;
+  const act=el.dataset.action;
+  if(act==="note"){
+    const g=state.groups[el.dataset.gid]; const it=g&&g.items.find(x=>x.id===el.dataset.id);
+    if(it){ it.note=el.value; save(); }
+  }else if(act==="meta"){
+    state.meta[el.dataset.field]=el.value; save();
+    renderBudgetOverview();
+  }else if(act==="budget"){
+    const i=Number(el.dataset.idx), f=el.dataset.field;
+    state.budget.rows[i][f]=el.value; save();
+    if(f==="planned"||f==="actual"){
+      // 实时刷新当前行差额
+      const tr=el.closest("tr");
+      if(tr && tr.cells && tr.cells[4]){
+        const diff=(Number(state.budget.rows[i].actual)||0)-(Number(state.budget.rows[i].planned)||0);
+        const cell=tr.cells[4];
+        cell.textContent = diff>0?"+"+money(diff):money(diff);
+        cell.className = diff>0?"neg":(diff<0?"pos":"");
+      }
+      updateBudgetSummary();
+    }
+  }
+});
+document.addEventListener("change", e=>{
+  const el=e.target;
+  if(el.id==="file-import"){
+    const file=el.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const s=JSON.parse(reader.result);
+        if(!s || !s.groups) throw new Error("格式不对");
+        if(confirm("导入将覆盖当前所有数据，确定？")){
+          const ns = normalizeState(s);
+          state = ns;
+          if(session.mode==="admin") serverData = ns; // 导入后同步到云端
+          save();
+          renderAll();
+          alert("导入成功！");
+        }
+      }catch(err){ alert("导入失败：文件格式不正确\n"+err.message); }
+    };
+    reader.readAsText(file);
+    el.value="";
+  }
+});
+
+/* ---------- Tab切换 ---------- */
+function switchTab(tab){
+  if(!document.getElementById("panel-"+tab)) return;
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active", p.id==="panel-"+tab));
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.getElementById("nav").addEventListener("click", e=>{
+  const btn=e.target.closest("button[data-tab]"); if(!btn) return;
+  switchTab(btn.dataset.tab);
+});
+document.addEventListener("click", e=>{
+  const st=e.target.closest("[data-goto-tab]"); if(!st) return;
+  switchTab(st.dataset.gotoTab);
+});
+
+/* ---------- 登录门 ---------- */
+function showLogin(msg, isErr){
+  document.getElementById("login-screen").classList.remove("hidden");
+  const m = document.getElementById("login-msg");
+  m.textContent = msg || "";
+  m.className = "login-msg" + (isErr ? " err" : " ok");
+}
+function hideLogin(){ document.getElementById("login-screen").classList.add("hidden"); }
+
+function renderModeBadge(mode){
+  const el = document.getElementById("mode-badge");
+  if(mode==="admin"){
+    el.innerHTML = '<span class="badge admin">管理模式 · 共享数据</span><span id="sync-status"></span><button class="badge-btn" id="btn-logout">退出</button>';
+  }else{
+    el.innerHTML = '<span class="badge guest">访客 · 模板模式（数据仅存本机）</span><span id="sync-status"></span><button class="badge-btn" id="btn-logout">退出</button>';
+  }
+  document.getElementById("btn-logout").addEventListener("click", ()=>{
+    try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+    location.reload();
+  });
+}
+
+async function enterDashboard(mode){
+  if(mode==="admin"){
+    try{
+      const d = await apiGet("/api/data", session.token);
+      if(d && d.ok) serverData = d.data;
+      setSyncStatus("已连接云端");
+    }catch(e){ setSyncStatus("⚠ 云端连接失败，暂时本地模式"); }
+  }
+  load();
+  renderAll();
+  hideLogin();
+  renderModeBadge(mode);
+}
+
+async function doLogin(){
+  const inp = document.getElementById("login-pwd");
+  const pwd = inp.value;
+  if(!pwd){ showLogin("请输入密码", true); return; }
+  if(!API_BASE || API_BASE.indexOf("__")===0){ showLogin("页面尚未配置云端地址，请联系管理员部署", true); return; }
+  showLogin("验证中…", false);
+  try{
+    const r = await apiPost("/api/login", {password:pwd});
+    if(r && r.ok){
+      session = {mode:r.mode, token:r.token};
+      try{ sessionStorage.setItem(SESSION_KEY, JSON.stringify({token:r.token})); }catch(e){}
+      inp.value = "";
+      await enterDashboard(r.mode);
+    }else{
+      showLogin((r && r.message) || "密码错误", true);
+    }
+  }catch(e){
+    showLogin("无法连接服务器，请检查网络后重试", true);
+  }
+}
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.getElementById("login-btn").addEventListener("click", doLogin);
+  document.getElementById("login-pwd").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+});
+
+/* ---------- 启动 ---------- */
+(async function boot(){
+  // 尝试恢复已登录会话（token 有效期内刷新页面免登录）
+  try{
+    const saved = sessionStorage.getItem(SESSION_KEY);
+    if(saved){
+      const s = JSON.parse(saved);
+      if(s && s.token){
+        const me = await apiGet("/api/me", s.token);
+        if(me && me.ok){
+          session = {mode:me.mode, token:s.token};
+          await enterDashboard(me.mode);
+          return;
+        }
+      }
+    }
+  }catch(e){}
+  try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+  showLogin("", false);
+})();
+</script>
+</body>
+</html>
