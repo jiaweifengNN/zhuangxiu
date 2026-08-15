@@ -130,6 +130,33 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:18px 0 30px}
 .badge-btn{margin-left:auto;font-size:12px;padding:4px 12px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--muted);cursor:pointer}
 .badge-btn:hover{color:var(--danger);border-color:var(--danger)}
 #sync-status{font-size:12px;color:var(--muted)}
+/* 书籍速查 */
+.book-subnav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.book-subnav button{border:1px solid var(--line);background:var(--card);color:var(--text);padding:7px 16px;border-radius:99px;cursor:pointer;font-size:13px;font-weight:600}
+.book-subnav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.book-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.book-card h3{margin:0 0 4px;font-size:17px}
+.book-card .book-meta{color:var(--muted);font-size:12px;margin-bottom:12px}
+.ch-item{border-top:1px solid var(--line);padding:10px 0}
+.ch-item:first-of-type{border-top:none}
+.ch-head{display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.ch-head .ch-no{color:var(--accent);font-weight:700;font-size:13px;min-width:54px;flex-shrink:0}
+.ch-head .ch-title{font-weight:600;font-size:14px;flex:1}
+.ch-head .ch-arrow{color:var(--muted);font-size:12px;transition:.2s}
+.ch-item.open .ch-arrow{transform:rotate(90deg)}
+.ch-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;margin-left:62px}
+.ch-tag{font-size:11px;padding:2px 9px;border-radius:10px;background:#eef4f0;color:#3a7d5b;border:1px solid #d0e6da}
+.ch-body{display:none;margin:10px 0 4px 62px;padding:10px 14px;background:#fafaf7;border-radius:8px;border-left:3px solid var(--accent)}
+.ch-item.open .ch-body{display:block}
+.ch-body ul{margin:0;padding-left:18px}
+.ch-body li{font-size:13px;line-height:1.8;color:var(--text)}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tag-cloud button{border:1px solid var(--line);background:var(--card);color:var(--text);padding:6px 14px;border-radius:99px;cursor:pointer;font-size:12px}
+.tag-cloud button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tag-result{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+.tag-result .tr-book{font-size:12px;color:var(--accent);font-weight:700}
+.tag-result .tr-ch{font-size:14px;font-weight:600;margin:2px 0 6px}
+.tag-result .tr-pts{font-size:13px;line-height:1.7;color:var(--text)}
 </style>
 </head>
 <body>
@@ -162,6 +189,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:18px 0 30px}
   <button data-tab="final">验收·入住</button>
   <button data-tab="smart">智能家居</button>
   <button data-tab="budget">预算管理</button>
+  <button data-tab="books">📚 书籍速查</button>
   <button data-tab="data">数据备份</button>
 </nav>
 
@@ -244,6 +272,16 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:18px 0 30px}
     <h3>按类别汇总</h3>
     <div id="budget-summary" style="font-size:13px;line-height:1.9"></div>
   </div>
+</section>
+
+<!-- 书籍速查 -->
+<section class="panel" id="panel-books">
+  <div class="book-subnav">
+    <button id="bk-mode-book" class="active">📖 按书浏览</button>
+    <button id="bk-mode-tag">🏷 按装修环节反查</button>
+  </div>
+  <div id="bk-bybook"></div>
+  <div id="bk-bytag" style="display:none"></div>
 </section>
 
 <!-- 数据 -->
@@ -417,7 +455,55 @@ const TAB_GROUPS = {
   smart:["sh_ecosystem","sh_install","sh_prewire","sh_future"]
 };
 
-/* ---------- 状态 ---------- */
+/* ---------- 书籍速查数据（逯薇四本·章节级知识点·装修环节标签） ---------- */
+const BOOKS = [
+  {title:"小家大变局",author:"逯薇",year:"2022",theme:"显大·实用·适老",chapters:[
+    {n:"序章",t:"全局认知",pts:["大局除数 = 建筑面积÷(房间数+卫生间数)，值越大越舒适；18=非常紧凑 / 22=标准 / 25=宽松 / 30=绰绰有余，用来快速评估优化潜力","3大趋势来自2021分水岭：城镇化趋缓、生育率待提高、老龄化高峰将至 → 显大/实用/适老"],tags:["认知方法论"]},
+    {n:"第1章",t:"显大·5大密码",pts:["红尺蓝尺：红尺=面宽方向最大视距，蓝尺=进深方向最大视距，红尺价值远大于蓝尺；红尺≥6m营造大平层感（小3-4.2m/中4.2-5m/大≥6m）；阳台/走廊/传统厨房不计入","三通空间：通风+通光+通情，公共区用非实墙隔断连通，实墙越多越显小","三通菜单：打开空间(厨房/书房/阳台/亲子) × 打开方式(无墙/半墙/移门/开窗) × 红尺位置(南/北/中区)，DIY自选","三通比例 = 三通面积÷(建面×0.8)，中小户型建议≥30%","活力点位：人频繁活动+家人交流的功能区，传统仅2个(客厅+餐厅)，建议≥3个（加临窗区/客餐反转/大洄游）"],tags:["认知方法论","户型改造","客餐厅LDK"]},
+    {n:"第2章",t:"显大案例·3道例题",pts:["深圳39㎡新婚：除卫浴外全打通，功能靠边留白中间，红尺5.2m/蓝尺11.4m/三通55%","成都102㎡三口：半墙隔断书房做家庭图书馆，厨房折叠窗隔油烟不隔人，学习区三原则(融合独立/不搞偷袭/专桌专区)","南宁138㎡二胎三代6口：红尺9.2m，2.8m大长桌，儿童房随年龄演变(0-5半开放→6-11添学习桌→12+封闭)"],tags:["户型改造","客餐厅LDK","儿童房"]},
+    {n:"第3章",t:"实用·4大密码",pts:["Ⅱ型走道：门洞在中部=既是交通又是收纳+生活空间，复用率最高；O型<Ⅰ型<Ⅱ型，门开中间越多越实用","U型川型布局：Ⅱ型走道+空间 → U型(有封顶如U厨房/U卧室)或川型(穿透式如川走廊/川卫浴)","最小面宽：紧凑书房/最小卧室210cm、次卧240cm、主卧270cm、客厅315cm；富裕面宽=实际-最小，>0就有水分可挤","内存菜单：按收纳深度选内存条——15cm超薄柜/洞洞板、30-35cm玄关柜电视柜书柜、45cm书桌卡座梳妆台、60cm橱柜衣柜钢琴；配合S墙技法双房互借"],tags:["认知方法论","户型改造","收纳"]},
+    {n:"第4章",t:"实用案例·2道例题",pts:["北京85㎡三代2房1卫改3房：空气流通洄游布局，坐榻替代沙发(下部储物)，推拉滑门可擦涂鸦","西安105㎡空巢退休：厨房窄框推拉门平时隐形，隐形麻将桌盖板变茶桌，吸烟灯"],tags:["户型改造","收纳"]},
+    {n:"第5章",t:"适老·八字诀",pts:["平—防滑无高差≤1.5cm，斜坡垫+防滑砖+防滑条","安—抓杆扶手直径38mm，横扶手高85cm，竖/弯70-140cm，仿木纹PVC弱化残感","房—门净宽≥80cm，首选推拉门","屋—三通关系，加透明玻璃门消除死角","人—感应灯装玄关/走廊/卫浴/床边，色温4000K","生—圆角家具：半扶手椅/蝴蝶桌/座面略高坐深浅沙发/下部容脚的床","如—警报：床头+卫浴各一组，物联网优于局域网，拉绳式优于按钮","意—卫浴：干湿分离/无高差长地漏/L型马桶扶手/坐式淋浴100×120cm/恒温花洒/浴帘优于玻璃门"],tags:["认知方法论","卫生间","水电预埋","灯光","软装"]}
+  ]},
+  {title:"小家越住越大1",author:"逯薇",year:"2016",theme:"收纳",chapters:[
+    {n:"第1章",t:"关于家的不等式",pts:["住商概念：居住是可学习的技能，类似情商财商","四个不等式：House≠Home / Designer≠Dweller / Bigger≠Better / 面积m²≠容积m³"],tags:["认知方法论"]},
+    {n:"第2章",t:"给家减减肥",pts:["矛盾三方死循环：购买力增强+物品增多+房价上涨","核心原则：丢弃先于收纳（类比节食先于运动）","贵买贱用才是浪费——最贵的房子沦为廉价冗物仓库","应丢弃7类：功能重复/好久没用/痛苦回忆/以后不再用/早已忘却/已坏或过时"],tags:["认知方法论","收纳"]},
+    {n:"第3章",t:"收纳九阴真经",pts:["四级容器体系：房子→房间→大型储物家具→细分储物件","四条标准：各处均布(就近收纳)、占比≥12%(越小越大)、立体集成、二八原则(藏8露2)","数据：100㎡3口之家约需10m³收纳≈300个登机箱","立体集成消厚重三招：嵌入墙体凹槽、浅色简洁、柜门内置反弹器隐藏拉手"],tags:["收纳","认知方法论"]},
+    {n:"第4章",t:"小容器大智慧",pts:["核心公式：凌乱物品+统一容器=瞬间整洁","丢掉原包装，越参差越显乱","统一容器五字标准：方(方形优先)/摞(易摞放)/美(外表精致)/透(一目了然)/通(多处通用)","文字标签=收纳催眠术，白色长方形不干胶"],tags:["收纳"]},
+    {n:"第5章",t:"玄关",pts:["玄关是家里最脏的位置(超过厨卫)，兼实用+精神价值","全家鞋35-80双，鞋柜容量优先","鞋柜：深350-400mm，层板间距160mm，可活动层板打排钻(32mm间距)","构成：地柜+吊柜+高柜+换鞋凳+饰面板，底部开敞常鞋位"],tags:["玄关","收纳"]},
+    {n:"第6章",t:"客厅",pts:["客厅面积最大物品最多(约全家50%以上)","核心武器：满墙电视柜(顶天立地)，有藏有露","视线法则：视线以上露、以下藏","孩子玩具放最底层开放收纳盒，贴图形标签培养责任感","可移动家具选小，收纳家具选大"],tags:["客餐厅LDK","收纳"]},
+    {n:"第7章",t:"厨房三部曲",pts:["做饭动线：取→洗→切→炒→盛","U型台面最佳，同等台面比L型省约30%面积","一金两银：黄金区(备餐≥60cm)+银一(盛盘≥30cm)+银二(沥水≥30cm)","台面高度=身高÷2+50mm；灶台略低、水槽略高","六大避坑：上翻柜门/油烟机柜/微波炉吊柜/冰箱吊柜/米箱拉篮/内置垃圾桶","推荐：抽屉柜、洗碗机、转角拉篮、吊柜底灯、高抛龙头+净水器孔；台面选石英石圆弧角"],tags:["厨房","水电预埋"]},
+    {n:"第8章",t:"一平米衣帽间",pts:["三大改进：人(最短动线)、物(高效收纳)、光(加载改善)","衣服竖放(立放)原则，塑料透明抽屉立放","无纺布首饰挂袋挂衣柜门内侧，提前备次日衣物挂衣柜前","镜前灯色温3000K，人镜距离约40cm"],tags:["卧室","收纳","灯光"]},
+    {n:"第9章",t:"化妆台",pts:["早起7件事动线：起床→洗脸→护肤→化妆→更衣→戴饰品→穿鞋→出门","三大问题：收纳不足、距离太远、光线不对","目标：收纳≥30瓶罐、最佳视距400mm、光照350LX无阴影","一站完成：清洁+保养+化妆+洗手集成于化妆台"],tags:["卧室","灯光","收纳"]},
+    {n:"第10章",t:"家务十宗罪",pts:["十宗罪：工具冗杂/功能相似/上下水不周全/淋浴间变拖把池/马桶兼脏水桶/两污合流/开门是家务间/两阳台双麻烦/全摊主阳台/积少成多","秘籍一：独立家务区(首选南向长阳台，配杂物吊柜/拖把挂架/多用龙头)","秘籍二：淘汰旧具换神器(喷雾拖把/超细纤维巾/无线吸尘器)"],tags:["阳台","水电预埋","收纳"]}
+  ]},
+  {title:"小家越住越大2",author:"逯薇",year:"2018",theme:"功能",chapters:[
+    {n:"第1章",t:"餐厅",pts:["餐桌杂物三类六小：吃(食品/幼儿)、喝(饮料)、用(工具/家电/随手杂物)，先分类再设计","餐桌边柜(收纳随手小物)+餐厅边柜(独立摆放预留插座放小家电干货)，组合入墙","餐厨交流：多轨通高玻璃移门+橱柜布局改面对面","数据：餐桌吊灯距地≤1600mm；USB插座距地900-1000mm；卡座兼顾安全感+收纳+省地"],tags:["客餐厅LDK","收纳","水电预埋"]},
+    {n:"第2章",t:"儿童房",pts:["两大原则：未来可变+让孩子自己做主；按6/8/10岁成长节点布局","小空间策略：改门位L型交通改U型，扩大沿墙收纳面","数据：书柜层板深300-350mm；侧板打32mm排孔调层高；任意撑调节挂衣杆","不压抑三诀：视线(第一眼延伸方向)/体量(柜体嵌墙隐藏侧面)/颜色(白/浅灰蓝减轻重量)"],tags:["儿童房","收纳","户型改造"]},
+    {n:"第3章",t:"卫生间",pts:["S/M/L分级配置：S用淋浴帘/M用淋浴屏/L淋浴屏+浴缸；小户型三件套=墙排马桶+挂墙柜盆+镜箱","干湿分区：湿区(如厕+淋浴)留1900mm，剩余全给干区(洗脸区越长越好，可兼走廊)","顶灯装在水盆正前上方；干区U型墙面全贴砖；超薄收纳柜可代替墙垛","五金重品质：一体盆防溅防霉、马桶喷枪替代刷、空气注入花洒、三折推拉门"],tags:["卫生间","户型改造","收纳"]},
+    {n:"第4章",t:"定制柜三大难题",pts:["木工vs品牌：品牌批量化定制更可靠(服装厂vs裁缝)","环保标准：E1国标/E0企标非国标/F日本标准；人造板是全球柜体主流","基材口诀：刨花板(实木颗粒)环保强度做柜身/中密度纤维板造型好做柜门/多层板防潮近水区用/三聚氰胺饰面板(爱格板/双饰面/免漆板)关键看封边","铰链三选：快装型/缓冲型/大角度型(常规100°大角度170°)","设计法则：与户型同步设计不能最后定、做凹柜嵌入、顶天立地扩满整墙、电视墙一体柜"],tags:["收纳","色彩材质","认知方法论"]},
+    {n:"第5章",t:"吊顶",pts:["四字功能：藏(梁/水电/新风/中央空调)/分(划分区域)/光(点光源变间接泛光)/齐(拉齐门楣帘顶柜顶一线)","人造板不分段最大高约2400mm低于层高，靠吊顶补齐柜顶差距避免闲置","厨卫吊顶：铝扣板易检修不美观/埃特板+墙漆颜值高难检修；风暖浴霸装淋浴屏外侧否则吹着冷"],tags:["水电预埋","灯光","认知方法论"]},
+    {n:"第6章",t:"灯光搭配",pts:["三大误区：重灯轻光/重灯泡轻色温/重主灯轻搭配","色温法则：3000K暖光适用客餐卧(医院6000K勿误用)/4500K适用厨卫","客厅：主灯直径800mm起步+灯槽灯+读书灯+边几灯","餐厅吊灯三要素：距桌面约650mm/居餐桌正中/半透光灯罩","厨房三灯：集成吊顶灯+吊柜底灯+水槽吊灯","卧室无主灯：摇臂床头灯+感应夜灯+衣柜感应灯；卫浴：镜箱灯装正面照脸部","灯槽间接照明可让纵向空间显高"],tags:["灯光","水电预埋","软装"]},
+    {n:"第7章",t:"1000元折腾出租屋",pts:["低成本四步：深度清洁(吸尘器+水砂纸+除霉剂+浴室喷雾)+顶天立地晾衣杆+置物架+布帘","淘宝外贸尾单布艺省钱；遥控灯泡免改线路即可换灯","房子是租的生活不是"],tags:["软装","收纳","认知方法论"]},
+    {n:"第8章",t:"时光宝盒",pts:["每年用一个收纳盒打包当年回忆物品(B超单/电影票/纪念衣物等)，过多物品拍照留档后舍弃","情感层是住商冰山顶端——爱把房子变成家"],tags:["收纳","软装","认知方法论"]}
+  ]},
+  {title:"小家越住越大3",author:"逯薇",year:"2020",theme:"颜值",chapters:[
+    {n:"第1章",t:"风格搭配",pts:["3×3要素搭配法：同一要素3次重复+3种载体+3重变化(大中小/前中后)形成统一感","风格四要素：形(形状)/色(颜色)/质(质感)/料(材料)，拆解后重复","搭配本质是协调，协调靠重复；打破风格约束混搭OK"],tags:["认知方法论","色彩材质","软装"]},
+    {n:"第2章",t:"配色",pts:["1+1配色法：硬装底色(黑白灰系/大地色系)+软装跳色(1-2种点缀色)","巧用画作配色法：画是全屋色彩压缩包，提取2-3种颜色用于抱枕盖毯","中国中小户型平均装修周期8年，硬装选基础款(白衬衫)，小件跳色常换常新","大件基础色、小件跳色；深浅浓淡变化体现层次"],tags:["色彩材质","软装"]},
+    {n:"第3章",t:"装饰·视平线法则",pts:["视平线法则：中国人视平线约150cm，110-170cm为黄金装饰区","视平线组合法：主要视角吸睛元素≥3个，摆灯画至少选1个，至少2个元素匹配3×3","七字口诀：壁柜帘植摆灯画(壁纸/柜子/窗帘/植物/摆件/灯具/挂画)","图案九字：七分纯二分纹一点魂","挂画数据：幅距<画宽1/5且≤15cm/中心线距地150cm/组画总宽=沙发或床宽0.8-1.0倍","三角构图：饰品≥3个用三角构图，尺寸约40+20+10cm，吸睛主角≥40cm"],tags:["软装","灯光","色彩材质"]},
+    {n:"第4章",t:"搭配快答",pts:["租房快速改颜：大面积织物入手(绗缝三件套/户外地毯/2.7m通高窗帘)+朝天灯","床品+窗帘+地毯约占房间视觉面积40%，比刷墙换地板便宜且可带走"],tags:["软装","色彩材质"]},
+    {n:"第5章",t:"厨房布局",pts:["可分可合厨房：交流中心=柜台+水槽+稳坐；形式有开窗式/移门式/餐厨合一式","U型布局最优，一金二银台面三区(备餐黄金区/装盘区/沥水区)","开窗式厨房窗台高度110cm，开窗聊天关窗隔烟","动线：取—洗—切—炒—盛"],tags:["厨房","客餐厅LDK","户型改造"]},
+    {n:"第6章",t:"飘窗利用",pts:["飘窗改软座：靠背倾角110°，座面略后倾防前滑；靠背+座深+座高=110-120cm","飘窗改书桌：容腿延伸≥25cm，桌高75cm，抽屉底距地60cm，窗帘留缝15cm，预留3个插座","飘窗改榻榻米：三七归纳——内侧30%通风区(装排气扇)/外侧70%储物区(滚轮深箱替代上翻盖)","安全：假飘窗/落地窗/承重墙严禁破坏"],tags:["卧室","儿童房","户型改造"]},
+    {n:"第7章",t:"卫浴三分离",pts:["三分离定义：洗面区/马桶间/淋浴间用实体墙分隔(玻璃不算)，三人同时使用","最小面积：一体式3.2m²/二分离4.0m²/三分离4.6m²","最小净尺寸：洗面区90×60/马桶间130×90/淋浴间160×90(cm)","形状决定可行性：瘦长形不适合/扁长形最适合/近方形看尺寸","马桶间慎用推拉门(传声漏臭)；淋浴区设脱衣区；洗面柜下水后置释放收纳"],tags:["卫生间","户型改造"]},
+    {n:"第8章",t:"阳台洗衣",pts:["洗晒动线最短化：脱衣→洗衣→晒衣一气呵成，原动线25m可缩短至2m","洗衣机移入阳台后厨房可变U型利用率最高","缝隙收纳：洗衣机与阳台柜间做细长储物；洗衣机抬高方便清洁","花洒一体化托盘(50cm长收纳6瓶)；镜柜无底板便于牙杯倒扣控水"],tags:["阳台","卫生间","收纳"]},
+    {n:"第9章",t:"15cm超薄柜",pts:["多场景应用：衣柜旁(首饰/丝巾/立式梳妆台)/洗面柜旁/阳台柜/餐厨高柜/走廊图书角","超薄柜贴灯带+预留插座解决采光；化妆镜/全身镜藏于柜门正反面","厨房超薄柜搭配洞洞板整面墙可用"],tags:["收纳","卧室","厨房"]},
+    {n:"第10章",t:"双孔夹神器",pts:["双孔夹收纳纸质物品：孩子画作/说明书/证件证书/发票，任何厚度尺寸都能装","配活页文件袋分类，统一规格+标签管理"],tags:["收纳","认知方法论"]},
+    {n:"第11章",t:"起居大柜·任性爱自己",pts:["起居大柜分段法：180+80n+剩余宽度，整面墙海量收纳电视嵌入其中","木柜体+蛇形帘搭配，造型开合自如比木门省钱","理想小家公式：30%好看+60%好用+10%任性"],tags:["收纳","软装","认知方法论"]}
+  ]}
+];
+const BOOK_TAGS = ["认知方法论","玄关","客餐厅LDK","厨房","卧室","儿童房","卫生间","阳台","收纳","水电预埋","灯光","色彩材质","软装","户型改造"];
+
+
 const BUDGET_TPL_KEY = "_budget_tpl_v1";
 /* 预置全周期预算参考清单（100㎡中档参考价，单位元，可随意改/删） */
 const DEFAULT_BUDGET_ROWS = [
@@ -764,7 +850,56 @@ function renderAll(){
   renderNext();
   renderBudgetOverview();
   renderBudget();
+  renderBooks();
   updateProgress();
+}
+
+/* ---------- 书籍速查渲染 ---------- */
+function renderBooks(){
+  renderBooksByBook();
+  renderBooksByTag();
+}
+function renderBooksByBook(){
+  const c = document.getElementById("bk-bybook");
+  if(!c) return;
+  c.innerHTML = BOOKS.map(b=>{
+    const chs = b.chapters.map(ch=>`
+      <div class="ch-item">
+        <div class="ch-head" onclick="this.parentElement.classList.toggle('open')">
+          <span class="ch-no">${ch.n}</span>
+          <span class="ch-title">${ch.t}</span>
+          <span class="ch-arrow">▶</span>
+        </div>
+        <div class="ch-tags">${ch.tags.map(t=>`<span class="ch-tag">${t}</span>`).join("")}</div>
+        <div class="ch-body"><ul>${ch.pts.map(p=>`<li>${p}</li>`).join("")}</ul></div>
+      </div>`).join("");
+    return `<div class="book-card">
+      <h3>📖 ${b.title}</h3>
+      <div class="book-meta">${b.author} · ${b.year} · 主题：${b.theme} · 共 ${b.chapters.length} 章</div>
+      ${chs}
+    </div>`;
+  }).join("");
+}
+function renderBooksByTag(){
+  const c = document.getElementById("bk-bytag");
+  if(!c) return;
+  c.innerHTML = `<div class="tag-cloud">${BOOK_TAGS.map(t=>`<button data-bktag="${t}">${t}</button>`).join("")}</div><div id="bk-tag-result"><div style="color:var(--muted);font-size:13px;padding:20px;text-align:center">👆 点击上方任意装修环节，查看四本书中所有相关章节</div></div>`;
+  c.querySelectorAll(".tag-cloud button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      c.querySelectorAll(".tag-cloud button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const tag = btn.dataset.bktag;
+      const hits = [];
+      BOOKS.forEach(b=>b.chapters.forEach(ch=>{ if(ch.tags.includes(tag)) hits.push({book:b.title,year:b.year,ch}); }));
+      const r = document.getElementById("bk-tag-result");
+      r.innerHTML = hits.length ? hits.map(h=>`
+        <div class="tag-result">
+          <div class="tr-book">📖 ${h.book}（${h.year}）· ${h.ch.n}</div>
+          <div class="tr-ch">${h.ch.t}</div>
+          <div class="tr-pts">${h.ch.pts.map(p=>`• ${p}`).join("<br>")}</div>
+        </div>`).join("") : `<div style="color:var(--muted);padding:16px">该环节暂无直接对应章节</div>`;
+    });
+  });
 }
 
 /* ---------- 事件 ---------- */
@@ -961,6 +1096,18 @@ async function doLogin(){
 document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("login-btn").addEventListener("click", doLogin);
   document.getElementById("login-pwd").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+  document.getElementById("bk-mode-book").addEventListener("click", ()=>{
+    document.getElementById("bk-mode-book").classList.add("active");
+    document.getElementById("bk-mode-tag").classList.remove("active");
+    document.getElementById("bk-bybook").style.display="";
+    document.getElementById("bk-bytag").style.display="none";
+  });
+  document.getElementById("bk-mode-tag").addEventListener("click", ()=>{
+    document.getElementById("bk-mode-tag").classList.add("active");
+    document.getElementById("bk-mode-book").classList.remove("active");
+    document.getElementById("bk-bytag").style.display="";
+    document.getElementById("bk-bybook").style.display="none";
+  });
 });
 
 /* ---------- 启动 ---------- */
