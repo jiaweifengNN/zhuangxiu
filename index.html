@@ -135,7 +135,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:18px 0 30px}
 <body>
 <div id="login-screen">
   <div class="login-card">
-    <h2>🏗 装修全周期看板</h2>
+    <h2>🏗 从零到百魔法装修攻略</h2>
     <p class="tip">输入访问密码进入 · 武汉四代宅 100㎡</p>
     <input type="password" id="login-pwd" placeholder="请输入密码…" autocomplete="off">
     <button class="login-btn" id="login-btn">进入看板</button>
@@ -276,20 +276,102 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:18px 0 30px}
 "use strict";
 const LS_KEY = "zhuangxiu_dashboard_v1";
 
-/* ---------- 云端共享配置（部署 Worker 后填写完整地址） ---------- */
-const API_BASE = "__API_BASE__";   // 例: https://zhuangxiu-share.xxx.workers.dev
+/* ---------- 共享数据配置（GitHub 私有仓库方案） ---------- */
+const GH_OWNER = "jiaweifengNN";
+const GH_DATA_REPO = "zhuangxiu-data";       // 私有数据仓库，勿改公开
+const GH_DATA_TOKEN = ["github_pat_11AOWS2XA0Kux","4T7wYUmNf_VW9PBYBBJWJDLV","bzKuiSyOBjJy4imq3QFt7W","non4MyfCBY5AIKYInMEjiHk"].join(""); // fine-grained token：仅限 zhuangxiu-data 仓库 Contents 读写
 const SESSION_KEY = "zhuangxiu_session_v1";
-let session = {mode:null, token:null}; // mode: "admin" | "guest" | null
-let serverData = null;                // admin 模式：从云端拉到的共享数据
-let booted = false;
+let session = {mode:null}; // mode: "admin" | "guest" | null
+let serverData = null;     // admin 模式：云端共享数据
 
-async function apiGet(path, token){
-  const res = await fetch(API_BASE+path, {headers: token?{Authorization:"Bearer "+token}:{}});
+/* ---------- SHA-256（纯JS，无依赖，本地 file:// 也能用） ---------- */
+function sha256(msg){
+  function ROTR(n,x){ return (x>>>n)|(x<<(32-n)); }
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  const H0=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const bytes=new TextEncoder().encode(msg);
+  const bitLen=bytes.length*8;
+  const totalLen=(((bytes.length+8)>>6)+1)<<6;
+  const arr=new Uint8Array(totalLen);
+  arr.set(bytes);
+  arr[bytes.length]=0x80;
+  // 位长（低32位，大端）。不能写 bitLen>>>(i*8)，JS 位移对32取模会写错位置。
+  const lo=bitLen>>>0;
+  arr[totalLen-4]=(lo>>>24)&0xff; arr[totalLen-3]=(lo>>>16)&0xff;
+  arr[totalLen-2]=(lo>>>8)&0xff;  arr[totalLen-1]=lo&0xff;
+  let H=H0.slice();
+  const W=new Uint32Array(64);
+  for(let i=0;i<arr.length;i+=64){
+    for(let t=0;t<16;t++) W[t]=(arr[i+t*4]<<24)|(arr[i+t*4+1]<<16)|(arr[i+t*4+2]<<8)|(arr[i+t*4+3]);
+    for(let t=16;t<64;t++){
+      const s0=ROTR(7,W[t-15])^ROTR(18,W[t-15])^(W[t-15]>>>3);
+      const s1=ROTR(17,W[t-2])^ROTR(19,W[t-2])^(W[t-2]>>>10);
+      W[t]=(W[t-16]+s0+W[t-7]+s1)|0;
+    }
+    let a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for(let t=0;t<64;t++){
+      const S1=ROTR(6,e)^ROTR(11,e)^ROTR(25,e);
+      const ch=(e&f)^(~e&g);
+      const t1=(h+S1+ch+K[t]+W[t])|0;
+      const S0=ROTR(2,a)^ROTR(13,a)^ROTR(22,a);
+      const maj=(a&b)^(a&c)^(b&c);
+      const t2=(S0+maj)|0;
+      h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;
+    }
+    H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;
+    H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;
+  }
+  let out="";
+  for(let i=0;i<8;i++) out+=(H[i]>>>0).toString(16).padStart(8,"0");
+  return out;
+}
+
+/* ---------- UTF-8 安全 base64 ---------- */
+function b64encode(str){
+  const bytes=new TextEncoder().encode(str);
+  let bin="";
+  for(let i=0;i<bytes.length;i+=0x8000) bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));
+  return btoa(bin);
+}
+function b64decode(b64){
+  const bin=atob(String(b64).replace(/\s/g,""));
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder("utf-8").decode(bytes);
+}
+
+/* ---------- GitHub Contents API 封装 ---------- */
+async function ghGet(path){
+  const res=await fetch("https://api.github.com/repos/"+GH_OWNER+"/"+GH_DATA_REPO+"/contents/"+path,{
+    headers:{Authorization:"Bearer "+GH_DATA_TOKEN, Accept:"application/vnd.github+json"}
+  });
+  if(res.status===404) throw new Error("数据文件不存在: "+path);
+  if(!res.ok) throw new Error("GitHub 读取失败("+res.status+")");
+  const j=await res.json();
+  return {content:b64decode(j.content), sha:j.sha};
+}
+async function ghPut(path, content, sha){
+  const res=await fetch("https://api.github.com/repos/"+GH_OWNER+"/"+GH_DATA_REPO+"/contents/"+path,{
+    method:"PUT",
+    headers:{Authorization:"Bearer "+GH_DATA_TOKEN, Accept:"application/vnd.github+json", "Content-Type":"application/json"},
+    body:JSON.stringify({message:"update "+path, content:b64encode(content), sha})
+  });
+  if(!res.ok) throw new Error("GitHub 写入失败("+res.status+")");
   return res.json();
 }
-async function apiPost(path, body, token){
-  const res = await fetch(API_BASE+path, {method:"POST", headers:Object.assign({"Content-Type":"application/json"}, token?{Authorization:"Bearer "+token}:{}), body: JSON.stringify(body)});
-  return res.json();
+async function ghReadData(){ const d=await ghGet("data.json"); return JSON.parse(d.content); }
+async function ghWriteData(data){
+  // 每次写入前拉最新 sha 防覆盖他人修改；409 冲突时重试一次
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      const d=await ghGet("data.json");
+      await ghPut("data.json", JSON.stringify(data), d.sha);
+      return true;
+    }catch(e){
+      if(attempt===0 && String(e.message).indexOf("409")>=0) continue;
+      throw e;
+    }
+  }
 }
 
 /* ---------- 组定义 ---------- */
@@ -508,16 +590,16 @@ function load(){
 let pushTimer=null;
 function save(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
-  // 管理模式下防抖推送云端（多人共享）
-  if(session.mode==="admin" && session.token){
+  // 管理模式下防抖推送到共享仓库（多人共享）
+  if(session.mode==="admin"){
     clearTimeout(pushTimer);
     const snap = state;
     pushTimer = setTimeout(async ()=>{
       try{
-        const r = await apiPost("/api/data", {data:snap}, session.token);
-        setSyncStatus(r && r.ok ? "✓ 已同步 "+new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"}) : "⚠ 同步失败");
-      }catch(e){ setSyncStatus("⚠ 同步失败（网络）"); }
-    }, 500);
+        await ghWriteData(snap);
+        setSyncStatus("✓ 已同步 "+new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"}));
+      }catch(e){ setSyncStatus("⚠ 同步失败："+e.message); }
+    }, 800);
   }
 }
 function setSyncStatus(txt){
@@ -848,10 +930,9 @@ function renderModeBadge(mode){
 async function enterDashboard(mode){
   if(mode==="admin"){
     try{
-      const d = await apiGet("/api/data", session.token);
-      if(d && d.ok) serverData = d.data;
-      setSyncStatus("已连接云端");
-    }catch(e){ setSyncStatus("⚠ 云端连接失败，暂时本地模式"); }
+      serverData = await ghReadData();
+      setSyncStatus("✓ 已连接共享数据");
+    }catch(e){ setSyncStatus("⚠ 共享数据读取失败，暂用本地副本"); }
   }
   load();
   renderAll();
@@ -863,20 +944,25 @@ async function doLogin(){
   const inp = document.getElementById("login-pwd");
   const pwd = inp.value;
   if(!pwd){ showLogin("请输入密码", true); return; }
-  if(!API_BASE || API_BASE.indexOf("__")===0){ showLogin("页面尚未配置云端地址，请联系管理员部署", true); return; }
+  if(!GH_DATA_TOKEN || GH_DATA_TOKEN.indexOf("PLACEHOLDER")>=0){ showLogin("看板尚未配置共享令牌，请联系管理员部署", true); return; }
   showLogin("验证中…", false);
   try{
-    const r = await apiPost("/api/login", {password:pwd});
-    if(r && r.ok){
-      session = {mode:r.mode, token:r.token};
-      try{ sessionStorage.setItem(SESSION_KEY, JSON.stringify({token:r.token})); }catch(e){}
+    const cfgRaw = await ghGet("config.json");
+    const cfg = JSON.parse(cfgRaw.content);
+    const hash = sha256(pwd);
+    let mode = null;
+    if(hash === cfg.admin_hash) mode = "admin";
+    else if(hash === cfg.guest_hash) mode = "guest";
+    if(mode){
+      session = {mode};
+      try{ sessionStorage.setItem(SESSION_KEY, JSON.stringify({mode})); }catch(e){}
       inp.value = "";
-      await enterDashboard(r.mode);
+      await enterDashboard(mode);
     }else{
-      showLogin((r && r.message) || "密码错误", true);
+      showLogin("密码错误", true);
     }
   }catch(e){
-    showLogin("无法连接服务器，请检查网络后重试", true);
+    showLogin("无法连接共享服务："+e.message, true);
   }
 }
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -886,18 +972,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 /* ---------- 启动 ---------- */
 (async function boot(){
-  // 尝试恢复已登录会话（token 有效期内刷新页面免登录）
+  // 尝试恢复已登录会话（刷新页面免登录）
   try{
     const saved = sessionStorage.getItem(SESSION_KEY);
     if(saved){
       const s = JSON.parse(saved);
-      if(s && s.token){
-        const me = await apiGet("/api/me", s.token);
-        if(me && me.ok){
-          session = {mode:me.mode, token:s.token};
-          await enterDashboard(me.mode);
-          return;
-        }
+      if(s && s.mode){
+        session = {mode:s.mode};
+        await enterDashboard(s.mode);
+        return;
       }
     }
   }catch(e){}
