@@ -155,15 +155,19 @@ footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;bor
   <div class="tagline">🔥 不只是看面积，更要看「大局除数 · 红尺蓝尺 · 三通率 · 收纳率」</div>
 </header>
 
+<div class="alert-banner" style="background:linear-gradient(90deg,#ff4757,#ff9f1c);color:#fff;text-align:center;padding:16px 20px;font-size:15px;font-weight:600">
+  ⚠️ 数据说明：各房间面积/尺寸由户型图视觉估算而来，非精确测量。玖月 106 有营销标注可做参考，嘉启 90 / 嘉悦 113 内部无区域面积标注。最终尺寸以开发商合同附图与实测为准。
+</div>
+
 <section id="overview">
   <h2><span class="emoji">🏠</span>三户总览</h2>
-  <p class="section-desc">点击卡片查看细节，下方可选择任意区域做三户同框对比。</p>
+  <p class="section-desc">建筑面积来自户型图标题；套内、房间尺寸、红尺蓝尺为<strong>基于图像比例估算</strong>，非精确值。仅用于三户之间做相对比较，不作为购房或施工依据。</p>
   <div class="plan-grid" id="planGrid"></div>
 </section>
 
 <section id="explorer">
   <h2><span class="emoji">🔍</span>按区域可视化对比</h2>
-  <p class="section-desc">点选区域，三个户型的同一空间会同时被红框高亮；下方显示该区域的放大对比与量化数据。</p>
+  <p class="section-desc">点选区域，三个户型的同一空间会同时被红框高亮。红框位置为<strong>示意性标注</strong>，面积/尺寸为<strong>估算值</strong>，用于三户之间的相对比较。</p>
   <div class="region-selector" id="regionSelector"></div>
   <div class="plan-grid" id="overlayGrid"></div>
 
@@ -179,7 +183,7 @@ footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;bor
 
 <section id="metrics">
   <h2><span class="emoji">📊</span>核心量化指标总览</h2>
-  <p class="section-desc">所有数据均来自户型图标注与视觉估算。绿色为该指标最优户。</p>
+  <p class="section-desc">绿色为该指标相对最优户。<strong>所有数值为估算/推算值</strong>：大局除数由建筑面积÷(房间数+卫生间数)计算；红尺蓝尺、LDKB、收纳率等由户型图视觉比例估算。玖月 106 部分区域有营销气泡面积可参考，嘉启/嘉悦无内部区域标注。</p>
   <div class="legend">
     <span><i style="background:var(--jiaqi)"></i>嘉启 90㎡</span>
     <span><i style="background:var(--jiuyue)"></i>玖月 106㎡</span>
@@ -220,8 +224,8 @@ footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;bor
 </section>
 
 <footer>
-  <p>数据来源：楼盘户型图及营销资料 + 视觉估算 | 分析方法：逯薇《小家大变局》《小家越住越大1/2/3》</p>
-  <p>本页面为装修决策辅助，最终尺寸、面积以开发商合同与实测为准。</p>
+  <p><strong>数据来源与局限：</strong>建筑面积、房间数来自户型图标题；玖月 106 部分区域面积来自营销气泡标注；其余各房间面积、面宽、进深、红尺蓝尺、收纳率等均为基于图片比例的主观估算。三户之间可做相对比较，但不具备精确测量意义。</p>
+  <p>分析方法参考逯薇《小家大变局》《小家越住越大1/2/3》。本页面仅为装修前期决策辅助，最终尺寸、面积、户型结构以开发商合同附图与现场实测为准。</p>
 </footer>
 
 <script>
@@ -229,7 +233,7 @@ const PLANS = [
   {
     id:'jiaqi',name:'嘉·启 A',area:90,rooms:3,bath:2,theme:'刚刚好全龄PRO三房',color:'#ff2d7a',
     img:'images/floorplan-jiaqi-90.jpg',imgW:1440,imgH:704,
-    tags:['三房两卫','港式双厅','三开间朝南','红尺7.6m'],
+    tags:['三房两卫','港式双厅','三开间朝南','红尺约7.6m'],
     regions:{
       '玄关':{x:80,y:14,w:14,h:10,note:'入户玄关，可嵌鞋柜'},
       '厨房':{x:80,y:24,w:14,h:16,note:'U型厨房潜力，与餐厅相邻'},
@@ -261,8 +265,8 @@ const PLANS = [
       '收纳':{area:10,note:'玄关柜+电视柜+衣柜'}
     },
     score:{显大:7.5,实用:7.0,收纳:7.0,功能:7.5,改造:7.0},
-    pros:['90㎡做三房两卫，功能完整','三开间朝南，采光面多','LDKB一体化，公共空间显大','总价门槛低，刚需友好'],
-    cons:['大局除数18.0，房间偏紧凑','红尺7.6m<蓝尺10.95m，进深偏长','收纳率刚达标，柜体需精打细算','北向次卧尺寸偏紧张']
+    pros:['约90㎡做三房两卫，功能完整','三开间朝南，采光面多','LDKB一体化，公共空间显大','总价门槛低，刚需友好'],
+    cons:['大局除数约18.0，房间偏紧凑','红尺约7.6m < 蓝尺约10.95m，进深偏长','收纳率约12%刚达标，柜体需精打细算','北向次卧尺寸偏紧张']
   },
   {
     id:'jiuyue',name:'玖月',area:106,rooms:3,bath:2,theme:'LDKB+X超级聚厅',color:'#00e5ff',
@@ -301,18 +305,18 @@ const PLANS = [
       '收纳':{area:30,note:'整墙收纳系统'}
     },
     score:{显大:9.5,实用:8.5,收纳:9.5,功能:8.5,改造:8.0},
-    pros:['大局除数21.2，接近标准舒适值','57㎡ LDKB+X 超级聚厅，显大极值','30㎡收纳空间，远超12%基准','19㎡主卧套房+衣帽间','红尺≈10m，大平层感强','南北通透，采光通风俱佳'],
+    pros:['大局除数约21.2，接近标准舒适值','约57㎡ LDKB+X 超级聚厅，显大极值','约30㎡收纳空间，远超12%基准','约19㎡主卧套房+衣帽间','红尺≈10m，大平层感强','南北通透，采光通风俱佳'],
     cons:['106㎡仅三房，房间数少于嘉悦113','若需要四房需改造，成本较高','LDKB大但私密性需靠软装划分','总价高于90㎡一档']
   },
   {
     id:'jiayue',name:'嘉·悦 B',area:113,rooms:4,bath:2,theme:'越住越大全配正四房',color:'#ffd600',
     img:'images/floorplan-jiayue-113.jpg',imgW:1440,imgH:704,
-    tags:['四房两卫','4.5m端厅','南北西采光','LDK一体'],
+    tags:['四房两卫','约4.5m端厅','南北西采光','LDK一体'],
     regions:{
       '玄关':{x:80,y:14,w:14,h:10,note:'入户玄关'},
       '厨房':{x:80,y:24,w:14,h:16,note:'L型/U型厨房'},
       '餐厅':{x:60,y:24,w:19,h:16,note:'与客厅形成LDK'},
-      '客厅':{x:60,y:40,w:28,h:30,note:'4.5m宽境端厅'},
+      '客厅':{x:60,y:40,w:28,h:30,note:'约4.5m宽境端厅'},
       '主卧':{x:80,y:62,w:14,h:26,note:'南向阳光大主卧'},
       '次卧A':{x:53,y:50,w:7,h:22,note:'南向次卧'},
       '次卧B':{x:53,y:24,w:7,h:25,note:'北向次卧'},
@@ -331,7 +335,7 @@ const PLANS = [
       '主卧':{area:18,width:3.5,depth:5.1,note:'阳光大主卧'},
       '次卧A':{area:10,width:2.8,depth:3.6,note:'南向次卧'},
       '次卧B':{area:9,width:2.7,depth:3.3,note:'北向次卧'},
-      '客厅':{area:26,width:4.5,depth:5.8,note:'4.5m端厅'},
+      '客厅':{area:26,width:4.5,depth:5.8,note:'约4.5m端厅'},
       '餐厅':{area:10,width:3.2,depth:3.1,note:'LDK一体'},
       '厨房':{area:7,width:2.6,depth:2.7,note:'L型厨房'},
       '卫生间':{area:9,note:'双卫'},
@@ -340,8 +344,8 @@ const PLANS = [
       '收纳':{area:12,note:'常规收纳'}
     },
     score:{显大:8.5,实用:7.5,收纳:7.0,功能:8.0,改造:8.5},
-    pros:['113㎡做四房两卫，功能最全','4.5m宽境端厅，客厅显大','四房满足二孩/老人/书房多场景','南北西三面采光，光线充足','改造潜力大，可改横厅或大三房'],
-    cons:['大局除数18.8，四房导致单房紧凑','红尺8.0m<蓝尺12.05m，进深偏长','收纳率11.8%略低于12%建议','次卧尺寸与90㎡相近，多出的面积在公区']
+    pros:['约113㎡做四房两卫，功能最全','约4.5m宽境端厅，客厅显大','四房满足二孩/老人/书房多场景','南北西三面采光，光线充足','改造潜力大，可改横厅或大三房'],
+    cons:['大局除数约18.8，四房导致单房紧凑','红尺约8.0m < 蓝尺约12.05m，进深偏长','收纳率约11.8%略低于12%建议','次卧尺寸与90㎡相近，多出的面积在公区']
   }
 ];
 
@@ -374,9 +378,9 @@ function renderPlanGrid(){
       <div class="plan-footer">
         <div class="spec-row"><span>房间/卫生间</span><span class="val">${p.rooms}房${p.bath}卫</span></div>
         <div class="spec-row"><span>大局除数</span><span class="val ${dajuClass}">${major['大局除数'].toFixed(1)}</span></div>
-        <div class="spec-row"><span>LDKB面积</span><span class="val good">${major['LDKB面积']}㎡</span></div>
-        <div class="spec-row"><span>收纳率</span><span class="val ${shounaClass}">${(major['收纳率']*100).toFixed(1)}%</span></div>
-        <div class="spec-row"><span>红尺 / 蓝尺</span><span class="val">${major['红尺(m)']}m / ${major['蓝尺(m)']}m</span></div>
+        <div class="spec-row"><span>LDKB面积</span><span class="val good">约 ${major['LDKB面积']}㎡</span></div>
+        <div class="spec-row"><span>收纳率</span><span class="val ${shounaClass}">约 ${(major['收纳率']*100).toFixed(1)}%</span></div>
+        <div class="spec-row"><span>红尺 / 蓝尺</span><span class="val">约 ${major['红尺(m)']}m / 约 ${major['蓝尺(m)']}m</span></div>
       </div>
     </div>`;
   }).join('');
@@ -448,8 +452,8 @@ function renderZoom(region){
         <img src="${p.img}" style="object-position:${pos}">
       </div>
       <div class="crop-desc">
-        <strong>${rm.area!=='-'?rm.area+'㎡':'—'}</strong>
-        ${rm.width?`面宽约 ${rm.width}m · 进深约 ${rm.depth}m<br>`:''}
+        <strong>${rm.area!=='-'?'约 '+rm.area+'㎡':'—'}</strong>
+        ${rm.width?`面宽约 ${rm.width}m · 进深约 ${rm.depth}m（估算）<br>`:''}
         ${rm.note}
       </div>
     </div>`;
@@ -457,12 +461,12 @@ function renderZoom(region){
 
   const tbody = document.getElementById('regionTableBody');
   const rows = [
-    ['面积 (㎡)', p=>p.roomMetrics[region]?.area||'—'],
-    ['面宽 (m)', p=>p.roomMetrics[region]?.width?p.roomMetrics[region].width+'m':'—'],
-    ['进深 (m)', p=>p.roomMetrics[region]?.depth?p.roomMetrics[region].depth+'m':'—'],
+    ['面积 (㎡)', p=>p.roomMetrics[region]?.area?'约 '+p.roomMetrics[region].area+'㎡':'—'],
+    ['面宽 (m)', p=>p.roomMetrics[region]?.width?'约 '+p.roomMetrics[region].width+'m':'—'],
+    ['进深 (m)', p=>p.roomMetrics[region]?.depth?'约 '+p.roomMetrics[region].depth+'m':'—'],
     ['占套内比', p=>{
       const a = p.roomMetrics[region]?.area;
-      return a!=='-'&&a?((a/p.metrics['套内估算'])*100).toFixed(1)+'%':'—';
+      return a?('约 '+((a/p.metrics['套内估算'])*100).toFixed(1)+'%'):'—';
     }],
     ['户型说明', p=>p.roomMetrics[region]?.note||'—']
   ];
@@ -490,7 +494,7 @@ function renderBarChart(){
         ${PLANS.map((p,i)=>{
           const v = p.metrics[m.key];
           const pct = Math.min(100, (v/m.max)*100);
-          const display = m.fmt ? m.fmt(v) : v + m.unit;
+          const display = '约 ' + (m.fmt ? m.fmt(v) : v + m.unit);
           const short = pct < 22 ? 'short' : '';
           return `<div class="bar-track" title="${p.name}: ${display}">
             <div class="bar ${short}" style="width:0%;background:${p.color}" data-width="${pct.toFixed(1)}"><span>${display}</span></div>
@@ -508,16 +512,16 @@ function renderBarChart(){
 function renderOverallTable(){
   const rows = [
     ['建筑面积', p=>p.area+'㎡'],
-    ['套内估算', p=>p.metrics['套内估算']+'㎡'],
-    ['得房率', p=>(p.metrics['得房率']*100).toFixed(0)+'%'],
+    ['套内估算', p=>'约 '+p.metrics['套内估算']+'㎡'],
+    ['得房率', p=>'约 '+(p.metrics['得房率']*100).toFixed(0)+'%'],
     ['房间/卫生间', p=>p.rooms+'房'+p.bath+'卫'],
     ['大局除数 <small>建面÷(房+卫)</small>', p=>p.metrics['大局除数'].toFixed(1)],
-    ['红尺 <small>最大面宽视距</small>', p=>p.metrics['红尺(m)']+'m'],
-    ['蓝尺 <small>最大进深视距</small>', p=>p.metrics['蓝尺(m)']+'m'],
-    ['LDKB面积', p=>p.metrics['LDKB面积']+'㎡'],
-    ['三通率 <small>三通面积÷(建面×0.8)</small>', p=>(p.metrics['三通率']*100).toFixed(0)+'%'],
-    ['收纳估算', p=>p.metrics['收纳估算']+'㎡'],
-    ['收纳率 <small>收纳÷套内</small>', p=>(p.metrics['收纳率']*100).toFixed(1)+'%'],
+    ['红尺 <small>最大面宽视距</small>', p=>'约 '+p.metrics['红尺(m)']+'m'],
+    ['蓝尺 <small>最大进深视距</small>', p=>'约 '+p.metrics['蓝尺(m)']+'m'],
+    ['LDKB面积', p=>'约 '+p.metrics['LDKB面积']+'㎡'],
+    ['三通率 <small>三通面积÷(建面×0.8)</small>', p=>'约 '+(p.metrics['三通率']*100).toFixed(0)+'%'],
+    ['收纳估算', p=>'约 '+p.metrics['收纳估算']+'㎡'],
+    ['收纳率 <small>收纳÷套内</small>', p=>'约 '+(p.metrics['收纳率']*100).toFixed(1)+'%'],
     ['活力点位数', p=>p.metrics['活力点位']+'个'],
     ['采光面数', p=>p.metrics['采光面数']+'面'],
     ['南北通透', p=>p.metrics['南北通透']]
