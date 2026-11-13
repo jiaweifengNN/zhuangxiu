@@ -175,6 +175,40 @@ ul.tight li b{color:var(--text)}
 .trap-item p{font-size:13.5px;color:var(--muted)}
 .trap-item .from{font-size:11px;color:var(--purple);margin-top:6px}
 
+/* ---------- 去家务化 ---------- */
+:root{--qjh:#00d68f}
+.pill.qjh{background:rgba(0,214,143,.14);color:var(--qjh)}
+.qjh-hero{background:linear-gradient(110deg,rgba(0,214,143,.12),rgba(0,229,255,.08) 55%,rgba(168,121,255,.10));border:1px solid rgba(0,214,143,.28);border-radius:20px;padding:24px 26px;margin-bottom:24px;position:relative;overflow:hidden}
+.qjh-hero::after{content:"🤖";position:absolute;right:24px;top:14px;font-size:76px;opacity:.14;line-height:1}
+.qjh-hero h3{font-size:clamp(19px,2.6vw,27px);font-weight:900;margin-bottom:8px;letter-spacing:-.5px}
+.qjh-hero p{font-size:14.5px;color:var(--muted);max-width:900px}
+.qjh-hero .stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px}
+.qjh-hero .stats div{font-size:12px;color:var(--muted)}
+.qjh-hero .stats b{display:block;font-size:26px;font-weight:900;color:var(--qjh);line-height:1.2}
+.qjh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;margin-bottom:24px}
+.qjh-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:.22s}
+.qjh-card:hover{transform:translateY(-3px);border-color:rgba(0,214,143,.55)}
+.qjh-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--qjh),var(--buy))}
+.qjh-card .no{position:absolute;right:14px;top:10px;font-size:36px;font-weight:900;color:rgba(0,214,143,.18);line-height:1}
+.qjh-card .grp{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--qjh);background:rgba(0,214,143,.12);padding:3px 9px;border-radius:6px}
+.qjh-card h3{font-size:18px;font-weight:800;margin:10px 40px 6px 0;letter-spacing:-.3px}
+.qjh-card .why{font-size:13.5px;color:var(--muted)}
+.qjh-card .how{font-size:13.5px;color:#cfd6e3;background:var(--card2);border-left:3px solid var(--qjh);border-radius:0 10px 10px 0;padding:11px 13px;margin-top:12px}
+.qjh-card .when{display:inline-block;margin-top:12px;font-size:11px;font-weight:800;color:var(--reno);background:rgba(255,154,61,.13);padding:4px 9px;border-radius:6px}
+.qjh-card .links{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.qjh-card .links button,.qjh-flow button{border:1px solid var(--line);background:var(--card2);color:var(--muted);font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:8px;cursor:pointer;transition:.2s}
+.qjh-card .links button:hover,.qjh-flow button:hover{color:var(--qjh);border-color:var(--qjh)}
+.qjh-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.qjh-flow .grp{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.qjh-flow .grp h4{font-size:13px;font-weight:800;color:var(--reno);margin-bottom:10px;letter-spacing:.5px}
+.qjh-flow button{display:block;width:100%;text-align:left;margin-bottom:6px}
+.qjh-flow button b{color:var(--text);margin-right:6px}
+.topic.qjh{border-color:rgba(0,214,143,.22)}
+.topic.qjh h3{color:var(--qjh)}
+.qjh-block{background:rgba(0,214,143,.06);border-left:3px solid var(--qjh);border-radius:0 10px 10px 0;padding:11px 13px;margin-bottom:8px;font-size:13.5px;color:#cfd6e3}
+.qjh-block b{color:var(--qjh);display:block;margin-bottom:3px;font-size:13px}
+.step.flash .body{box-shadow:0 0 0 2px var(--qjh),0 0 26px rgba(0,214,143,.35)}
+
 /* ---------- 备注帖 ---------- */
 .note-input{display:grid;grid-template-columns:1fr 150px auto;gap:10px;margin-bottom:18px}
 @media(max-width:700px){.note-input{grid-template-columns:1fr}}
@@ -197,7 +231,7 @@ footer a{color:var(--buy)}
   nav,.filters,.note-input,.btn,.mark{display:none!important}
   body{background:#fff;color:#111}
   .step .content{display:block!important}
-  .card,.topic,.step .body{background:#fff;color:#111;border-color:#ddd}
+  .card,.topic,.step .body,.qjh-card,.qjh-hero,.qjh-flow .grp,.qjh-block{background:#fff!important;color:#111;border-color:#ddd}
   h1,h2,h3,p,td,th,li{color:#111!important}
 }
 </style>
@@ -220,6 +254,7 @@ footer a{color:var(--buy)}
   <a href="#policy">📡 政策雷达</a>
   <a href="#buy">🏠 买房流程</a>
   <a href="#reno">🔨 装修流程</a>
+  <a href="#qjh">🧹 去家务化</a>
   <a href="#before">⚡ 必须提前定</a>
   <a href="#topics">🔬 硬核细节</a>
   <a href="#traps">🚨 坑速查</a>
@@ -336,6 +371,45 @@ footer a{color:var(--buy)}
     <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill reno" id="renoStat">已完成 0 / 20</span><button class="btn" onclick="resetDone('reno')">重置进度</button></div>
   </div>
   <div class="timeline reno" id="renoTimeline"></div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 去家务化 ============ -->
+<section id="qjh">
+  <div class="sec-head">
+    <div><h2><span class="em">🧹</span>去家务化 · 围绕扫地机器人做设计</h2>
+    <p class="desc">来自 <b>设计想法备注帖 总结 #1（2026-11-13）</b>：不用费心伺候家电，靠硬装一次做到位。<b>十大设计要点</b>逐条给出「最晚在哪一步定」，并映射到装修 20 步——每步卡片里也加了「🧹 去家务化」注意点。</p></div>
+    <span class="pill qjh">总结 #1</span>
+  </div>
+
+  <div class="qjh-hero">
+    <h3>让房子替你干活，而不是让你伺候房子</h3>
+    <p>核心逻辑：<b>先定机器人怎么跑</b>（地面无阻、家具不卡、基站有水电）→ <b>再让家电代劳</b>（厨电、洗护、擦窗）→ <b>最后减少需要打扫的表面</b>（台面零物品、封闭柜门、少造型）。这三件事全部要在<b>水电交底之前</b>落到图纸上，事后补就是砸砖。</p>
+    <div class="stats">
+      <div><b>10</b>设计要点</div>
+      <div><b>20</b>装修步骤映射</div>
+      <div><b>20</b>步逐步注意点</div>
+      <div><b>8</b>条待定 / 口径冲突</div>
+    </div>
+  </div>
+
+  <div class="filters" id="qjhFilters"></div>
+  <div class="qjh-grid" id="qjhGrid"></div>
+
+  <div class="topic qjh">
+    <h3>🔗 映射到装修 20 步</h3>
+    <p class="lead">点任意一步，直接跳到该步骤并展开「🧹 去家务化」注意点。<b>顺序错了就是返工</b>——最密集的是 A 准备阶段（定方案）、B 隐蔽阶段（定水电）、C/D 面层安装阶段（兑现尺寸）。</p>
+    <div class="qjh-flow" id="qjhFlow"></div>
+  </div>
+
+  <div class="topic qjh">
+    <h3>⚠️ 待定与口径冲突（找设计师前拍板）</h3>
+    <p class="lead">下面这些是原文里两种说法并存、或与设计规范有张力的地方，<b>并列保留，不替你做决定</b>。</p>
+    <div class="table-scroll" style="max-height:none"><table id="qjhPending"><thead><tr><th>议题</th><th>两种说法 / 风险</th><th>状态</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="notice info" style="margin-bottom:0">🛒 <b>采购硬指标</b>：以后买任何家具（沙发、床、电视柜、边几、地毯）之前先量 <b>底部离地净高</b>——要么贴地封死，要么 ≥12cm 让机器人进得去；同时避开落地灯电源线、细腿凳、玩具筐这类「机器人杀手」。「精简生活、定期清理」不是硬装动作，是入住后的采购纪律。</div>
 </section>
 
 <hr class="sep">
@@ -494,7 +568,7 @@ footer a{color:var(--buy)}
   </div>
   <div class="note-input">
     <input id="noteText" placeholder="例如：客厅想要一整面书墙，但担心落灰和承重…">
-    <select id="noteCat"><option>布局与房间</option><option>风格与材质</option><option>收纳与柜子</option><option>智能家居</option><option>适老与儿童</option><option>家电与采购</option><option>预算与取舍</option><option>待问设计师</option></select>
+    <select id="noteCat"><option>布局与房间</option><option>风格与材质</option><option>收纳与柜子</option><option>智能家居</option><option>适老与儿童</option><option>家电与采购</option><option>预算与取舍</option><option>待问设计师</option><option>去家务化</option></select>
     <button class="btn primary" onclick="addNote()">＋ 记一条</button>
   </div>
   <div class="notice info">下面是<b>从项目已有资料回填</b>的想法（灰色左边框），不是新编的；亮紫色是你新加的。带「待定 / 待问」的条目建议找设计师前先拍板。</div>
@@ -502,7 +576,7 @@ footer a{color:var(--buy)}
 </section>
 
 <footer>
-  <p><b>从定金到入住 · 买房 + 装修全流程避坑手册</b>　|　湖畔大观 A² 约 98㎡ · 武汉 · 数据核实至 2026-11-12</p>
+  <p><b>从定金到入住 · 买房 + 装修全流程避坑手册</b>　|　湖畔大观 A² 约 98㎡ · 武汉 · 政策数据核实至 2026-11-12 · 去家务化总结 #1 更新于 2026-11-13</p>
   <p style="margin-top:8px">本页是决策辅助，<b>所有政策、利率、收费标准以签约当日官方文件、银行审批、开发商合同与物业公示为准</b>；涉及结构拆改、承重墙、燃气改动，必须走物业报建与原设计单位/有资质单位方案，本页不构成施工依据。</p>
   <div class="src">
     <b>主要依据</b><br>
@@ -788,7 +862,79 @@ const NOTE_SEEDS = [
   {c:'布局与房间',t:'看过 7.7㎡ 次卧「床下小宇宙」高架床方案（睡/学/藏/玩 四合一）；也看过「客厅魔变」打通相邻房间并入客厅。是否复制到湖畔待定，且必须先查剪力墙。',d:'项目资料回填',seed:true},
   {c:'智能家居',t:'全屋米家一次到位，并给后续扩展留接口（插座 / 网络预埋）。开关底盒要拉零线、加深底盒。',d:'项目资料回填',seed:true},
   {c:'家电与采购',t:'Shark L5 无线吸尘器（基站自动集尘、多一块电池、1600+ 可入）。基站需要预留常通电插座 + 墙面收纳位，水电阶段一起定点。',d:'项目资料回填',seed:true},
-  {c:'待问设计师',t:'湖畔 A² 承重墙 / 剪力墙分布（图上标注 *2# 无剪力墙、*5/11# 有剪力墙，按楼栋核实）、楼栋总层数、实测净尺寸与层高、梁高、下水立管、燃气表位、物业装修报建流程。',d:'项目资料回填',seed:true}
+  {c:'待问设计师',t:'湖畔 A² 承重墙 / 剪力墙分布（图上标注 *2# 无剪力墙、*5/11# 有剪力墙，按楼栋核实）、楼栋总层数、实测净尺寸与层高、梁高、下水立管、燃气表位、物业装修报建流程。',d:'项目资料回填',seed:true},
+  {c:'去家务化',t:'【总结 #1 · 2026-11-13】围绕扫地机器人做去家务化：家具要么全落地封底要么抬高 10cm、全屋通铺不做门槛/高低台/地轨、洗脸盆改墙排、窗帘离地抬高 10cm、基站预留电源+上下水；配洗碗机/直饮机/微蒸烤、洗烘+内衣裤机、擦窗机器人+智能开窗器；全挂衣柜、台面零物品+升降柜、取消开放格改玻璃门、吊顶少造型。原文与十大要点见「🧹 去家务化」专题和设计想法备注帖 09 区。',d:'2026-11-13 · 总结帖 #1',seed:true},
+  {c:'待问设计师',t:'【总结 #1 待定】① 家具「全落地封底」还是「抬高 10cm 支脚」全屋统一哪种？10cm 对最终机型够不够（建议按官方尺寸 +2cm）；② 全屋无门槛下卫生间止水坎怎么做（内置、完成面齐平的节点图）；③ 墙排假墙厚度/检修口/坡度；④ 基站放哪、排水怎么防返味。',d:'2026-11-13 · 待拍板',seed:true}
+];
+
+/* ==================== 去家务化（备注帖 总结 #1） ==================== */
+const QJH_GROUPS = ['全部','🤖 机器人适配','🧹 家电代劳','🏠 全屋细节'];
+
+const QJH_POINTS = [
+  {n:'01',g:'🤖 机器人适配',t:'家具二选一：全落地封底 或 抬高 10cm',why:'机器人不卡、底部不积灰',when:'平面方案 / 定制柜复尺',
+   how:'最忌<b>底部留 3–8cm 又没封死</b>的半吊子柜：进得去出不来、还扫不到。按最终机型机身高度 +2cm 余量定净高（建议 ≥12cm），全屋统一策略。沙发、床、电视柜、浴室柜、边几逐件过一遍。',steps:['r5','r16','r17']},
+  {n:'02',g:'🤖 机器人适配',t:'全屋通铺 · 不要门槛 / 高低台 / 地轨',why:'不绊机器人、不藏污纳垢',when:'平面方案 → 泥瓦',
+   how:'各房间完成面统一标高；取消过门石与凸出扣条，改同材质通铺 + <b>同高极窄收口条</b>；推拉门改吊轨；湿区止水坎<b>内置于结构楼板、完成面齐平</b>（无门槛 ≠ 不做止水，不违反防水要求）。',steps:['r5','r6','r12','r15']},
+  {n:'03',g:'🤖 机器人适配',t:'洗脸盆下水全部改墙排',why:'卫浴区畅通无阻、浴室柜下无死角',when:'水电前',
+   how:'需假墙 / 壁龛（约 10–15cm）、<b>检修口</b>、下水坡度与存水弯；与悬空浴室柜、壁挂马桶一并出大样图。贴完砖再改要砸墙砸砖。',steps:['r6','r9','r10','r16']},
+  {n:'04',g:'🤖 机器人适配',t:'窗帘离地抬高 10cm，不做落地款',why:'不挡感应视线、不留卫生死角',when:'吊顶 / 软装',
+   how:'轨道高度按<b>完成面标高反推</b>（不是按毛坯地面量）；电动窗帘盒预留电源与宽度（单轨 ≥15cm、双轨 ≥20–25cm）。注意与遮光、漏光、空调能耗的取舍，标待定。',steps:['r13','r17']},
+  {n:'05',g:'🤖 机器人适配',t:'扫地机基站专属位：电源 + 上下水',why:'自动补水排污，家电伺候人而不是人伺候家电',when:'水电前',
+   how:'位置优先阳台 / 卫生间干区 / 家政柜；<b>专用插座 + 给水 + 排水</b>（存水弯防返味、防溢、检修空间）；左右约 ≥0.5m、前方约 ≥1.5m 回充净空，最终按机型<b>官方安装图</b>。只留插座＝还得天天手动加水倒污水。',steps:['r5','r6','r10','r17','r18']},
+  {n:'06',g:'🧹 家电代劳',t:'厨电三件套：洗碗机 / 直饮机 / 微蒸烤一体机',why:'免手动洗碗、烧水、繁琐操作',when:'水电前 + 柜子复尺',
+   how:'提前拿<b>官方开孔图</b>定插座、给排水、散热缝；直饮机要进水与排水；「台面零物品」要求它们全部嵌入或入柜，所以柜子方案必须同时定。调料用原包装 + 升降柜，台面才空得下来。',steps:['r2','r10','r16','r17']},
+  {n:'07',g:'🧹 家电代劳',t:'洗护三件套：洗衣机 + 烘干机 + 内衣裤洗衣机',why:'分区洗护、洗完直接烘，不用晾晒',when:'水电前 + 柜子复尺',
+   how:'叠放要承重与固定件、三路独立插座与排水；取消晾衣架后要确认<b>烘干容量够四代宅</b>；阳台腾出来给基站或家政柜。位置涉及上下水，水电阶段必须定点。',steps:['r2','r5','r10','r16']},
+  {n:'08',g:'🧹 家电代劳',t:'擦窗机器人 + 智能开窗器',why:'免请人擦玻璃、雨天自动关窗',when:'吊顶 / 智能点位',
+   how:'窗边别做深窗台、厚重落地帘、固定护栏挡机器；开窗器需电源 / 零火线，并入米家<b>雨天自动关窗</b>联动；擦窗机留安全绳挂点与附近插座。',steps:['r6','r10','r13','r17']},
+  {n:'09',g:'🏠 全屋细节',t:'全挂式衣柜',why:'不叠衣、不换季、一目了然',when:'柜子方案',
+   how:'柜体进深 <b>≥600mm</b>、挂杆按长衣 / 短衣分区，少层板抽屉；老人常用挂杆高度要够得着；和 98㎡ 的收纳率一起算，别为了全挂把储物量砍掉。',steps:['r2','r5','r16']},
+  {n:'10',g:'🏠 全屋细节',t:'表面减法：台面零物品 + 玻璃门 + 少造型吊顶',why:'减少积灰面与整理量，从源头少家务',when:'柜子方案 / 吊顶 / 入住后',
+   how:'常用调料进<b>升降调料柜</b>、不常用进升降吊柜拉篮（承重与五金写死品牌型号）；取消开放格改玻璃柜门（柜内灯带电源预留）；吊顶不做雕花灯槽与多余布线；入住后少买、定期清理。',steps:['r5','r13','r16','r20']}
+];
+
+/* 装修 20 步各自的去家务化注意点（与 RENO_STEPS 按 id 对应，改这里不影响流程数据） */
+const QJH_BY_STEP = {
+  r1:['<b>拿原始资料时就为无门槛做准备</b>：记录各房间原始地面标高、层高与梁高，确认卫生间是否下沉式（决定墙排与同层排水的可行性）。','标出所有<b>下水立管、地漏、给水点、阳台给排水</b>——基站位和墙排改造全靠这些原始条件。','量入户门、推拉门、阳台门的<b>现有门槛与地轨高度</b>，写进验房问题清单。'],
+  r2:['把<b>「去家务化」列为一级需求</b>并单列预算：自动上下水基站、洗碗机、直饮机、微蒸烤、洗烘 + 内衣裤机、擦窗机、开窗器、全挂五金、玻璃门、升降五金、墙排改造、全屋通铺找平。','四代宅加成：自动上下水让老人不用搬水箱，无门槛防绊倒——<b>去家务化和适老化是同一套动作</b>，别分开做两遍预算。'],
+  r3:['量房时画一张<b>「机器人通行图」</b>：把所有会阻断的门槛、地轨、地毯、落地家具、地面明线标出来。','实测净高、门洞、立管、梁高；确认全屋地面完成面能否<b>齐平</b>（不同材质厚度差要在找平阶段消化）。'],
+  r4:['把去家务化条款写进<b>设计任务书</b>：全屋无门槛、家具离地策略、墙排、基站水电、全挂衣柜、玻璃门、少造型吊顶。','确认施工方真做过墙排、同层排水、全屋通铺找平；报价里<b>逐项列出</b>这些工艺，别让它变成后期增项。'],
+  r5:['<b>最关键的一步</b>：在平面上画出机器人动线与基站位（靠近上下水、不被门扇 / 柜门挡、留回充净空），并定家具离地策略二选一、全屋统一。','取消所有门槛、高低台、地轨；定厨电与洗护三件套的嵌入位置、全挂衣柜进深、取消开放格。','这一步和「必须提前定」清单一起过：家具尺寸 → 柜子方案 → 点位，顺序不能反。'],
+  r6:['出<b>零门槛节点大样图</b>：卫生间 / 阳台止水坎内置于结构楼板、完成面齐平；推拉门吊轨；材质交接同高收口条。','出墙排假墙、检修口、下水坡度、柜体底部节点（封底 or 支脚净高）、基站给排水与插座大样图。','施工图与报价逐项写死，注明「未列明项目属漏项由施工方承担」。'],
+  r7:['把<b>「全屋完成面齐平」「柜底净高 ≥12cm（或全封底）」「墙排检修口」「基站水电点位」</b>写进施工说明与验收标准。','玻璃门、升降五金、全挂五金写明品牌型号——杂牌五金是去家务化翻车重灾区，坏了比做家务还累。'],
+  r8:['粉笔标出<b>基站位、所有柜体底部标高线、墙排假墙线、无门槛区域、机器人通行路径</b>，逐房拍照留档。','现场验证基站前方回充净空与门扇开启、柜门开启互不干涉；所有参与方在点位图签字。'],
+  r9:['墙排需要砌假墙 / 壁龛，<b>同步预留检修口</b>；拆掉原门槛、地台的基层并把地面找平到统一标高。','不能为做墙排去拆承重墙；新墙底部与完成面的关系要在这一步定死。'],
+  r10:['<b>基站专用插座 + 给水 + 排水</b>：排水要有存水弯防返味、防溢，管径坡度按机型官方图；插座别被机身挡住。','洗脸盆墙排下水（墙内坡度、检修口、存水弯）；厨电 / 洗护 / 直饮机 / 擦窗机 / 开窗器 / 电动窗帘的插座与网络点位一次到位。','地面<b>不留明线</b>（充电线、网线），避免缠绕机器人；取消地轨后吊轨电源同步预留。'],
+  r11:['无门槛后挡水更依赖<b>内置止水坎 + 湿区找坡 + 线性地漏 / 同层排水</b>，闭水试验必须做（溢水风险更高）。','若基站放阳台并接上下水，<b>阳台也要做防水 + 地漏</b>；墙排假墙内侧防水返高别漏。'],
+  r12:['<b>全屋通铺兑现的一步</b>：统一完成面标高，各房间 / 过道 / 阳台齐平，误差控制在毫米级。','取消过门石与凸出扣条，用同材质通铺 + 同高极窄收口条；地漏选隐形 / 线性与砖面齐平；瓷砖留缝做美缝不藏污。','找坡只做湿区，干区必须平；地板与砖交接用极窄同高条，凸起会绊住机器人。'],
+  r13:['吊顶<b>少造型、不做雕花与积灰灯槽</b>（但检修口不能省）；窗帘盒预留电源与轨道宽度，按完成面反推抬高 10cm 的轨道高度。','窗边别做深窗台与固定护栏挡擦窗机；智能开窗器电源 / 零火线、玻璃柜内灯带电源同步预留。'],
+  r14:['柜后墙面找平——<b>全落地封底柜才贴得严</b>；改玻璃门后柜内可见，内部墙面也要平整同色。','少用凹凸造型涂料 / 文化砖（积灰）；墙面、柜体、踢脚线收口缝宽统一。'],
+  r15:['装门确认<b>门扇下沿离地约 8–12mm</b>：不刮机器人也不漏风；推拉门改吊轨 / 隐藏轨，取消地面轨道。','踢脚线选与墙齐平或极薄款（凸出踢脚线积灰、沿边清扫打折）；地板通铺不留扣条或用同高扣条。'],
+  r16:['<b>兑现家具离地策略</b>：所有柜体要么落地封底、要么抬高 ≥10cm（建议 ≥12cm），按最终机型实测复核；浴室柜悬空配合墙排。','全挂衣柜进深 ≥600mm、挂杆分区少层板；升降调料柜 / 吊柜拉篮的承重与五金按型号装；<b>取消开放格改玻璃柜门</b>并留柜内灯带电源；柜门底部离缝一致。'],
+  r17:['基站安装与调试：<b>自动补水、排污、防溢、防返味、自清洁</b>全跑一遍，建禁区 / 虚拟墙。','洗碗机、直饮机、微蒸烤、洗烘、内衣裤机、擦窗机、开窗器逐台调试，米家雨天关窗与扫地 / 洗烘联动配好。','沙发、床、餐桌现场核实支脚或封底；<b>拿机器人实跑一遍</b>，地毯、落地灯线、玩具筐是通行杀手；窗帘离地 10cm 复核遮光。'],
+  r18:['<b>拿扫地机器人全屋实跑一遍</b>作为去家务化专项验收：记录卡住点、断点、禁区，写进问题清单再整改。','复核完成面高差、门槛、柜底净高、基站自动上下水；玻璃门 / 升降五金 / 全挂五金开合测试；收齐基站与家电说明书、保修单再付尾款。'],
+  r19:['全挂衣柜、玻璃门柜、大量板材叠加后<b>甲醛负荷更高</b>，柜门抽屉全开做 CMA 检测。','基站附近保持通风干燥，防止潮湿发霉与污水箱异味。'],
+  r20:['建立<b>「机器人地图 / 禁区 / 耗材台账」</b>（集尘袋、滤网、滚刷、清洁液）与设备质保台账。','把<b>「底部离地净高」变成采购硬指标</b>：以后买任何家具先量；坚持少买、定期清理，从源头减少家务。']
+};
+
+const QJH_RISKS = [
+  {l:'fatal',t:'基站只留插座，没留上下水',d:'自动补水排污做不成，得天天手动加水倒污水箱——正好违背「不伺候家电」。水电前必须定点。'},
+  {l:'fatal',t:'把「无门槛」理解成不做止水坎',d:'卫生间溢水 / 返潮。止水坎要内置于结构楼板、完成面齐平，配线性地漏或同层排水，并正常做闭水试验。'},
+  {l:'high',t:'家具底部留 3–8cm 又不封死',d:'机器人卡住 + 积灰，两头不讨好。要么全落地封底，要么抬高 ≥10cm（建议按机型实测 ≥12cm）。'},
+  {l:'high',t:'通铺了但各房间完成面有高差 / 用了凸出扣条',d:'机器人过不去、扣条边积灰。泥瓦阶段统一标高，交接用同高极窄收口条。'},
+  {l:'high',t:'墙排下水没留检修口',d:'堵了要砸假墙。施工图阶段出大样图并留检修口。'},
+  {l:'mid',t:'开放格改玻璃门却没考虑柜内灯带电源与指纹',d:'柜内黑、玻璃常擦，反而增加家务。柜子方案阶段一次定。'}
+];
+
+const QJH_PENDING = [
+  {t:'沙发与家具落地策略',a:'开头问「沙发要买支脚的，不能买全落地的？」；正文写「要么全落地要么抬高 10 公分」。两者都去家务化但方向相反：封底＝不让它进去也不积灰；支脚＝让它进去扫。真正要避免的是底部半悬空柜。',s:'待定：全屋统一哪种，或分区域混用'},
+  {t:'抬高 10cm 够不够',a:'带激光雷达 / 自动集尘的机型机身常在 10–11cm，地毯、落地灯线、玩具筐仍会卡。',s:'待核实：按机型官方尺寸 +2cm 余量（建议 ≥12cm）'},
+  {t:'不要做门槛 vs 防水止水坎',a:'规范要求卫生间门槛做止水坎。无门槛 ≠ 不挡水，做法是止水坎内置于结构楼板、完成面齐平 + 同层排水 / 线性地漏。',s:'待设计师出节点图'},
+  {t:'不要做落地柜？',a:'与正文「全落地」并存，推测是指不做底部半悬空、又卡又积灰的柜子。',s:'待定'},
+  {t:'墙排下水',a:'需假墙 / 壁龛、检修口、下水坡度、存水弯，且与悬空浴室柜配套；贴砖后改不了。',s:'水电前定'},
+  {t:'窗帘抬高 10cm',a:'与遮光、漏光、空调能耗有取舍；电动窗帘盒还要预留电源与轨道宽度。',s:'待定'},
+  {t:'玻璃门替代开放格',a:'玻璃门易留指纹、柜内灯带要布电，与「不做多余布线」有张力。',s:'待定'},
+  {t:'基站上下水',a:'排水要存水弯防返味、防溢；位置优先阳台 / 卫生间干区 / 家政柜；左右约 ≥0.5m、前方约 ≥1.5m 回充净空为经验值。',s:'水电前定，按官方安装图'}
 ];
 
 /* ==================== 工具 ==================== */
@@ -890,6 +1036,9 @@ function renderTimeline(which){
     const isDone = done.includes(s.id);
     const traps = s.traps.map(t => '<div class="trap '+t.l+'"><b>🚨 '+esc(t.t)+'　<span class="pill '+t.l+'">'+LV[t.l]+'</span></b>'+t.d+'</div>').join('');
     const checks = s.checks.map(c => '<div class="checkline">'+c+'</div>').join('');
+    const qjh = (which === 'reno' && QJH_BY_STEP[s.id]) ? QJH_BY_STEP[s.id] : null;
+    const qjhHTML = qjh ? '<div class="block"><h4>🧹 去家务化 · 这一步要注意</h4>' + qjh.map(x => '<div class="qjh-block">'+x+'</div>').join('') + '</div>' : '';
+    const qjhPill = qjh ? '<span class="pill qjh">🧹 去家务化</span>' : '';
     const kv = which === 'buy'
       ? '<div class="block"><h4>这一步 / 要带什么 / 花多少钱</h4><div class="kv"><span class="k">时机</span><span>'+esc(s.when)+'</span><span class="k">费用</span><span>'+esc(s.pay)+'</span><span class="k">要做</span><span>'+s.do+'</span><span class="k">材料</span><span>'+esc(s.docs)+'</span></div></div>'
       : '<div class="block"><h4>依赖关系 / 产出物</h4><div class="kv"><span class="k">前置依赖</span><span>'+esc(s.pre)+'</span><span class="k">本步产出</span><span>'+esc(s.out)+'</span><span class="k">要做</span><span>'+s.do+'</span></div></div>';
@@ -898,9 +1047,11 @@ function renderTimeline(which){
       + '<div class="body"><div class="top" onclick="toggleStep(\''+s.id+'\')">'
       + '<h3>'+esc(s.title)+'</h3><div class="meta"><span class="phase-tag">'+esc(s.phase)+'</span>'
       + '<span class="pill '+(which==='buy'?'buy':'reno')+'">'+s.traps.length+' 个坑</span>'
+      + qjhPill
       + '<label class="mark" onclick="event.stopPropagation()"><input type="checkbox" '+(isDone?'checked':'')+' onchange="markDone(\''+which+'\',\''+s.id+'\',this.checked)"> 已完成</label>'
       + '<span class="chev">›</span></div></div>'
       + '<div class="content">'+kv
+      + qjhHTML
       + '<div class="block"><h4>⚠️ 必须避开的坑</h4>'+traps+'</div>'
       + '<div class="block"><h4>✅ 验收 / 带走的东西</h4>'+checks+'</div>'
       + '</div></div></div>';
@@ -944,6 +1095,7 @@ function allTraps(){
   const a = [];
   BUY_STEPS.forEach(s => s.traps.forEach(t => a.push({...t, from:'买房 · ' + s.title, phase:'买房'})));
   RENO_STEPS.forEach(s => s.traps.forEach(t => a.push({...t, from:'装修 · ' + s.title, phase:'装修'})));
+  QJH_RISKS.forEach(t => a.push({...t, from:'去家务化 · 总结 #1', phase:'去家务化'}));
   const order = {fatal:0, high:1, mid:2};
   return a.sort((x,y) => order[x.l] - order[y.l]);
 }
@@ -951,7 +1103,7 @@ function renderTraps(){
   const q = ($('#trapSearch').value || '').trim().toLowerCase();
   const all = allTraps();
   const fatal = all.filter(t => t.l === 'fatal').length;
-  $('#trapFilters').innerHTML = ['全部','致命 '+fatal,'买房','装修'].map(f =>
+  $('#trapFilters').innerHTML = ['全部','致命 '+fatal,'买房','装修','去家务化'].map(f =>
     '<button class="'+(trapFilter===f.split(' ')[0]?'on':'')+'" onclick="setTrap(\''+f.split(' ')[0]+'\')">'+f+'</button>'
   ).join('');
   const list = all.filter(t => {
@@ -966,6 +1118,43 @@ function renderTraps(){
 }
 function setTrap(f){ trapFilter = f; renderTraps(); }
 $('#trapSearch').addEventListener('input', renderTraps);
+
+/* ==================== 去家务化 ==================== */
+let qjhGroup = '全部';
+const STEP_MAP = Object.fromEntries(RENO_STEPS.map((s,i) => [s.id, {n:i+1, t:s.title}]));
+function setQjhGroup(g){ qjhGroup = g; renderQjh(); }
+function renderQjh(){
+  $('#qjhFilters').innerHTML = QJH_GROUPS.map(g =>
+    '<button class="'+(qjhGroup===g?'on':'')+'" onclick="setQjhGroup(\''+g+'\')">'+esc(g)+'</button>'
+  ).join('');
+  $('#qjhGrid').innerHTML = QJH_POINTS.filter(p => qjhGroup === '全部' || p.g === qjhGroup).map(p =>
+      '<div class="qjh-card"><span class="no">'+p.n+'</span>'
+    + '<span class="grp">'+esc(p.g)+'</span>'
+    + '<h3>'+esc(p.t)+'</h3>'
+    + '<div class="why">💡 '+esc(p.why)+'</div>'
+    + '<div class="how">'+p.how+'</div>'
+    + '<span class="when">⏰ 最晚：'+esc(p.when)+'</span>'
+    + '<div class="links">'+p.steps.map(id =>
+        '<button onclick="gotoStep(\''+id+'\')">→ '+String(STEP_MAP[id].n).padStart(2,'0')+' '+esc(STEP_MAP[id].t)+'</button>'
+      ).join('')+'</div></div>'
+  ).join('');
+  const phases = [...new Set(RENO_STEPS.map(s => s.phase))];
+  $('#qjhFlow').innerHTML = phases.map(ph =>
+    '<div class="grp"><h4>'+esc(ph)+'</h4>' + RENO_STEPS.filter(s => s.phase === ph).map(s =>
+      '<button onclick="gotoStep(\''+s.id+'\')"><b>'+String(STEP_MAP[s.id].n).padStart(2,'0')+'</b>'+esc(s.title)+'</button>'
+    ).join('') + '</div>'
+  ).join('');
+  $('#qjhPending tbody').innerHTML = QJH_PENDING.map(p =>
+    '<tr><td><b>'+esc(p.t)+'</b></td><td>'+esc(p.a)+'</td><td><span class="pill high">'+esc(p.s)+'</span></td></tr>'
+  ).join('');
+}
+function gotoStep(id){
+  const el = document.getElementById('step-'+id);
+  if(!el) return;
+  el.classList.add('open','flash');
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  setTimeout(() => el.classList.remove('flash'), 1800);
+}
 
 /* ==================== 备注帖 ==================== */
 function getNotes(){ return LS.get('mxz_notes', []); }
@@ -999,6 +1188,7 @@ function exportNotes(){
 /* ==================== 导航 / 初始化 ==================== */
 renderTimeline('buy');
 renderTimeline('reno');
+renderQjh();
 renderPre();
 renderTraps();
 renderNotes();
