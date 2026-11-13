@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从定金到入住 · 买房 + 装修全流程避坑手册</title>
+<style>
+:root{
+  --bg:#0c0e15; --card:#161922; --card2:#1e2230; --card3:#242938;
+  --text:#f2f4f9; --muted:#98a2b6; --line:rgba(255,255,255,.09);
+  --buy:#00e5ff; --reno:#ff9a3d; --purple:#a879ff; --pink:#ff4d8d;
+  --danger:#ff4757; --warn:#ffc93c; --good:#00d68f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--buy);text-decoration:none}
+button,input,select,textarea{font-family:inherit}
+
+/* ---------- Header ---------- */
+header{text-align:center;padding:64px 20px 44px;background:radial-gradient(ellipse at 50% 0%,#1b2240 0%,#0c0e15 70%);position:relative;overflow:hidden}
+header::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--buy),var(--purple),var(--reno),var(--pink))}
+header::after{content:"";position:absolute;width:600px;height:600px;left:50%;top:-420px;transform:translateX(-50%);background:radial-gradient(circle,rgba(0,229,255,.13),transparent 65%);pointer-events:none}
+h1{font-size:clamp(30px,5.6vw,62px);font-weight:900;letter-spacing:-2px;line-height:1.15;margin-bottom:14px;background:linear-gradient(100deg,var(--buy),var(--purple) 45%,var(--reno));-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative}
+.sub{font-size:clamp(15px,2.2vw,20px);color:var(--muted);max-width:820px;margin:0 auto;position:relative}
+.badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px;position:relative}
+.badge{font-size:13px;padding:7px 16px;border-radius:999px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+.badge b{color:var(--text)}
+.badge.hot{border-color:rgba(255,201,60,.4);color:var(--warn)}
+
+/* ---------- Nav ---------- */
+nav{position:sticky;top:0;z-index:50;background:rgba(12,14,21,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .inner{max-width:1400px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:8px 16px;scrollbar-width:none}
+nav .inner::-webkit-scrollbar{display:none}
+nav a{white-space:nowrap;font-size:14px;font-weight:600;color:var(--muted);padding:9px 14px;border-radius:10px;transition:.2s}
+nav a:hover{background:var(--card2);color:var(--text)}
+nav a.active{background:rgba(0,229,255,.12);color:var(--buy)}
+#progress{height:3px;background:linear-gradient(90deg,var(--buy),var(--reno));width:0;transition:width .25s;position:absolute;bottom:-1px;left:0}
+
+section{max-width:1400px;margin:0 auto;padding:52px 20px;scroll-margin-top:64px}
+h2{font-size:clamp(24px,3.6vw,38px);font-weight:900;letter-spacing:-1px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h2 .em{font-size:.9em}
+.desc{color:var(--muted);font-size:15px;margin-bottom:26px;max-width:1000px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.sec-head .desc{margin-bottom:0}
+hr.sep{border:0;border-top:1px solid var(--line);margin:0}
+
+/* ---------- 通用卡片 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:6px;letter-spacing:.3px}
+.pill.buy{background:rgba(0,229,255,.14);color:var(--buy)}
+.pill.reno{background:rgba(255,154,61,.14);color:var(--reno)}
+.pill.fatal{background:rgba(255,71,87,.16);color:var(--danger)}
+.pill.high{background:rgba(255,201,60,.14);color:var(--warn)}
+.pill.mid{background:rgba(168,121,255,.14);color:var(--purple)}
+.pill.ok{background:rgba(0,214,143,.14);color:var(--good)}
+small{color:var(--muted);font-size:12px;font-weight:400}
+.mono{font-variant-numeric:tabular-nums}
+
+/* ---------- 计算器 ---------- */
+.calc-wrap{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.calc-wrap{grid-template-columns:1fr}}
+.form-row{margin-bottom:16px}
+.form-row label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:7px}
+.form-row label b{color:var(--text)}
+.form-row input,.form-row select,.form-row textarea{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);padding:11px 13px;border-radius:10px;font-size:15px;outline:none;transition:.2s}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--buy);box-shadow:0 0 0 3px rgba(0,229,255,.1)}
+.form-row .hint{font-size:11px;color:var(--muted);margin-top:5px;display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rate-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.rate-presets button{font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card3);color:var(--muted);cursor:pointer}
+.rate-presets button:hover{color:var(--text);border-color:var(--buy)}
+.money-card{background:linear-gradient(145deg,#1a2036,#161922);border:1px solid rgba(0,229,255,.18);border-radius:18px;padding:20px}
+.money-card .big{font-size:clamp(30px,4.4vw,46px);font-weight:900;letter-spacing:-1.5px;line-height:1.1;color:var(--buy)}
+.money-card .lbl{font-size:13px;color:var(--muted);margin-bottom:6px}
+.money-card.hero{grid-column:1/-1;background:linear-gradient(120deg,#12283a,#1d1830);border-color:rgba(168,121,255,.25)}
+.money-card.hero .big{color:#fff;font-size:clamp(34px,5vw,56px)}
+.money-card.hero .big span{font-size:.45em;color:var(--muted);font-weight:600}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;background:var(--card2);position:sticky;top:0}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+td .v{font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+td .zero{color:var(--good);font-weight:700}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;max-height:520px;overflow-y:auto}
+.notice{background:rgba(255,201,60,.07);border:1px solid rgba(255,201,60,.25);border-left:4px solid var(--warn);border-radius:12px;padding:16px 18px;font-size:14px;color:#e8ddc4;margin:18px 0}
+.notice b{color:var(--warn)}
+.notice.info{background:rgba(0,229,255,.06);border-color:rgba(0,229,255,.22);border-left-color:var(--buy);color:#cfe6ee}
+.notice.info b{color:var(--buy)}
+.notice.danger{background:rgba(255,71,87,.07);border-color:rgba(255,71,87,.25);border-left-color:var(--danger);color:#f0d3d6}
+.notice.danger b{color:var(--danger)}
+
+/* ---------- 政策雷达 ---------- */
+.policy{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.policy .p{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;position:relative}
+.policy .p h4{font-size:15px;margin-bottom:7px;padding-right:70px}
+.policy .p .flag{position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;padding:3px 7px;border-radius:5px}
+.policy .p p{font-size:13px;color:var(--muted)}
+.flag.v{background:rgba(0,214,143,.14);color:var(--good)}
+.flag.c{background:rgba(255,201,60,.14);color:var(--warn)}
+.flag.w{background:rgba(168,121,255,.14);color:var(--purple)}
+
+/* ---------- 筛选按钮 ---------- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filters button,.btn{border:1px solid var(--line);background:var(--card2);color:var(--muted);padding:9px 15px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.filters button:hover,.btn:hover{color:var(--text);border-color:var(--buy)}
+.filters button.on{background:var(--buy);color:#04121a;border-color:var(--buy)}
+.btn.primary{background:linear-gradient(100deg,var(--buy),#52b9ff);color:#04121a;border:0}
+.btn.orange{background:linear-gradient(100deg,var(--reno),#ffc26b);color:#241304;border:0}
+.btn.red{background:rgba(255,71,87,.14);color:var(--danger);border-color:rgba(255,71,87,.3)}
+.search{width:100%;max-width:360px;background:var(--card2);border:1px solid var(--line);color:var(--text);padding:10px 14px;border-radius:999px;font-size:14px;outline:none}
+.search:focus{border-color:var(--buy)}
+
+/* ---------- 时间轴 ---------- */
+.timeline{position:relative;padding-left:52px}
+.timeline::before{content:"";position:absolute;left:19px;top:14px;bottom:14px;width:2px;background:linear-gradient(180deg,var(--buy),var(--purple),var(--reno))}
+.timeline.reno::before{background:linear-gradient(180deg,var(--reno),var(--pink))}
+.step{position:relative;margin-bottom:18px}
+.step .dot{position:absolute;left:-52px;top:18px;width:40px;height:40px;border-radius:12px;background:var(--card2);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--muted);z-index:2;transition:.2s}
+.step.done .dot{background:var(--good);border-color:var(--good);color:#04121a}
+.step .dot .tick{display:none}
+.step.done .dot .tick{display:block}
+.step.done .dot .num{display:none}
+.step .body{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.2s}
+.step:hover .body{border-color:rgba(255,255,255,.18)}
+.step.done .body{opacity:.72}
+.step .top{display:flex;align-items:flex-start;gap:12px;padding:18px 20px;cursor:pointer;flex-wrap:wrap}
+.step .top h3{font-size:19px;font-weight:800;flex:1;min-width:200px;letter-spacing:-.3px}
+.step .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.step .chev{color:var(--muted);font-size:18px;transition:transform .25s}
+.step.open .chev{transform:rotate(90deg)}
+.step .content{display:none;padding:0 20px 20px;border-top:1px solid var(--line)}
+.step.open .content{display:block}
+.step .content .block{margin-top:18px}
+.step .content .block h4{font-size:12px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:9px;font-weight:800}
+.step .content p{font-size:14px;color:#d9dee9}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:6px 12px;font-size:14px}
+.kv .k{color:var(--muted);font-weight:700}
+.trap{background:rgba(255,71,87,.06);border-left:3px solid var(--danger);border-radius:0 10px 10px 0;padding:10px 13px;margin-bottom:8px;font-size:13.5px}
+.trap b{color:#ff8a94;display:block;margin-bottom:2px;font-size:13.5px}
+.trap.high{background:rgba(255,201,60,.055);border-left-color:var(--warn)}
+.trap.high b{color:var(--warn)}
+.trap.mid{background:rgba(168,121,255,.055);border-left-color:var(--purple)}
+.trap.mid b{color:var(--purple)}
+.checkline{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:#cfd6e3;margin-bottom:6px}
+.checkline::before{content:"✓";color:var(--good);font-weight:900;flex:none}
+.mark{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);cursor:pointer;padding:5px 10px;border:1px solid var(--line);border-radius:8px;user-select:none}
+.mark:hover{color:var(--good);border-color:var(--good)}
+.mark input{accent-color:var(--good)}
+.phase-tag{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--purple);background:rgba(168,121,255,.12);padding:3px 9px;border-radius:6px}
+
+/* ---------- 专题 ---------- */
+.topic{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
+.topic h3{font-size:22px;font-weight:800;margin-bottom:6px;display:flex;gap:10px;align-items:center}
+.topic .lead{color:var(--muted);font-size:14px;margin-bottom:18px}
+.numgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.num{background:var(--card2);border-radius:12px;padding:14px;border:1px solid var(--line)}
+.num .n{font-size:24px;font-weight:900;color:var(--buy);font-variant-numeric:tabular-nums}
+.topic.reno .num .n{color:var(--reno)}
+.num .t{font-size:13px;font-weight:700;margin-bottom:3px}
+.num .d{font-size:12px;color:var(--muted)}
+ul.tight{padding-left:20px;font-size:14px;color:#d9dee9}
+ul.tight li{margin-bottom:6px}
+ul.tight li b{color:var(--text)}
+
+/* ---------- 坑速查 ---------- */
+.trap-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:grid;grid-template-columns:80px 1fr;gap:14px;align-items:start}
+@media(max-width:620px){.trap-item{grid-template-columns:1fr;gap:8px}}
+.trap-item .lv{font-size:11px;font-weight:800;padding:4px 8px;border-radius:6px;text-align:center}
+.trap-item h4{font-size:15px;font-weight:800;margin-bottom:3px}
+.trap-item p{font-size:13.5px;color:var(--muted)}
+.trap-item .from{font-size:11px;color:var(--purple);margin-top:6px}
+
+/* ---------- 备注帖 ---------- */
+.note-input{display:grid;grid-template-columns:1fr 150px auto;gap:10px;margin-bottom:18px}
+@media(max-width:700px){.note-input{grid-template-columns:1fr}}
+.note-input input,.note-input select{background:var(--card2);border:1px solid var(--line);color:var(--text);padding:12px 14px;border-radius:10px;font-size:14px;outline:none}
+.note-input input:focus{border-color:var(--purple)}
+.note{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--purple);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.note .txt{flex:1;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+.note .txt .cat{font-size:11px;color:var(--purple);font-weight:800;display:block;margin-bottom:4px}
+.note .txt .date{font-size:11px;color:var(--muted);margin-top:6px;display:block}
+.note .del{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.note .del:hover{color:var(--danger)}
+.note.seed{opacity:.9;border-left-color:var(--muted)}
+
+footer{text-align:center;padding:44px 20px 60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
+footer b{color:var(--text)}
+footer a{color:var(--buy)}
+.src{font-size:12px;line-height:1.9;max-width:1000px;margin:14px auto 0;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+
+@media print{
+  nav,.filters,.note-input,.btn,.mark{display:none!important}
+  body{background:#fff;color:#111}
+  .step .content{display:block!important}
+  .card,.topic,.step .body{background:#fff;color:#111;border-color:#ddd}
+  h1,h2,h3,p,td,th,li{color:#111!important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>从定金到入住</h1>
+  <p class="sub">湖畔大观 · 毛坯交付 · 买房 + 装修全流程避坑手册<br>每一步要干什么、要交多少钱、哪些坑必须绕开</p>
+  <div class="badges">
+    <span class="badge">📍 <b>武汉</b></span>
+    <span class="badge">🏠 <b>新房 / 毛坯</b></span>
+    <span class="badge">📐 <b>约 98㎡ 三房两卫</b></span>
+    <span class="badge hot">⚠️ 政策核实至 <b>2026-11-12</b></span>
+  </div>
+</header>
+
+<nav><div class="inner" id="navInner">
+  <a href="#calc">💰 费用计算器</a>
+  <a href="#policy">📡 政策雷达</a>
+  <a href="#buy">🏠 买房流程</a>
+  <a href="#reno">🔨 装修流程</a>
+  <a href="#before">⚡ 必须提前定</a>
+  <a href="#topics">🔬 硬核细节</a>
+  <a href="#traps">🚨 坑速查</a>
+  <a href="#notes">📌 备注帖</a>
+  <div id="progress"></div>
+</div></nav>
+
+<!-- ============ 费用计算器 ============ -->
+<section id="calc">
+  <div class="sec-head">
+    <div><h2><span class="em">💰</span>买房到底要准备多少钱</h2>
+    <p class="desc">输入合同总价，实时算首付、月供、契税、维修基金和「落地现金」。所有税率依据见下方明细表，<b>计税基数是合同成交价，不是挂牌价</b>。</p></div>
+    <button class="btn primary" onclick="window.print()">🖨 打印 / 存 PDF</button>
+  </div>
+
+  <div class="calc-wrap">
+    <div class="card">
+      <div class="form-row">
+        <label>房屋 <b>成交总价</b>（万元）</label>
+        <input type="number" id="f_price" value="150" min="1" step="1" class="mono">
+        <span class="hint">以《商品房买卖合同》网签总价为准。留空前请先向售楼部确认备案价 / 实际成交价。</span>
+      </div>
+      <div class="two">
+        <div class="form-row"><label>建筑面积（㎡）</label><input type="number" id="f_area" value="98" min="1" step="0.1" class="mono"></div>
+        <div class="form-row"><label>首付比例（%）</label><input type="number" id="f_down" value="20" min="10" max="100" step="1" class="mono"></div>
+      </div>
+      <div class="form-row"><label>家庭住房套数（决定契税）</label>
+        <select id="f_suite"><option value="first">家庭唯一住房（首套）</option><option value="second">家庭第二套</option><option value="third">第三套及以上</option></select>
+      </div>
+      <div class="form-row"><label>楼栋层数（决定维修基金单价）</label>
+        <select id="f_floor"><option value="73">有电梯 15 层及以上 → 73 元/㎡</option><option value="61">有电梯 14 层及以下 → 61 元/㎡</option><option value="55">无电梯框架 → 55 元/㎡</option><option value="49">砖混 → 49 元/㎡</option></select>
+        <span class="hint">湖畔 A² 具体层数未在户型图上标注，签约前向售楼部确认。</span>
+      </div>
+      <div class="two">
+        <div class="form-row"><label>贷款年限（年）</label><input type="number" id="f_years" value="30" min="1" max="40" step="1" class="mono"></div>
+        <div class="form-row"><label>年利率（%）</label><input type="number" id="f_rate" value="3.05" min="0.1" max="20" step="0.01" class="mono"></div>
+      </div>
+      <div class="rate-presets">
+        <button data-r="3.05">商贷首套 3.05%</button>
+        <button data-r="3.225">商贷二套 3.225%</button>
+        <button data-r="2.6">公积金首套 2.6%</button>
+        <button data-r="3.075">公积金二套 3.075%</button>
+      </div>
+      <div class="form-row" style="margin-top:16px"><label>其他现金支出（元）</label>
+        <input type="number" id="f_other" value="8000" min="0" step="500" class="mono">
+        <span class="hint">物业费预缴、装修押金、垃圾清运费、产权代办等，按物业公示填。</span>
+      </div>
+      <div class="form-row"><label>家庭月收入（元，用于压力测试，可留空）</label>
+        <input type="number" id="f_income" value="" min="0" step="1000" placeholder="例如 20000" class="mono">
+      </div>
+    </div>
+
+    <div>
+      <div class="kpi-row" id="kpis"></div>
+      <div class="money-card hero" style="padding:20px 22px;margin-bottom:18px">
+        <div class="lbl">签约到拿钥匙，需要一次性拿出的现金 ≈</div>
+        <div class="big" id="heroCash">—</div>
+        <small id="heroBreak"></small>
+      </div>
+      <div class="notice info" id="stress"></div>
+      <div class="table-scroll" style="max-height:none">
+        <table id="feeTable"><thead><tr><th>费用项</th><th>金额</th><th>什么时候交 / 交给谁</th><th>依据 / 坑</th></tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+  </div>
+  <div class="notice">⚠️ <b>别把首付卡得刚好。</b>契税 + 维修基金 + 登记费 + 物业费预缴 + 装修押金，98㎡ 大约还要额外 <b>1–2 万现金</b>；紧接着就是装修款。上面「其他现金支出」默认值只是占位，签约前按楼盘公示改。<br>另外：<b>放款即开始计息</b>，不是交房才开始还贷；这条最容易算漏现金流。</div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 政策雷达 ============ -->
+<section id="policy">
+  <h2><span class="em">📡</span>2026 武汉政策雷达</h2>
+  <p class="desc">🟢 = 官方文件已核实　🟡 = 阶段性 / 有窗口期　🟣 = 中介或平台整理、签约前必须向官方或银行二次核实。<b>凡带颜色标签的都不当作既得利益写进预算</b>。</p>
+  <div class="policy" id="policyGrid"></div>
+  <div class="notice danger" style="margin-top:20px"><b>补贴三条铁律：</b>① 几乎所有购房补贴都是「先买房 → 缴税 → 办证 → 再申请」，<b>不存在签约时直接抵房款</b>；② 同类补贴<b>就高不重复</b>，不能叠加；③ 政策有截止日（多项到 2026-12-31），且售楼部口头承诺不算数，要看正式文件 + 在安居链 APP 或区住更局核实。</div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 买房流程 ============ -->
+<section id="buy">
+  <div class="sec-head">
+    <div><h2><span class="em">🏠</span>买房流程 · 11 步</h2>
+    <p class="desc">按<b>新房（湖畔大观，毛坯交付）</b>主线写。点卡片展开看「要交多少钱 / 带什么材料 / 有哪些坑 / 怎么验收」，勾完的步骤会变灰，进度自动存浏览器。</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill buy" id="buyStat">已完成 0 / 11</span><button class="btn" onclick="resetDone('buy')">重置进度</button></div>
+  </div>
+  <div class="timeline" id="buyTimeline"></div>
+  <div class="topic" style="margin-top:24px">
+    <h3>🆚 新房 vs 二手房：税费差在哪</h3>
+    <p class="lead">你买的是新房，所以下表右列绝大部分<b>与你无关</b>——但看清楚能防止被中介或销售混着报费用。</p>
+    <div class="table-scroll" style="max-height:none"><table>
+      <thead><tr><th>税费</th><th>新房（你）</th><th>二手房</th></tr></thead>
+      <tbody>
+        <tr><td>契税</td><td><b>买方缴</b>，98㎡ 首套/二套均 1%</td><td>买方缴，税率同上</td></tr>
+        <tr><td>增值税</td><td class="zero">不涉及（开发商作为法人销售不动产，税已含在房价里，不单独向你收）</td><td>卖方税：满 2 年免征；不足 2 年按 3% 征收率全额（2026-01-01 起）</td></tr>
+        <tr><td>个人所得税</td><td class="zero">不涉及</td><td>卖方税：满五唯一免征，否则差额 20% 或核定 1%</td></tr>
+        <tr><td>土地增值税</td><td class="zero">不涉及</td><td>个人销售住房暂免</td></tr>
+        <tr><td>印花税</td><td class="zero">个人买卖住房免征</td><td>免征</td></tr>
+        <tr><td>中介费 / 评估费</td><td class="zero">一般不涉及（分销佣金由开发商承担；新房按备案合同价放款，无需评估）</td><td>中介费可谈；贷款评估费常见</td></tr>
+        <tr><td>维修资金</td><td><b>买方缴</b>，交付前，按面积</td><td>通常随房转移，看账户余额</td></tr>
+      </tbody></table></div>
+    <div class="notice" style="margin-bottom:0">⚠️ 如果有人向你收「评估费 / 按揭服务费 / 代办费 / 保险费 / 印花税」，先要<b>收费依据 + 正规发票</b>；无依据或超政府定价的可拒缴。</div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 装修流程 ============ -->
+<section id="reno">
+  <div class="sec-head">
+    <div><h2><span class="em">🔨</span>装修流程 · 20 步</h2>
+    <p class="desc">毛坯交付，按 <b>准备 → 隐蔽 → 面层 → 安装 → 收尾</b> 五个阶段排。每步都写了「<b>前置依赖</b>」——顺序错了就是返工。水电、防水、留缝的硬数值在下面「🔬 硬核细节」里。</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="pill reno" id="renoStat">已完成 0 / 20</span><button class="btn" onclick="resetDone('reno')">重置进度</button></div>
+  </div>
+  <div class="timeline reno" id="renoTimeline"></div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 必须提前定 ============ -->
+<section id="before">
+  <h2><span class="em">⚡</span>哪些事必须提前定</h2>
+  <p class="desc">装修返工 90% 不是手艺问题，是<b>「该定的东西没定就开工了」</b>。这张表按「最晚节点」排序——越靠前的越要先拍板。点按钮按节点筛。</p>
+  <div class="filters" id="preFilters"></div>
+  <div class="table-scroll" style="max-height:none"><table id="preTable"><thead><tr><th>要定的东西</th><th>最晚在…之前</th><th>晚了会怎样</th><th>类别</th></tr></thead><tbody></tbody></table></div>
+  <div class="notice danger"><b>一句话记法：</b>先定家具家电尺寸 → 再定柜子方案 → 再定点位 → 最后才开槽。反过来做，插座会被柜子挡死、嵌入式电器塞不进柜、零冷水回水管永远补不回来。</div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 硬核细节 ============ -->
+<section id="topics">
+  <h2><span class="em">🔬</span>硬核细节 · 现场照着量</h2>
+  <p class="desc">这些数值来自国家/行业标准与官方文件，是验收时能直接跟工长对线的东西。标注「行业口径」的属于通行做法，建议<b>写进合同</b>才有效力。</p>
+
+  <div class="topic reno">
+    <h3>⚡ 水电验收</h3>
+    <p class="lead">水电是唯一「封上就再也看不见」的工程，也是后期所有打孔、挂件、检修的依据。</p>
+    <div class="numgrid">
+      <div class="num"><div class="n">≥0.6MPa</div><div class="t">给水试压</div><div class="d">GB 50242-2002 第4.2.1条：试验压力＝工作压力1.5倍且不小于0.6MPa。PPR 管稳压 1h 压降 ≤0.05MPa，再于 1.15 倍工作压力稳压 2h 压降 ≤0.03MPa，接头不渗不漏</div></div>
+      <div class="num"><div class="n">≥0.5MΩ</div><div class="t">绝缘电阻</div><div class="d">500V 兆欧表实测；左零右火上接地，地线黄绿双色全屋贯通、分色统一</div></div>
+      <div class="num"><div class="n">≤30mA</div><div class="t">漏电保护</div><div class="d">插座回路（尤其厨卫）必须装漏保并<b>按试验按钮实测跳闸</b></div></div>
+      <div class="num"><div class="n">≤40%</div><div class="t">管内穿线占比</div><div class="d">导线总截面积不超过管内截面积 40%，必须是能抽动的活线；<b>管内严禁接头</b>，接头只在底盒内</div></div>
+      <div class="num"><div class="n">≥30cm</div><div class="t">强弱电间距</div><div class="d">不共管共槽，平行间距 ≥30cm、交叉处弱电管包锡箔 ≥30cm（行业通行口径，写进合同）</div></div>
+      <div class="num"><div class="n">3 次留档</div><div class="t">开槽后 / 布管后 / 封槽前</div><div class="d">全景照片 + 视频，每面墙放卷尺入镜，标注距地高度和距相邻墙尺寸；索要<b>水电竣工 CAD 图</b>，以后打孔全靠它</div></div>
+    </div>
+    <div class="grid2">
+      <div><h4 style="font-size:13px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">线径与回路</h4><ul class="tight">
+        <li>照明 <b>1.5mm²</b>｜普通插座 <b>2.5mm²</b>｜厨房 / 卫生间 / 空调 / 电热水器 / 蒸烤箱 <b>4mm²</b>｜即热式、中央空调 <b>6mm²</b>｜进户 ≥10mm²</li>
+        <li>照明与插座<b>分路</b>；空调、厨房、带电热水器的卫生间设<b>专用回路</b></li>
+        <li>卫生间设 <b>LEB 局部等电位端子箱</b>，花洒、金属洁具、金属管接入，<b>不得封死</b></li>
+        <li>排水地面 <b>≥1%</b> 向地漏找坡，地漏为最低点；门口完成面低于相邻房间 ≥20mm</li>
+      </ul></div>
+      <div><h4 style="font-size:13px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">常见偷工减料</h4><ul class="tight">
+        <li>4mm² 偷偷换成 2.5mm²、1.5 代 2.5；不接地线或用细地线；线不分色</li>
+        <li>管内接头、死线抽不动；强弱电共槽；冷热水同槽或间距 &lt;15cm</li>
+        <li>水管走地不试压 / 试压时没关进户总阀（数据无效）；线管不固定</li>
+        <li>承重墙开长横槽；<b>封槽之后才通知你验收</b>——这是最狠的一招，务必约定封槽前必须到场</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="topic reno">
+    <h3>💧 防水</h3>
+    <p class="lead">渗漏几乎全出在<b>节点</b>（管根、地漏、门槛、阴角），不在大面。做防水前先确认管洞已封堵、水电开槽已修补。</p>
+    <div class="numgrid">
+      <div class="num"><div class="n">≥1.8m</div><div class="t">淋浴区墙面返高</div><div class="d">JGJ 298-2013 第5.2.2条，宜做到顶。非淋浴区上翻 ≥300mm；另有「有给水装置的墙体一侧 ≥1.2m」的口径，两者差很大，<b>合同里写死用哪一种</b></div></div>
+      <div class="num"><div class="n">≥24h</div><div class="t">闭水试验</div><div class="d">蓄水 ≥20mm（最高点以上）、≥24h，<b>建议 48h</b>，去楼下看顶面与管周。防水隔离层完成时 + 竣工验收时<b>各做一次</b>并留记录</div></div>
+      <div class="num"><div class="n">20mm</div><div class="t">门槛止水坎</div><div class="d">混凝土坎高出成品地面 20mm，<b>必须做在结构楼板上</b>，防水层 U 形包裹坎侧与顶面形成闭合环；贴完砖再补＝无效</div></div>
+      <div class="num"><div class="n">R≥50mm</div><div class="t">阴角圆弧</div><div class="d">阴角抹圆弧 + 300mm 宽无纺布/网格布「两涂一布」；管根剔槽 + 止水条 + 堵漏宝抹弧，加强层延伸管周 300mm</div></div>
+      <div class="num"><div class="n">500 / 200mm</div><div class="t">门口外延伸</div><div class="d">防水层向门外延伸 500mm、两侧各 200mm；穿楼板套管上口高出成品面 50mm</div></div>
+      <div class="num"><div class="n">二次排水</div><div class="t">下沉式卫生间</div><div class="d">沉箱最低点<b>预埋暗地漏</b>，否则砖缝渗水积在砂浆层，发臭、返潮、渗到楼下</div></div>
+    </div>
+    <div class="notice" style="margin-bottom:0">区域：卫生间、厨房、阳台、有防水要求的房间。<b>禁止把无防水房间或阳台改成卫生间</b>（建设部令 110 号第 5 条）；改防水层须有施工方案并做闭水试验（第 8 条）。武汉梅雨长、湿度大，湿作业每层留足干燥间隔，厨卫与靠外墙柜体用防潮板 + 中性防霉胶，建议写进合同工艺条款。</div>
+  </div>
+
+  <div class="topic reno">
+    <h3>📏 留缝与收口</h3>
+    <p class="lead">不同材质膨胀系数不同，不留缝就是地板起拱、柜体被顶裂、交界处开裂。这些尺寸必须在<b>定制柜下单前</b>和<b>贴砖前</b>锁定。</p>
+    <div class="table-scroll" style="max-height:none"><table>
+      <thead><tr><th>部位</th><th>留缝</th><th>收口方式 / 为什么</th></tr></thead><tbody>
+      <tr><td>木地板 ↔ 墙 / 门框 / 柜体</td><td class="v">8–12mm（实木 ≥10、地暖 15）</td><td>同色硅酮胶 / 踢脚线 / 压条遮盖；大面积每 8–10m 或 &gt;40㎡ 分段。柜体下方留 10–15mm</td></tr>
+      <tr><td>瓷砖缝</td><td class="v">墙 1–2mm / 地 2–3mm</td><td>美缝或环氧彩砂；不留缝必空鼓开裂</td></tr>
+      <tr><td>门套下 / 不同材质交接</td><td class="v">5–8mm / 3–5mm</td><td>T 型或 L 型金属收口条</td></tr>
+      <tr><td>柜体 ↔ 墙</td><td class="v">≤1cm / &gt;1cm</td><td>≤1cm 用同色防霉胶；&gt;1cm 用同材质收口条。转角 45° 斜拼优于直角。<b>柜后墙面不找平＝收口缝巨大</b></td></tr>
+      <tr><td>台面 ↔ 墙</td><td class="v">挡水条 1–2cm 高</td><td>胶缝 0.3–0.5cm，厨卫用中性防霉美容胶</td></tr>
+      <tr><td>柜 ↔ 地板 / 踢脚线</td><td class="v">1–2cm</td><td>柜地齐平要在<b>定制下单前</b>预留 1.2–1.5cm 地板厚度</td></tr>
+      <tr><td>吊顶检修口</td><td class="v">≥400×400（建议 450×450）</td><td>回风 + 检修一体 ≥600×600；盖板磁吸/卡扣可取下，<b>禁用螺丝固定死</b>；&gt;3kg 灯具独立吊挂</td></tr>
+      <tr><td>石材 ↔ 木作 / 线板</td><td class="v">1–2mm / 3–5mm</td><td>弹性胶或 AB 胶填缝 → 批土打磨 → 统一上漆</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="topic reno">
+    <h3>🔌 插座点位清单（离地 cm）</h3>
+    <p class="lead">100㎡ 大约 70–90 个点位（行业经验值，不是标准）。<b>破「被柜子挡住」唯一办法</b>：水电交底前把床、沙发、书桌、餐桌、柜子的精确尺寸与摆位落到平面图，现场用粉笔逐点标记，插座按家具外轮廓再外扩约 10cm 避让。</p>
+    <div class="table-scroll" style="max-height:none"><table>
+      <thead><tr><th>空间</th><th>点位建议</th></tr></thead><tbody>
+      <tr><td><b>玄关</b></td><td>弱电箱内 ×1（光猫/路由，<b>Top1 漏项</b>）、鞋柜内/下 ×1(30)、台面上 ×1(130)、门外上方 ×1(220，监控/猫眼)、智能锁充电、入户 + 客厅双控(130)</td></tr>
+      <tr><td><b>客厅</b></td><td>电视墙五孔 4–5 + 网口 1 + 电视 1(30，壁挂 100；预埋 50 管)、沙发两侧各 2(70–80，带 USB)、空调 16A 柜机 30 / 挂机 200–220、窗帘盒内 ×1–2(200–220)、投影幕布吊顶内 ×1、茶几地插</td></tr>
+      <tr><td><b>餐厅</b></td><td>餐桌旁 1–2(80–90 或地插)、餐边柜 2–3(120–130)、冰箱带开关 16A(50/30，建议独立回路)</td></tr>
+      <tr><td><b>厨房</b></td><td>台面上带开关五孔 4–6(120–130)、油烟机(220)、水槽下 2–3(50：净水/垃圾处理器/小厨宝)、嵌入式蒸烤箱/洗碗机/消毒柜各 16A（<b>按官方开孔图定位</b>）、燃气报警器(220)</td></tr>
+      <tr><td><b>主卧</b></td><td>床头两侧各 2(70–80，带 USB + 双控)、梳妆/书桌 2–3(90–100)、电视墙 2(30)、衣柜内 ×1、空调 16A(200–220)、窗帘盒(200–220)、床尾 ×1(30，净化器)</td></tr>
+      <tr><td><b>次卧 / 儿童房</b></td><td>同主卧减配；书桌 3(30/100)；<b>30cm 以下全部带安全门 / 保护盖</b></td></tr>
+      <tr><td><b>卫生间</b></td><td>智能马桶旁 ×1(30–40，<b>带防溅盒、必留</b>)、镜柜旁 2(140)、电热水器 16A(200)、洗衣机(120–130)、电热毛巾架预留、浴霸/风暖专线（开关门外 130）；全部防溅盒 + 接 LEB</td></tr>
+      <tr><td><b>阳台</b></td><td>洗衣机(120–130)、烘干机(150)、电动晾衣架吊顶内、<b>扫地机基站(30，另留进水 + 排污 + 常通电)</b>、备用 ×1</td></tr>
+      <tr><td><b>弱电箱 / 走廊</b></td><td>换大箱体 + 独立电源 + ≥3 口插排；各房间 ≥1 个六类网口；走廊双控(130) + 夜灯(30)</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="topic reno">
+    <h3>👵 四代宅 + 全屋米家预埋</h3>
+    <div class="grid2">
+      <div><h4 style="font-size:14px;margin-bottom:8px;color:var(--reno)">适老（必须在水电 / 砌墙阶段做）</h4><ul class="tight">
+        <li>全屋<b>无高差</b>：室内落差 ≤0.5cm；必须设门槛时 ≤3cm 并做斜角，或用长条地漏 + 同层排水实现淋浴区齐平</li>
+        <li>主通道净宽 ≥90cm；<b>门洞净宽 ≥800mm</b>（至少一个卫生间，建议 850mm）；轮椅回转直径 ≥1.5m</li>
+        <li>湿区防滑 ≥R10、干区 ≥R9；干湿分离、淋浴凳、恒温花洒、坐便器高 40–50cm</li>
+        <li><b>扶手加固板 / 钢板预埋</b>：马桶侧墙、淋浴区离地 85–90cm，承载 ≥100–150kg。事后打孔装扶手吃不住力</li>
+        <li>紧急呼叫：马桶旁 / 床头 / 淋浴区防水拉绳，高位 90cm（如厕）+ 低位 10cm（跌倒），联动家人手机并考虑断电备用</li>
+        <li>床下、走廊、柜底、马桶旁红外感应夜灯，无眩光多光源；床头双控</li>
+      </ul></div>
+      <div><h4 style="font-size:14px;margin-bottom:8px;color:var(--reno)">米家智能（水电前定稿）</h4><ul class="tight">
+        <li><b>所有开关底盒拉零线</b>（零火版），86 型加深底盒 ≥50mm（推荐 60mm）；单火版易频闪、关灯微亮</li>
+        <li>灯光按场景分回路，别一房一路串死；上智能后可用无线贴墙开关替代传统双控</li>
+        <li>窗帘盒内留常通电五孔/16A（距顶约 45cm）；单轨槽 ≥15cm、双轨 ≥20–25cm 且需 2 个插座</li>
+        <li>弱电箱换大箱 + 独立电源 + 插排；预埋<b>六类/超六类</b>网线到电视柜、书房、各卧室；AC+AP 或有线回程 Mesh（100–150㎡ 约 3 台）</li>
+        <li>网关放客厅电视柜/玄关，<b>别塞金属弱电箱</b>；2.4G / 5G 分离并设独立 SSID（多数米家设备只认 2.4G）；优先蓝牙 Mesh + 中枢网关，断网也能跑本地自动化</li>
+        <li>摄像头墙角距顶 5–20cm 留插座；吊顶内毫米波人在传感器留零火线（老人静坐不灭灯）；燃气传感器、智能水阀、水浸传感器点位</li>
+      </ul></div>
+    </div>
+    <div class="notice info" style="margin-bottom:0">儿童安全：30cm 以下插座安全门、家具倒圆防撞、柜体固定防倾倒、门缝防夹、窗户限位器 / 防坠落传感器、玻璃 3C；室内摄像头避开床与沙发。<b>Shark L5 基站</b>属于这一批——常通电插座 + 墙面收纳位，水电阶段一起定。</div>
+  </div>
+
+  <div class="topic reno">
+    <h3>📄 合同、付款与质保</h3>
+    <div class="numgrid">
+      <div class="num"><div class="n">3331</div><div class="t">付款节点（消协建议，非法定）</div><div class="d">开工 30% / 水电验收 30% / 泥木验收 30% / 竣工验收 10%。拒绝「开工付 60%」「竣工前结清」</div></div>
+      <div class="num"><div class="n">5–10%</div><div class="t">尾款</div><div class="d">另留质保金 3–5%，竣工验收合格满 1 年再付清</div></div>
+      <div class="num"><div class="n">≤5%</div><div class="t">增项上限</div><div class="d">写「非业主书面变更的增项总额 ≤合同价 5%，超出业主不付」；水电按实结算须给预估价 + ±10% 浮动上限</div></div>
+      <div class="num"><div class="n">5 年 / 2 年</div><div class="t">法定最低保修</div><div class="d">建设部令 110 号第 32 条：有防水的厨房、卫生间、外墙面防渗漏 <b>5 年</b>，其他 <b>2 年</b>，自竣工验收合格日起算。「隐蔽工程一律 5 年」是误传</div></div>
+    </div>
+    <ul class="tight">
+      <li><b>报价必须附逐项明细</b>：工程量 / 单价 / 工艺 / 材料品牌 + 型号 + 环保等级；写「未列明项目属报价漏项，由施工方承担」。防「同档次替代」「工程特供版」——材料进场逐一验货并索检测报告。</li>
+      <li><b>工期与违约</b>：写明开工竣工年月日（100㎡ 约 90 个工作日，行业经验值）；违约金每日合同价万分之三~千分之一，低于「每天 50 元」形同虚设；超 30 日可解约索赔。</li>
+      <li><b>明写禁止转包 / 分包</b>，工长换人须书面同意；施工安全责任由施工方承担；约定保修响应时限（如 48h 上门）。</li>
+      <li><b>验收不合格</b>：书面问题清单 + 拍照录像、拒签验收单；纠纷可协商 / 消协投诉 / 仲裁 / 起诉（110 号令第 25 条）。空气检测不合格应返工（第 29 条）。</li>
+      <li><b>甲醛</b>：板材 GB 18580-2017 强制 E1 ≤0.124mg/m³；GB/T 39600-2021 分 E1 / E0 ≤0.050 / ENF ≤0.025。有老人小孩优先 ENF 或 E0，并<b>控制板材总用量</b>（单件达标叠加后仍可能超标）。自住判定用 <b>GB/T 18883-2022：甲醛 1 小时均值 ≤0.08mg/m³</b>，检测前关闭门窗 ≥12h，委托 CMA 机构；别用工程验收标准 GB 50325 替代，便携仪只配粗筛。<b>气味不能判定超标</b>。</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 坑速查 ============ -->
+<section id="traps">
+  <div class="sec-head">
+    <div><h2><span class="em">🚨</span>坑速查</h2><p class="desc">上面所有坑自动汇总到这里，按严重程度排序，可搜索、可按阶段筛。<b>先看「致命」那几条。</b></p></div>
+    <input class="search" id="trapSearch" placeholder="🔍 搜关键词：定金 / 监管 / 承重墙 / 闭水 …">
+  </div>
+  <div class="filters" id="trapFilters"></div>
+  <div id="trapList"></div>
+</section>
+
+<hr class="sep">
+
+<!-- ============ 备注帖 ============ -->
+<section id="notes">
+  <div class="sec-head">
+    <div><h2><span class="em">📌</span>备注帖 · 找设计师之前的想法</h2>
+    <p class="desc">想到什么随手记在这里（存在你自己浏览器里）。<b>更重要的是</b>：以后你直接把想法发给 Buddy，我会归好类追加到项目里的 <b>设计想法备注帖.md</b>，网页与文件双向维护，不会丢。</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn orange" onclick="exportNotes()">⬇ 导出 Markdown</button><button class="btn" onclick="clearNotes()">清空自定义</button></div>
+  </div>
+  <div class="note-input">
+    <input id="noteText" placeholder="例如：客厅想要一整面书墙，但担心落灰和承重…">
+    <select id="noteCat"><option>布局与房间</option><option>风格与材质</option><option>收纳与柜子</option><option>智能家居</option><option>适老与儿童</option><option>家电与采购</option><option>预算与取舍</option><option>待问设计师</option></select>
+    <button class="btn primary" onclick="addNote()">＋ 记一条</button>
+  </div>
+  <div class="notice info">下面是<b>从项目已有资料回填</b>的想法（灰色左边框），不是新编的；亮紫色是你新加的。带「待定 / 待问」的条目建议找设计师前先拍板。</div>
+  <div id="noteList"></div>
+</section>
+
+<footer>
+  <p><b>从定金到入住 · 买房 + 装修全流程避坑手册</b>　|　湖畔大观 A² 约 98㎡ · 武汉 · 数据核实至 2026-11-12</p>
+  <p style="margin-top:8px">本页是决策辅助，<b>所有政策、利率、收费标准以签约当日官方文件、银行审批、开发商合同与物业公示为准</b>；涉及结构拆改、承重墙、燃气改动，必须走物业报建与原设计单位/有资质单位方案，本页不构成施工依据。</p>
+  <div class="src">
+    <b>主要依据</b><br>
+    · 财政部 税务总局 住建部公告 <b>2024 年第 16 号</b>（契税，2024-12-01 起；武汉市税务局 2026-09-01、江夏区税务局 2026-04-24 官方答复仍援引）<br>
+    · 《武汉市住宅专项维修资金管理办法》（市政府令第 216 号）及武汉市住更局交存标准：砖混 49 / 无电梯框架 55 / 有电梯 14 层及以下 61 / 15 层及以上 73 元/㎡<br>
+    · 发改价格规〔2016〕2559 号（登记费住宅 80 元/件、抵押登记费由银行承担）、财税〔2008〕137 号（个人买卖住房免印花税）<br>
+    · 《商品房销售管理办法》建设部令第 88 号第 20 条（面积误差 3%）、《武汉市新建商品房预售资金监管办法》（2023-07-20 施行）<br>
+    · 武汉市住更局《关于进一步优化完善我市房地产政策措施的通知》（2026-04-30）、《关于进一步优化我市房地产政策措施的通知》（2026-09-04）<br>
+    · GB 50242-2002、GB 50303-2015、JGJ 298-2013、JGJ/T 304-2013、《住宅室内装饰装修管理办法》建设部令 110 号、GB 18580-2017、GB/T 39600-2021、GB/T 18883-2022<br>
+    · 标注「行业口径 / 经验值」的数值（点位数量、工期、检修口尺寸、强弱电 30cm、付款 3331 等）为通行做法，<b>写进合同才有效力</b>。
+  </div>
+  <p style="margin-top:16px"><a href="huxing-duibi.html">📐 看四户户型量化对决</a>　·　<a href="index.html">🏗 回装修看板</a></p>
+</footer>
+
+<script>
+/* ==================== 数据 ==================== */
+
+const POLICIES = [
+  {t:'契税：98㎡ 首套/二套都是 1%',f:'v',d:'家庭唯一住房 ≤140㎡ 1%、>140㎡ 1.5%；第二套 ≤140㎡ 1%、>140㎡ 2%；三套及以上 3%。依据 2024 年第 16 号公告，2026 年武汉税务局官方答复仍援引。'},
+  {t:'维修基金：按面积交，不是按房价',f:'v',d:'武汉：砖混 49 / 无电梯框架 55 / 有电梯 14 层及以下 61 / 15 层及以上 73 元/㎡。98㎡ → 5978 或 7154 元。交付前凭《交存通知书》缴到专户银行或区政务中心，不交给开发商。'},
+  {t:'登记费 80 元，其余多项为 0',f:'v',d:'住宅不动产登记费 80 元/件；抵押登记费由银行承担，不得转嫁购房人；印花税免征；第一本证书免工本费。新房一般无评估费、无中介费。'},
+  {t:'商贷首付最低 15%',f:'c',d:'武汉首套/二套商贷最低首付口径存在 15% 与「二套 25%」两种说法，各家银行审批不同；公积金首套最高贷 80%（首付 ≥20%）、二套 70%（≥30%）。签约前让银行出书面测算。'},
+  {t:'利率：LPR 3.5% / 首套商贷约 3.05%',f:'c',d:'2026-11 五年期以上 LPR 3.50%，武汉首套商贷参考 3.05%（LPR-45BP）；公积金 5 年以上首套 2.6%、二套 3.075%。实际以借款合同为准，重定价周期与加减点务必看清。'},
+  {t:'公积金：双缴 150 万 / 单缴 120 万',f:'c',d:'可贷额度取「最高限额、贷款比例、还款能力、缴存余额」四项最小值；多子女上浮 20%；需连续足额缴存满 6 个月；武汉已有 3 套及以上、或全国有未结清公积金贷款不予贷款；异地缴存也可在汉申请。'},
+  {t:'认区不认房（阶段性）',f:'c',d:'2026-05-01 至 12-31：家庭成员在拟购新房所在区无成套住房，商贷可按首套认定。仅适用「商贷 + 新建商品住房」，二手房与全款不适用；组合贷的商贷部分适用。'},
+  {t:'新城区购房 1% 补助',f:'c',d:'2026-09-04 至 12-31，长江新区、东西湖、黄陂、江夏、蔡甸、新洲、汉南买新建商品住房，按合同总价 1% 补助，总额 1 亿用完即止。先办证、后在安居链 APP 申领。湖畔大观属哪个区需确认。'},
+  {t:'多子女补贴 6 万 / 12 万',f:'c',d:'二孩 6 万、三孩 12 万，政策已延至 2027-12-31；同类补贴就高不重复。先办证再申请。'},
+  {t:'部分区契税补助 / 首套贴息',f:'w',d:'汉阳、经开等区有阶段性契税补助；另有「2026-10-01 起首套商贷 1% 贴息、120㎡内且总价 150 万内、本金上限 100 万、最长 5 年」的说法。这两项来自平台/中介整理，未核到官方原文，必须向区住更局与贷款银行核实。'},
+  {t:'房贷最长 40 年 / 预售竣工后放款',f:'w',d:'2026-08-28 后有全国性新规讨论（最长年限延至 40 年、预售房房贷竣工备案后发放）。武汉落地细则未见明确文件，别把它写进现金流假设，以贷款银行为准。'},
+  {t:'二手房增值税征收率降至 3%',f:'w',d:'2026-01-01 起，个人出售不足 2 年住房按 3% 征收率全额缴增值税，满 2 年免征。你买新房不涉及，仅作背景知识。'}
+];
+
+const BUY_STEPS = [
+  {id:'b1',phase:'准备',title:'资格与资金自查',when:'看房前 1–2 周',pay:'0 元',
+   do:'拉征信、算近 6 个月流水、查家庭住房套数与公积金缴存、把总预算拆成「房款 + 税费 + 装修 + 备用金」四块。',
+   docs:'身份证 / 户口本 / 婚姻证明 · 征信报告 · 近 6 个月银行流水 · 家庭住房查询结果 · 公积金缴存明细',
+   traps:[
+     {l:'fatal',t:'把首付算到刚好',d:'契税、维修基金、登记费、物业费预缴、装修押金加起来约 1–2 万现金，紧接着就是装修款。首付卡死＝后面全线借钱。'},
+     {l:'high',t:'征信硬查询次数过多',d:'短期内被多家机构查征信、或有未结清网贷/大额信用卡分期，可能直接被拒贷或上浮利率。房贷前 3–6 个月别乱点「额度测算」。'},
+     {l:'high',t:'误判首套认定',d:'契税看「家庭唯一/第二套」，商贷看「认区不认房」阶段性政策，公积金又是一套规则。三套口径不一样，别听销售一句话就下结论。'},
+     {l:'mid',t:'流水不够想「包装」',d:'伪造流水/收入证明属骗贷，轻则拒贷重则担责。正确做法是增加共同借款人或提高首付。'}
+   ],
+   checks:['把四块预算写成一张表，备用金 ≥10%','确认公积金连续缴存满 6 个月、无未结清公积金贷款','向银行做一次预审，拿到书面可贷额度与利率区间']},
+
+  {id:'b2',phase:'准备',title:'核查五证与项目底细',when:'下定之前',pay:'0 元',
+   do:'看《国有土地使用证》/不动产权证、《建设用地规划许可证》《建设工程规划许可证》《建筑工程施工许可证》《商品房预售许可证》，并确认你选的那一栋在预售许可范围内。',
+   docs:'五证原件（售楼部公示） · 预售许可证附表 · 预售资金监管账户信息 · 土地年限与交付时间',
+   traps:[
+     {l:'fatal',t:'没预售证就交钱',d:'无预售许可的认购不受保护，且可能项目本身手续不全、无法网签备案。'},
+     {l:'fatal',t:'在建工程抵押未解押',d:'土地或在建工程被抵押，可能导致无法办证。要求出示解押证明或写入合同。'},
+     {l:'high',t:'口头承诺不入合同',d:'学区、地铁、赠送面积、交房时间、精装标准、车位——销售说什么都不算，写进合同或补充协议才算。全程录音。'},
+     {l:'high',t:'特价房捆绑',d:'「特价」常绑定车位、装修包、储藏室或全款要求，把总价拆开算一遍再比。'},
+     {l:'mid',t:'忽略剪力墙/楼栋差异',d:'湖畔大观户型图上标注「*2#无剪力墙 / *5、11#有剪力墙」，后期能不能打通客厅按楼栋不同，签约前问清你买的是哪栋。'}
+   ],
+   checks:['五证拍照留档，核对预售证上的栋号/房号','在「武房服务」小程序核对监管账户','把所有口头承诺整理成清单，要求写进补充协议']},
+
+  {id:'b3',phase:'下定',title:'认购与交定金',when:'选定房源当天',pay:'定金（一般 2–10 万，抵扣首付）',
+   do:'签《认购书》，交定金，锁定房号与价格，约定签约期限。',
+   docs:'认购书 · 定金收据/发票 · POS 单 · 房号与价格确认单',
+   traps:[
+     {l:'fatal',t:'「定金」和「订金」一字之差',d:'定金适用定金罚则：你反悔不退，开发商反悔双倍返还；订金一般可退。《民法典》第 586 条：定金不得超过主合同标的额的 20%，超出部分不产生定金效力。'},
+     {l:'high',t:'被催着当天刷卡',d:'认购书常写「7 日内签约，否则没收定金」。看清签约期限、贷款不成怎么处理、房号面积单价是否写全，再签字。'},
+     {l:'high',t:'钱进了非监管账户或个人账户',d:'定金也应进预售资金监管账户。POS 单商户名必须是开发商主体，收据写明「定金」+ 房号，并索取正规发票。'},
+     {l:'mid',t:'没约定贷款失败怎么处理',d:'写清「因银行审批未通过导致无法履约，定金全额退还」的条款，否则容易被动。'}
+   ],
+   checks:['认购书逐条读，尤其是违约与退款条款','付款后查「武房服务」本人交存记录','保存房号、单价、面积、优惠明细的书面确认']},
+
+  {id:'b4',phase:'签约',title:'网签备案 + 签《商品房买卖合同》',when:'认购后约 7 天内',pay:'0 元（首付在网签后付）',
+   do:'先网签、后付款。逐条核对合同与补充协议，重点看房号、面积构成、单价总价、交付日期、交付标准（毛坯）、面积差异处理、逾期交付违约金、产权登记时限、前期物业。',
+   docs:'商品房买卖合同（示范文本） · 补充协议 · 网签备案号 · 前期物业服务合同 · 房屋平面图与分摊说明',
+   traps:[
+     {l:'fatal',t:'空白合同 / 先签字后填内容',d:'任何空白处都要划掉或填完整，每页签骑缝，自己留一份原件或扫描件。'},
+     {l:'fatal',t:'面积差异条款写「多退少补」',d:'《商品房销售管理办法》第 20 条：误差 ≤3% 据实结算；超 3% 买受人可退房，实测偏小超 3% 部分应双倍返还。合同若笼统写「多退少补」，等于把双倍返还规则排除掉。'},
+     {l:'fatal',t:'交付标准含糊',d:'毛坯就要写清「毛坯交付」及具体界面（墙面、地面、门窗、水电、燃气到位程度），别让「精装/全装修」字眼混进来。'},
+     {l:'high',t:'逾期交付违约金过低',d:'有的写「万分之 0.1」，一年赔不了几千块，等于没有约束。争取按日万分之三以上，并约定超期可解约。'},
+     {l:'high',t:'补充协议塞霸王条款',d:'常见：开发商可单方变更规划、不可抗力无限扩大、免除逾期责任、限制业主维权。逐条划掉再签。'},
+     {l:'high',t:'阴阳合同 / 合同价 ≠ 备案价',d:'影响贷款额度、税费与日后转让，也不受法律保护。'},
+     {l:'mid',t:'忽略产权登记时限',d:'合同应写明交付后多少日内办初始登记、开发商协助办证的义务与违约责任。'}
+   ],
+   checks:['网签后立刻在住更局官网 / 武房服务查备案状态','合同全文扫描存档（含补充协议、附图）','把销售承诺逐条对照，缺的要求补进补充协议']},
+
+  {id:'b5',phase:'付款',title:'付首付 + 资金监管',when:'网签后',pay:'首付款（含定金）',
+   do:'首付（含定金）与后续按揭贷款全部进入<b>预售资金监管账户</b>，索取《交款通知书》编号、POS 单/银行回单与购房发票。',
+   docs:'交款通知书（编号） · 银行转账回单（附言写编号） · 首付款发票 · 监管账户入账短信',
+   traps:[
+     {l:'fatal',t:'销售让你转到「一般账户 / 个人账户 / 关联公司」',d:'这是最典型的坑。监管账户专款专用于本项目建设，按工程节点拨付，防挪用烂尾；转出去等于自己把保护拆了。户名通常含「监管」字样。'},
+     {l:'high',t:'用「额外折扣」诱导一次性付款到非监管账户',d:'折扣再大也不值得。武汉 2023 年《预售资金监管办法》明确开发商不得用非监管账户收款。'},
+     {l:'high',t:'只给收据不给发票',d:'后续办证、提取公积金、贷款都需要购房发票。收据不能替代。'},
+     {l:'mid',t:'转账没写交款通知书编号',d:'柜台转账必须在附言备注编号，否则款项可能无法对应到你的房源。'}
+   ],
+   checks:['核对账户名称与预售许可证 / 合同第七条一致','交款后收到「已进监管账户」提示短信','在「武房服务」小程序查到本人交存信息']},
+
+  {id:'b6',phase:'贷款',title:'办贷款（商贷 / 公积金 / 组合贷）',when:'网签付款后 1–4 周',pay:'0 元（抵押登记费由银行承担）',
+   do:'提交材料 → 面签 → 银行审批 → 签借款合同 → 抵押预告登记 → 放款进监管账户。',
+   docs:'身份证 / 户口本 / 婚姻证明 · 收入证明 + 近 6 个月流水 · 征信授权 · 购房合同 + 首付发票 · 还款银行卡 · 公积金缴存证明（组合贷）',
+   traps:[
+     {l:'fatal',t:'借款合同的利率与加点没看清',d:'看清「LPR ± 多少 BP」、重定价日与周期（通常 1 年）、提前还款违约金与预约期、放款条件。口头说的利率一律不算。'},
+     {l:'high',t:'月供占收入过高',d:'建议月供 ≤ 家庭月可支配收入 40–50%，并预留装修与 6 个月应急金。上面计算器可填月收入做压力测试。'},
+     {l:'high',t:'等额本息 / 等额本金没算总利息',d:'等额本息月供低但总利息高；等额本金前期压力大。用计算器把 30 年总利息拉出来看一眼，差得很明显。'},
+     {l:'high',t:'忽略「放款即开始计息」',d:'不是交房才开始还贷。期房从放款次月就要还款，现金流要提前排。'},
+     {l:'mid',t:'公积金额度想当然按最高值',d:'可贷额度取四项最小值（最高限额 / 贷款比例 / 还款能力 / 缴存余额 ×20 倍 × 时间系数），很多人实际贷不到 150 万。'},
+     {l:'mid',t:'放款前征信变化',d:'审批期间别新增大额贷款、别刷爆信用卡、别换工作导致流水断档，可能临门一脚被拒。'}
+   ],
+   checks:['拿借款合同核对利率、加点、重定价日、提前还款条款','设自动还款并留足余额','保存还款计划表，每年查一次征信']},
+
+  {id:'b7',phase:'等待交付',title:'等待交付 / 开始还贷',when:'放款后至交房（期房可能 1–2 年）',pay:'月供',
+   do:'按月还款，定期关注工程进度、开发商资金与项目舆情，保存所有沟通记录。',
+   docs:'还款计划表 · 每月还款凭证 · 工程进度告知 / 开发商函件',
+   traps:[
+     {l:'fatal',t:'以为没交房就不用还贷',d:'放款即计息，断供直接上征信，严重时银行可提前收贷。'},
+     {l:'high',t:'延期交付只打电话催',d:'必须<b>书面催告</b>并留存送达证据，超过合同约定期限才能主张违约金或解除合同。口头沟通没有时效证据。'},
+     {l:'mid',t:'忽视项目资金异动',d:'监管账户、施工停滞、频繁更换总包都是预警信号，业主群与住更局通报要盯。'},
+     {l:'mid',t:'联系方式变更未通知银行',d:'收不到还款/利率调整通知，容易逾期。'}
+   ],
+   checks:['设置还款日历 + 自动扣款','每半年查一次项目竣工验收备案进度','所有与开发商的沟通留书面/录音记录']},
+
+  {id:'b8',phase:'收房',title:'交房验房（先验后收！）',when:'开发商书面交房通知',pay:'0 元（此步先别急着缴费）',
+   do:'先验「两书一表」+ 面积实测报告，再逐项验房，最后才签字、缴费、拿钥匙。',
+   docs:'《住宅质量保证书》《住宅使用说明书》《竣工验收备案表》 · 面积实测报告 · 分户验收表 · 验房问题清单',
+   traps:[
+     {l:'fatal',t:'先签《房屋交接单》再验房',d:'签字、缴费、拿钥匙通常被视为认可房屋质量，之后再维权极难。顺序必须是：验文件 → 验房 → 记录问题 → 整改 → 再签收。'},
+     {l:'fatal',t:'没有《竣工验收备案表》也收房',d:'备案表是达到法定交付条件的凭证（规划/消防/人防等专项验收完成），缺之可拒收。'},
+     {l:'high',t:'被要求「先缴费再给钥匙」',d:'物业费、维修基金、契税可以晚一步交，但不要以此为条件放弃先验房的权利。'},
+     {l:'high',t:'问题只口头说',d:'用记号笔现场标记 + 拍照录像，逐项写进问题清单，要求开发商<b>签字或盖章</b>并写明整改期限。'},
+     {l:'mid',t:'签收后保修期起算',d:'保修期自交付日起算，拖着不验房等于白白消耗保修时间。'}
+   ],
+   checks:['毛坯重点：空鼓（单处 >400cm² 或空鼓率 >5% 要整改）、贯穿裂缝、渗漏（雨后查窗边/外墙，厨卫蓄水 24h 看楼下）、门窗 3C 与密封、净高与方正度、下水与地漏、相位仪测零火地、燃气表与通气、空调孔里高外低、水电气表读数归零','问题清单盖章 + 约定整改日期，复查合格后再签收','全程录音录像并确认设备日期准确']},
+
+  {id:'b9',phase:'税费',title:'缴契税 / 维修基金 / 面积补差 / 物业预缴',when:'交付前后至办证前',pay:'见费用计算器',
+   do:'缴契税、住宅专项维修资金、不动产登记费；结算面积补差；按前期物业合同预缴物业费、装修押金与垃圾清运费。',
+   docs:'完税凭证 · 维修资金交存凭证（专户银行/区政务中心） · 面积实测报告与补差发票 · 所有缴费票据',
+   traps:[
+     {l:'fatal',t:'把维修基金交给开发商「代收」',d:'正确路径是凭《交存通知书》缴到专户管理银行网点或区政务中心维修资金窗口，钱进你名下房屋专户。交给开发商存在被挪用风险。'},
+     {l:'high',t:'被收无依据费用',d:'评估费、按揭服务费、代办费、保险费、印花税——新房大多不涉及或已免征。要依据 + 正规发票，无依据可拒缴。'},
+     {l:'high',t:'面积补差没核对',d:'拿面积实测报告自己算误差比：≤3% 据实结算，超 3% 有退房/双倍返还规则（合同另有约定从约定）。重点盯套内缩水、公摊增大。'},
+     {l:'mid',t:'以为补贴能直接抵房款',d:'契税补助、购房补助基本都是「先办证 → 再在安居链 APP 申领」，且同类补贴就高不重复、有截止日。别把它算进首付。'},
+     {l:'mid',t:'物业费预缴无上限',d:'按《前期物业服务合同》约定，通常预收 3 个月至 1 年；装修押金验收合格后应可退，索收据。'}
+   ],
+   checks:['所有缴费索正规票据并建「已缴清单」','维修资金在专户系统查得到本人交存记录','核对完税凭证上的房屋坐落、面积、金额']},
+
+  {id:'b10',phase:'办证',title:'办不动产权证',when:'交付后按合同约定期限（常见 90 日内）',pay:'登记费 80 元',
+   do:'备齐材料申请不动产登记，开发商代办或自办；拿证后核对权利人、坐落、面积、用途、土地使用期限、共有份额。',
+   docs:'购房合同 · 购房发票 · 契税完税凭证 · 维修资金缴存凭证 · 身份证/婚姻证明 · 测绘成果与面积实测报告 · 登记申请书',
+   traps:[
+     {l:'high',t:'开发商长期「代办」不办',d:'证办不下来会影响落户、入学、抵押、转让。合同要写清协助办证时限与违约责任，超期书面催告。'},
+     {l:'high',t:'被收高价「代办费」',d:'自办只交 80 元登记费；代办属自愿服务，可拒绝或议价。'},
+     {l:'mid',t:'证书信息未核对',d:'面积、坐落、用途、共有情况写错，后续交易会很麻烦，当场核对当场申请更正。'}
+   ],
+   checks:['拿证核对全部字段并扫描存档','在「鄂汇办 / 不动产登记」查电子证照','凭合同与完税凭证同步申请各类购房补贴']},
+
+  {id:'b11',phase:'交接',title:'落户 / 水电燃气 / 物业交接 / 装修报建',when:'拿证后、装修开工前',pay:'按物业公示',
+   do:'办落户、水电气过户开通、与物业交接、申报装修登记、确认施工时段与垃圾清运，之后才进入装修流程。',
+   docs:'不动产权证 · 前期物业服务合同 · 装修管理服务协议 · 装修申报登记回执 · 结构图/承重墙标识',
+   traps:[
+     {l:'high',t:'以为买房就锁定学区',d:'武汉网签备案未交付的家庭落户后可凭合同作过渡入学材料，由教育部门<b>统筹安排</b>，不锁定固定学位，按顺位排队。'},
+     {l:'high',t:'装修前不报建',d:'《住宅室内装饰装修管理办法》第 13 条要求开工前向物业申报登记；不报可能被停工、扣押金。'},
+     {l:'fatal',t:'拆承重墙 / 无防水房间改卫生间',d:'第 5 条：变动主体承重结构须由原设计单位或有资质单位出设计方案；禁止把无防水房间、阳台改成卫生间；拆改供暖/燃气须分别报管理单位批准。'},
+     {l:'mid',t:'没拿到结构图就谈打通',d:'湖畔 A² 的「客厅魔变」方案必须先确认剪力墙分布（按楼栋不同），否则方案白做。'}
+   ],
+   checks:['向物业索取结构图并标出承重墙','索取《装修管理服务协议》与报建回执','确认施工时段、电梯保护、垃圾清运与押金退还条件']}
+];
+
+const RENO_STEPS = [
+  {id:'r1',phase:'A · 准备',title:'收房验房 + 拿原始资料',pre:'开发商书面交房通知',out:'验房问题清单（盖章）、两书一表、面积实测报告、原始结构图',
+   do:'完成买房流程第 8 步，问题整改复查合格后再收房。同时向物业索取结构图、承重墙标识、上下水立管位置。',
+   traps:[{l:'fatal',t:'先签字后验房',d:'视为认可质量，后续维权难。'},{l:'high',t:'只量长宽不量梁高/管井/燃气表位',d:'吊顶与柜体方案全返工。'},{l:'high',t:'不拿结构图',d:'拆改方案无法判断可行性，也不敢报建。'}],
+   checks:['毛坯验房逐项过一遍（空鼓/裂缝/渗漏/门窗/净高/下水/强弱电/燃气/表读数）','结构图、层高、梁高、下水立管、燃气表、空调机位全部记录']},
+
+  {id:'r2',phase:'A · 准备',title:'梳理需求与预算',pre:'① 收房',out:'常住人口与房间分配、动线、储物清单、预算总表',
+   do:'四代同堂先定「谁住哪间、几卫、老人夜间照护动线」，再定预算。参考分配：硬装约 55%、主材 30%、软装 10%、备用金 5%（另有留 10–15% 备用金的口径）。',
+   traps:[{l:'fatal',t:'不留备用金',d:'必被增项吃光，且没有议价余地。'},{l:'high',t:'没定房间数就往下走',d:'房间分配决定隔墙、点位、柜子、空调，一改全改。'},{l:'mid',t:'只算硬装不算家电软装',d:'入住前还会再花一大笔，容易中途降配。'}],
+   checks:['把需求写成一页纸（人 / 房 / 动线 / 收纳量 / 智能场景）','预算拆到一级类目并留 ≥10% 备用金','把想法同步进「📌 备注帖」']},
+
+  {id:'r3',phase:'A · 准备',title:'量房（自己量一遍）',pre:'② 需求框架',out:'原始结构图 + 净高 / 开间进深 / 梁柱管井 / 门窗洞口实测',
+   do:'别只信开发商户型图（湖畔 A² 那张只有外框总尺寸）。自己或让设计师实测，标出梁高、下水立管、燃气表、地漏、强弱电箱、空调孔。',
+   traps:[{l:'high',t:'用开发商图当施工图',d:'图上无内部尺寸，柜体、吊顶、点位会全错。'},{l:'high',t:'忽略梁高与管井',d:'中央空调/新风内机、吊顶下吊高度被卡死。'},{l:'mid',t:'不测门洞净宽',d:'适老化要求 ≥800mm，后期发现不够就得拆改。'}],
+   checks:['每个房间拍 4 面墙 + 天花 + 地面，带卷尺入镜','出一份自己留底的尺寸图（CAD 或手绘均可）']},
+
+  {id:'r4',phase:'A · 准备',title:'选设计师 / 施工方、定承包方式',pre:'③ 量房尺寸',out:'设计合同、施工合同主体、承包方式',
+   do:'清包（自购全部材料只雇工）/ 半包（辅料+施工，自购主材）/ 全包 / 整装；或「独立设计师 + 工长」。至少比 3 家，看在建工地而非样板间。',
+   traps:[{l:'high',t:'独立设计师 + 工长却没人做项目管理',d:'出图与交底接口不写死，出问题互相甩锅。'},{l:'high',t:'只看效果图不看施工图能力',d:'很多公司只出效果图，水电/天花/节点图靠工长现场发挥。'},{l:'mid',t:'被「免费设计」绑定施工',d:'设计费省了，报价里找回来，且没有独立图纸可用。'}],
+   checks:['明确谁出全套施工图、谁现场交底、谁验收','查营业执照、在建工地、过往业主反馈','设计合同与施工合同分开签，图纸版权归自己']},
+
+  {id:'r5',phase:'A · 准备',title:'平面方案（最重要的一步）',pre:'④ 定设计方 + 家具家电初步尺寸',out:'平面布置图、动线图、家具定位图、拆改图',
+   do:'把床、沙发、餐桌、柜体、家电的精确尺寸与摆位落到平面图上，确认房间数、动线、收纳量、适老通道。这一步要同时敲定中央空调/新风/地暖/净水要不要上。',
+   traps:[{l:'fatal',t:'平面没定就谈效果图 / 直接定点位',d:'插座被柜子挡死、柜体与墙收口无解，返工代价最大。'},{l:'fatal',t:'中央空调 / 新风 / 地暖晚定',d:'决定吊顶下吊（带泵约 280–300mm）、梁上开孔、水路；封吊顶后只能走明管或放弃。'},{l:'high',t:'先谈风格后谈动线',d:'四代宅的核心是老人夜间动线与无高差，颜值排后面。'}],
+   checks:['平面图定稿后打印出来，用纸家具摆一遍','把「必须提前定」清单（⚡ 那一节）过一遍','平面方案同步给家电/柜子/智能三方确认']},
+
+  {id:'r6',phase:'A · 准备',title:'拆改审批 + 施工图 + 报价清单',pre:'⑤ 平面定稿',out:'全套施工图 + 逐项预算明细表 + 物业批准',
+   do:'拆改图报物业；有承重结构变动须原设计单位/有资质单位出方案。索要全套图：打拆、砌墙、给排水、强弱电、天花、铺贴、灯光、立面、节点、智能化。',
+   traps:[{l:'fatal',t:'没有设计方案就动承重结构',d:'建设部令 110 号第 5 条明令禁止；物业可停工，且危及结构安全。'},{l:'fatal',t:'报价不列工程量 / 单价 / 工艺 / 品牌型号',d:'漏项与「同档次替代」的温床。'},{l:'high',t:'只给效果图不给水电/天花/节点图',d:'现场全靠工长口头判断，后期无法追责。'},{l:'high',t:'拆改供暖/燃气没单独报批',d:'第 6 条要求分别报管理单位批准。'}],
+   checks:['施工图逐张核对，尤其水电点位图与天花图','要求写「未列明项目属报价漏项，由施工方承担」','物业批准文件留档']},
+
+  {id:'r7',phase:'A · 准备',title:'签合同',pre:'⑥ 图纸与报价',out:'书面施工合同 + 保修书',
+   do:'把付款节点、增项上限、工期与违约金、材料品牌型号环保等级、禁止转包、质保年限与响应时限全部写死（数值见「🔬 合同、付款与质保」）。',
+   traps:[{l:'fatal',t:'水电「按实结算」不设上限',d:'最常见的增项炸弹。必须给预估价 + ±10% 浮动上限。'},{l:'fatal',t:'开工付 60% / 竣工前结清',d:'钱付完就没筹码了。参考 3331，尾款留 5–10%。'},{l:'high',t:'材料写「同档次」',d:'进场变工程特供版。写死品牌 + 型号 + 环保等级，进场逐一验货索检测报告。'}],
+   checks:['合同含 110 号令第 24 条的 9 项必备内容','付款节点、增项上限、违约金、质保期逐条核对','索要保修书并约定起算日']},
+
+  {id:'r8',phase:'B · 隐蔽',title:'开工交底 / 物业报建',pre:'⑦ 合同',out:'管理服务协议、报建回执、现场粉笔点位标记、留档照片',
+   do:'业主、设计师、工长、电工、水工<b>全部到场</b>，逐房逐点用粉笔/美纹纸在墙上标出插座、开关、灯位、水位、家具轮廓，拍照留档。',
+   traps:[{l:'fatal',t:'业主不到场 / 点位只口头说',d:'后期所有「我以为」都没依据。这一步必须本人到场。'},{l:'high',t:'家具轮廓没上墙',d:'插座按家具外轮廓再外扩约 10cm 避让，没标就会挡。'},{l:'mid',t:'未办报建就开工',d:'物业可勒令停工、扣押金。'}],
+   checks:['每个点位现场用粉笔标出并逐房拍照','柜内/柜后插座与柜体图纸同步核对','所有参与方在点位图上签字确认']},
+
+  {id:'r9',phase:'B · 隐蔽',title:'拆改与砌墙',pre:'⑧ 交底 + ⑥ 审批',out:'拆改完成、垃圾清运、新墙',
+   do:'按拆改图施工，新砌墙植筋、挂网，养护到位再开槽。',
+   traps:[{l:'fatal',t:'承重墙开长横槽 / 拆连接阳台的砖混墙',d:'结构安全 + 违反 110 号令第 5 条。'},{l:'high',t:'新墙未干就开槽、不植筋不挂网',d:'后期开裂、线条歪斜。'},{l:'mid',t:'垃圾清运没写清谁负责',d:'临时加价常见项。'}],
+   checks:['对照结构图确认拆的都是非承重墙','新墙垂直度、植筋与挂网拍照留档']},
+
+  {id:'r10',phase:'B · 隐蔽',title:'水电改造（含验收）',pre:'⑨ 拆改 + ⚡清单全部定稿',out:'水电竣工 CAD 图 + 全景照片/视频 + 打压/绝缘记录',
+   do:'开槽 → 布管 → 穿线 → <b>封槽前验收</b> → 封槽。所有数值见「🔬 水电验收」。同步完成智能开关零线、六类网线、窗帘盒电源、传感器点位。',
+   traps:[{l:'fatal',t:'封槽之后才通知验收',d:'最狠的一招。必须写进合同：封槽前业主到场签字，否则返工由施工方承担。'},{l:'fatal',t:'4mm² 换 2.5mm² / 不接地线 / 管内接头',d:'看不见的地方最容易省，后期大功率电器跳闸甚至起火。'},{l:'fatal',t:'零冷水没预埋回水管',d:'装修后无法补埋，只能用 H 阀借冷水管，冲马桶/净水前几秒出温水。'},{l:'high',t:'试压时没关进户总阀 / 没排净空气',d:'数据无效，等于没测。PPR 稳压 1h 压降 ≤0.05MPa。'},{l:'high',t:'智能开关底盒没拉零线',d:'只能买单火版，易频闪、关灯微亮。所有底盒拉零线 + 加深底盒 ≥50mm。'},{l:'high',t:'弱电箱内没留电源',d:'Top1 漏项，光猫/路由/网关没电，全屋网络趴窝。'},{l:'high',t:'嵌入式电器没按官方开孔图定位插座',d:'插座顶出机身、散热缝不足，柜子塞不进。'}],
+   checks:['开槽后 / 布管后 / 封槽前三次留档，卷尺入镜','打压与绝缘电阻实测并留记录，漏保按试验按钮实测跳闸','索要水电竣工 CAD 图，标注每个点位距地高度与距墙尺寸']},
+
+  {id:'r11',phase:'B · 隐蔽',title:'防水 + 闭水试验',pre:'⑩ 水电验收 + 管洞封堵',out:'闭水试验记录（含楼下签字/影像）、隐蔽验收单',
+   do:'卫生间、厨房、阳台做防水；淋浴区墙面返高 ≥1.8m；门槛石下混凝土止水坎做在结构楼板上；蓄水 ≥20mm、≥24h（建议 48h）去楼下看。',
+   traps:[{l:'fatal',t:'闭水没过就贴砖',d:'返工要把砖全砸掉。'},{l:'fatal',t:'止水坎贴完砖才补',d:'无效。必须做在结构楼板上，防水层 U 形包裹形成闭合环。'},{l:'high',t:'下沉式卫生间没做二次排水',d:'砖缝渗水积在砂浆层，发臭返潮渗楼下。'},{l:'high',t:'只做大面不做节点',d:'渗漏绝大多数在管根、地漏、门槛、阴角。管根剔槽+止水条，阴角 R≥50mm 圆弧 + 两涂一布。'},{l:'mid',t:'返高口径不写进合同',d:'淋浴区 1.8m 与非淋浴区 300mm / 1.2m 两种口径并存，写死用哪种。'}],
+   checks:['亲自去楼下看顶面与管周，拍照录像','防水隔离层完成时与竣工验收时各做一次（二次蓄水）','闭水记录让施工方签字留档']},
+
+  {id:'r12',phase:'C · 面层',title:'泥瓦：找坡、贴砖、找平',pre:'⑪ 闭水合格',out:'地面找坡、铺贴完成、地面找平',
+   do:'先找坡后防水（顺序别反）、贴砖、地面找平；地暖在此阶段回填。留缝规格见「🔬 留缝与收口」。',
+   traps:[{l:'high',t:'先找坡后做防水（顺序反了）',d:'防水层被破坏或坡度失效，地漏不是最低点。'},{l:'high',t:'大砖不拉槽找不出坡',d:'排水慢、积水。地面 ≥1% 向地漏找坡。'},{l:'high',t:'不留缝 / 不留伸缩缝',d:'必空鼓开裂，地板起拱。'},{l:'mid',t:'武汉梅雨没干透就下一道',d:'湿作业每层留足干燥间隔，写进合同工艺条款。'}],
+   checks:['泼水试排水，地漏为最低点、门口完成面低 ≥20mm','空鼓锤逐块敲，单处 >400cm² 要求整改','核对瓷砖留缝与美缝方案']},
+
+  {id:'r13',phase:'C · 面层',title:'木工 / 吊顶',pre:'⑫ 泥瓦 + 空调新风内机吊装完成',out:'龙骨、检修口、窗帘盒、风口底座',
+   do:'封板前完成内机吊装与冷凝水试水；留检修口 ≥400×400、窗帘盒内电源、投影幕布电位。',
+   traps:[{l:'fatal',t:'检修口漏留或螺丝固定死',d:'中央空调/新风坏了要拆吊顶。盖板必须磁吸/卡扣可取下。'},{l:'high',t:'封板前未试冷凝水',d:'漏水泡吊顶。冷凝水支管坡 ≥1%、干管 ≥0.8%、设存水弯，禁接污水管。'},{l:'high',t:'窗帘盒内无电源 / 槽宽不够',d:'电动窗帘只能走明线；单轨 ≥15cm、双轨 ≥20–25cm。'},{l:'mid',t:'风口藏进灯槽',d:'出风被挡、结露。'}],
+   checks:['封板前拍全景照，记录所有内机与管线位置','检修口位置尺寸、冷凝水试水留影像','>3kg 灯具独立吊挂，不挂在龙骨上']},
+
+  {id:'r14',phase:'C · 面层',title:'油漆 / 墙面',pre:'⑬ 吊顶',out:'腻子、底漆、面漆、墙面修补',
+   do:'基层找平、腻子分遍、底漆面漆；柜后墙面也要找平。',
+   traps:[{l:'high',t:'柜后墙面不找平',d:'柜体与墙收口缝巨大，只能靠打胶遮丑。'},{l:'mid',t:'梅雨季未干透就下一遍',d:'起皮、发霉。'},{l:'mid',t:'板材与胶没控环保等级',d:'单件达标叠加后仍可能甲醛超标，优先 ENF/E0 并控制用量。'}],
+   checks:['靠尺检查墙面平整度，尤其柜体靠墙处','每遍干燥间隔按材料说明书','留同色面漆备用，安装后补伤']},
+
+  {id:'r15',phase:'D · 安装',title:'主材安装',pre:'⑭ 墙面完成',out:'门、地板、开关灯具、洁具、五金',
+   do:'先装门后装地板（或按厂家要求协调），装完补墙面；开关面板、灯具、洁具依次进场。',
+   traps:[{l:'high',t:'装完不补墙面',d:'门套、柜体边缘留缝明显。'},{l:'mid',t:'同天堆一堆安装队',d:'没人盯细节，互相碰坏成品。'},{l:'mid',t:'燃气未通气就装热水器',d:'无法调试，且存在安全风险。'}],
+   checks:['成品保护到位，地板铺完立即保护','开关面板逐个通电测试，核对零火线与智能配对','洁具安装后复查地漏排水与打胶']},
+
+  {id:'r16',phase:'D · 安装',title:'定制柜复尺与安装',pre:'⑮ 地墙完成 + 嵌入式电器官方开孔图',out:'复尺单、柜体、收口条',
+   do:'地面/墙面/吊顶成活后复尺下单；安装时处理收口条、踢脚线、柜地齐平。',
+   traps:[{l:'fatal',t:'初尺当复尺用 / 型号没锁死',d:'柜体按尺寸生产后无法改，电器塞不进或散热缝不足。'},{l:'high',t:'用商品页外形尺寸当开孔尺寸',d:'必须拿厂家<b>官方安装开孔图</b>，两者差很多。'},{l:'high',t:'柜地齐平没预留地板厚度',d:'下单前预留 1.2–1.5cm。'},{l:'mid',t:'收口条宽度没提前定',d:'墙面一旦成活，缝隙只能靠打胶遮丑。'}],
+   checks:['复尺单业主签字，逐一核对电器开孔图','柜体环保等级检测报告（ENF/E0）留档','收口、踢脚、柜内插座逐项验收']},
+
+  {id:'r17',phase:'D · 安装',title:'家电、智能设备与软装',pre:'⑯ 柜体安装 + 通气通电',out:'设备调试记录、说明书/保修单/环保说明书',
+   do:'家电分批送装、逐台调试；智能设备配网、场景与自动化配置；软装进场。',
+   traps:[{l:'high',t:'一次性同天送装',d:'没人逐台盯，磕碰与调试遗漏。'},{l:'mid',t:'网关塞进金属弱电箱',d:'信号衰减；放客厅电视柜或玄关。'},{l:'mid',t:'2.4G/5G 未分离独立 SSID',d:'多数米家设备只认 2.4G，配网失败。'},{l:'mid',t:'没留说明书与保修单',d:'110 号令第 31 条要求交付；后期维权与二手都靠它。'}],
+   checks:['逐台通电试运行并拍序列号','智能场景全跑一遍（含断网本地自动化）','说明书、保修单、检测报告统一归档']},
+
+  {id:'r18',phase:'E · 收尾',title:'竣工验收 + 尾款',pre:'⑰ 全部安装完成',out:'分户验收记录、质量保修书、竣工图、空气质量报告',
+   do:'逐项验收，问题清单书面化并整改复查；合格后再付尾款，质保金按合同满 1 年再付。',
+   traps:[{l:'fatal',t:'未验收合格就结清尾款',d:'完全失去筹码。'},{l:'high',t:'没拿竣工图与水电 CAD 图',d:'以后打孔、挂件、检修全靠猜。'},{l:'high',t:'空气检测不合格仍签收',d:'110 号令第 29 条：不合格应返工。'}],
+   checks:['书面问题清单 + 照片，整改复查合格再签字','收齐竣工图、水电 CAD、保修书、检测报告','尾款与质保金按合同节点付']},
+
+  {id:'r19',phase:'E · 收尾',title:'通风散味 + CMA 空气检测',pre:'⑱ 验收 + 全部家具进场',out:'CMA 检测报告',
+   do:'持续通风（可配合高温闷放加速释放），硬装与全部家具进场后按 GB/T 18883-2022 检测。',
+   traps:[{l:'fatal',t:'用便携仪/自测盒当判定依据',d:'京津冀三地消协 2026 比较试验：50 批次便携仪无一精准，最大偏差 237.7%。必须委托 CMA 机构。'},{l:'fatal',t:'拿工程验收标准 GB 50325 当自住判定',d:'密闭条件不同（1h vs 12h），不能替代 GB/T 18883-2022。'},{l:'high',t:'密闭时间不够 / 柜门没打开',d:'检测前关闭门窗及新风 ≥12h，柜门抽屉全开，采样点 0.8–1.5m 呼吸带，每独立房间 1 点。'},{l:'mid',t:'靠气味判断',d:'甲醛无色无味到一定浓度才有刺激性，气味不能判定。'}],
+   checks:['甲醛 1 小时均值 ≤0.08mg/m³，并核苯、TVOC、氨等全项','报告带 CMA 章，核对密闭 12h 与逐项实测值','有老人小孩建议延长空置并复测']},
+
+  {id:'r20',phase:'E · 收尾',title:'入住',pre:'⑲ 全项达标',out:'—',
+   do:'搬家、成品保护撤除、建立设备与质保台账。',
+   traps:[{l:'high',t:'超标仍入住',d:'甲醛释放周期 3–15 年，源头控制（轻装修、少胶少板）比后期治理有效。'},{l:'mid',t:'质保台账没建',d:'防水 5 年、其他 2 年，过保再发现问题只能自费。'}],
+   checks:['建立「设备 + 购买日期 + 保修期 + 票据」台账','把水电竣工图、竣工照片、所有说明书云端备份一份']}
+];
+
+const PRE = [
+  {i:'中央空调 / 风管机、新风、地暖、全屋净水软水、前置过滤器',b:'平面方案前',w:'决定吊顶下吊（带泵约 280–300mm）、梁上开孔、水路；封吊顶后只能走明管或放弃',c:'设备'},
+  {i:'燃气热水器（零冷水）、智能马桶坑距、壁挂马桶水箱、暗装花洒阀体',b:'水电前',w:'零冷水大循环须预埋专用回水管，装修后无法补埋；不同品牌暗装阀体孔距不通用，封墙后换不了品牌',c:'设备'},
+  {i:'家具 / 家电精确尺寸与摆位（床、沙发、餐桌、书桌、柜体）',b:'水电交底前',w:'插座被柜/床/沙发挡死；按家具外轮廓外扩约 10cm 避让',c:'尺寸'},
+  {i:'定制柜方案（玄关柜、衣柜、餐边柜、阳台柜、书墙）',b:'水电交底前',w:'柜内/柜后插座必须与柜体图纸同步出图，否则点位全错',c:'柜子'},
+  {i:'扫地机自动上下水基站、洗烘套装、洗碗机、蒸烤箱、零嵌冰箱、集成灶',b:'上下水类水电前 / 嵌入式复尺前',w:'柜体塞不进、散热缝不足、插座顶出机身；集成灶与分体烟机的烟道和插座上下相反，改一次要重打孔',c:'设备'},
+  {i:'灯光回路、智能开关（零火线）、网络（弱电箱 / 六类网线 / AP 点位）',b:'水电前',w:'单火版频闪、网关塞弱电箱信号衰减、无线回程 Mesh 衰减大',c:'智能'},
+  {i:'传感器 / 网关 / 摄像头 / 人在传感器 / 智能水阀点位',b:'水电前',w:'吊顶内毫米波传感器需零火线，事后只能走明线',c:'智能'},
+  {i:'电视 / 投影、电动窗帘、投影幕布',b:'吊顶收尾前',w:'电视墙预埋 50 管；投影需 ≥25mm 管（光纤 HDMI 32mm）、留 2 根、大弧弯禁 90° 直角，先穿线测试再封管；窗帘盒无电源只能走明线',c:'智能'},
+  {i:'适老扶手加固板 / 钢板、紧急呼叫、夜灯回路',b:'水电 / 砌墙阶段',w:'事后打孔装扶手吃不住力（承载需 ≥100–150kg）',c:'适老'},
+  {i:'瓷砖 / 地板规格、美缝、收口条、踢脚线',b:'贴砖前',w:'不同材质膨胀系数不同，不留缝＝起拱开裂；柜地齐平需预留 1.2–1.5cm 地板厚度',c:'尺寸'},
+  {i:'嵌入式电器官方安装开孔图（非商品页外形尺寸）',b:'定制柜复尺前',w:'柜体按尺寸生产后无法改，电器塞不进或散热不足',c:'柜子'},
+  {i:'房间数 / 谁住哪间 / 老人夜间动线',b:'需求梳理阶段（最优先）',w:'它决定隔墙、点位、柜子、空调，一改全改',c:'布局'}
+];
+
+const NOTE_SEEDS = [
+  {c:'布局与房间',t:'四代同堂：老人 + 小孩 + 夫妻长期共居。先定「谁住哪间」和老人夜间照护动线，再谈风格。',d:'项目资料回填',seed:true},
+  {c:'布局与房间',t:'目标房源湖畔大观 A² 约 98㎡ 三房两卫，主卧带独立衣帽间 + 南向飘窗。户型图只有外框总尺寸，内部按比例估算，待实测。',d:'项目资料回填',seed:true},
+  {c:'布局与房间',t:'看过 7.7㎡ 次卧「床下小宇宙」高架床方案（睡/学/藏/玩 四合一）；也看过「客厅魔变」打通相邻房间并入客厅。是否复制到湖畔待定，且必须先查剪力墙。',d:'项目资料回填',seed:true},
+  {c:'智能家居',t:'全屋米家一次到位，并给后续扩展留接口（插座 / 网络预埋）。开关底盒要拉零线、加深底盒。',d:'项目资料回填',seed:true},
+  {c:'家电与采购',t:'Shark L5 无线吸尘器（基站自动集尘、多一块电池、1600+ 可入）。基站需要预留常通电插座 + 墙面收纳位，水电阶段一起定点。',d:'项目资料回填',seed:true},
+  {c:'待问设计师',t:'湖畔 A² 承重墙 / 剪力墙分布（图上标注 *2# 无剪力墙、*5/11# 有剪力墙，按楼栋核实）、楼栋总层数、实测净尺寸与层高、梁高、下水立管、燃气表位、物业装修报建流程。',d:'项目资料回填',seed:true}
+];
+
+/* ==================== 工具 ==================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '¥' + Math.round(n).toLocaleString('zh-CN');
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ==================== 费用计算器 ==================== */
+function calcFees(){
+  const price  = (parseFloat($('#f_price').value)  || 0) * 10000;
+  const area   = parseFloat($('#f_area').value)   || 0;
+  const downP  = Math.min(100, Math.max(0, parseFloat($('#f_down').value) || 0));
+  const years  = Math.max(1, parseFloat($('#f_years').value) || 30);
+  const rate   = (parseFloat($('#f_rate').value) || 0) / 100;
+  const other  = parseFloat($('#f_other').value)  || 0;
+  const income = parseFloat($('#f_income').value) || 0;
+  const suite  = $('#f_suite').value;
+  const fundUnit = parseFloat($('#f_floor').value);
+
+  const down  = price * downP / 100;
+  const loan  = Math.max(0, price - down);
+  const r = rate / 12, n = Math.round(years * 12);
+  const monthly = loan <= 0 ? 0 : (r === 0 ? loan / n : loan * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1));
+  const totalPay = monthly * n;
+  const interest = Math.max(0, totalPay - loan);
+
+  let deedRate, deedNote;
+  if(suite === 'first'){ deedRate = area <= 140 ? 0.01 : 0.015; deedNote = '家庭唯一住房，' + (area <= 140 ? '≤140㎡ → 1%' : '>140㎡ → 1.5%'); }
+  else if(suite === 'second'){ deedRate = area <= 140 ? 0.01 : 0.02; deedNote = '家庭第二套，' + (area <= 140 ? '≤140㎡ → 1%' : '>140㎡ → 2%'); }
+  else { deedRate = 0.03; deedNote = '第三套及以上，统一 3%'; }
+  const deed = price * deedRate;
+  const fund = area * fundUnit;
+  const reg  = 80;
+  const taxes = deed + fund + reg;
+  const cash  = down + taxes + other;
+
+  const rows = [
+    ['房屋总价', price, '网签合同总价', '计税与贷款基数。<b>用成交价，不是挂牌价</b>'],
+    ['首付款', down, '网签后 / 打进预售资金监管账户', '含定金。<b>必须核对账户名含「监管」字样</b>，索发票'],
+    ['贷款额', loan, '银行放款进监管账户', '放款即开始计息，不是交房才开始还贷'],
+    ['契税', deed, '办证前 / 税务机关', deedNote + '。依据 2024 年第 16 号公告；以税务核定为准'],
+    ['住宅专项维修资金', fund, '交付前 / 专户银行或区政务中心', '武汉 ' + fundUnit + ' 元/㎡ × ' + area + '㎡。<b>不交给开发商代收</b>；楼栋层数决定单价'],
+    ['不动产登记费', reg, '办证时 / 不动产登记中心', '住宅 80 元/件；第一本证书免工本费'],
+    ['抵押登记费', 0, '—', '<b>购房人 0 元</b>：住宅 80 元由抵押权人（银行）缴，不得转嫁'],
+    ['印花税', 0, '—', '<b>免征</b>（财税〔2008〕137 号）'],
+    ['评估费 / 中介费', 0, '—', '新房一般<b>不涉及</b>；按备案合同价放款，无需评估；分销佣金由开发商承担'],
+    ['其他现金支出', other, '交付前后 / 物业等', '物业费预缴、装修押金（验收合格可退）、垃圾清运费、面积补差。<b>按楼盘公示改这个值</b>']
+  ];
+
+  $('#feeTable tbody').innerHTML = rows.map(([name, val, when, note]) =>
+    '<tr><td><b>' + esc(name) + '</b></td><td class="v ' + (val === 0 ? 'zero' : '') + '">' + (val === 0 ? '0 / 免征' : money(val)) + '</td><td>' + when + '</td><td><small>' + note + '</small></td></tr>'
+  ).join('');
+
+  $('#kpis').innerHTML = [
+    ['首付款', money(down), '合同总价的 ' + downP + '%'],
+    ['贷款额', money(loan), years + ' 年 · ' + (rate * 100).toFixed(2) + '%'],
+    ['月供（等额本息）', money(monthly), '共 ' + n + ' 期'],
+    ['总利息', money(interest), '本息合计 ' + money(totalPay)],
+    ['税费合计', money(taxes), '契税 + 维修基金 + 登记费'],
+    ['月供 / 收入', income ? Math.round(monthly / income * 100) + '%' : '—', income ? '月收入 ' + money(income) : '填月收入做压力测试']
+  ].map(([l, v, d]) => '<div class="money-card"><div class="lbl">' + l + '</div><div class="big">' + v + '</div><small>' + d + '</small></div>').join('');
+
+  $('#heroCash').innerHTML = money(cash) + ' <span>（首付 + 税费 + 其他）</span>';
+  $('#heroBreak').textContent = '首付款 ' + money(down) + '　+　契税 ' + money(deed) + '　+　维修基金 ' + money(fund) + '　+　登记费 ' + money(reg) + '　+　其他 ' + money(other) + '。不含后续装修款。';
+
+  const st = $('#stress');
+  if(!income){ st.className = 'notice info'; st.innerHTML = '💡 <b>压力测试：</b>在左侧填家庭月收入，这里会显示月供占比。一般建议月供 ≤ 月可支配收入 40–50%，并另留装修款与 6 个月应急金。'; }
+  else {
+    const p = monthly / income * 100;
+    if(p > 50){ st.className = 'notice danger'; st.innerHTML = '🚨 <b>月供占收入 ' + p.toFixed(0) + '%，偏高。</b>建议提高首付、延长年限或换公积金/组合贷；装修款和应急金会被挤掉。'; }
+    else if(p > 40){ st.className = 'notice'; st.innerHTML = '⚠️ <b>月供占收入 ' + p.toFixed(0) + '%，偏紧。</b>还能承受，但要留足装修与应急金，别再叠加车贷等负债。'; }
+    else { st.className = 'notice info'; st.innerHTML = '✅ <b>月供占收入 ' + p.toFixed(0) + '%，在舒适区间。</b>仍建议把装修预算与 6 个月应急金单独留出来。'; }
+  }
+  LS.set('mxz_calc', {p:$('#f_price').value,a:$('#f_area').value,d:$('#f_down').value,y:$('#f_years').value,r:$('#f_rate').value,o:$('#f_other').value,i:$('#f_income').value,s:suite,f:$('#f_floor').value});
+}
+['f_price','f_area','f_down','f_years','f_rate','f_other','f_income','f_suite','f_floor'].forEach(id => {
+  $('#'+id).addEventListener('input', calcFees); $('#'+id).addEventListener('change', calcFees);
+});
+document.querySelectorAll('.rate-presets button').forEach(b => b.addEventListener('click', () => { $('#f_rate').value = b.dataset.r; calcFees(); }));
+(function restoreCalc(){ const c = LS.get('mxz_calc', null); if(!c) return; const map = {f_price:'p',f_area:'a',f_down:'d',f_years:'y',f_rate:'r',f_other:'o',f_income:'i'}; Object.entries(map).forEach(([id,k]) => { if(c[k] !== undefined) $('#'+id).value = c[k]; }); if(c.s) $('#f_suite').value = c.s; if(c.f) $('#f_floor').value = c.f; })();
+
+/* ==================== 政策雷达 ==================== */
+$('#policyGrid').innerHTML = POLICIES.map(p => {
+  const flag = p.f === 'v' ? ['v','🟢 已核实'] : p.f === 'c' ? ['c','🟡 阶段性'] : ['w','🟣 待核实'];
+  return '<div class="p"><span class="flag '+flag[0]+'">'+flag[1]+'</span><h4>'+esc(p.t)+'</h4><p>'+p.d+'</p></div>';
+}).join('');
+
+/* ==================== 时间轴 ==================== */
+const LV = {fatal:'致命',high:'高',mid:'中'};
+function renderTimeline(which){
+  const data = which === 'buy' ? BUY_STEPS : RENO_STEPS;
+  const done = LS.get('mxz_' + which + '_done', []);
+  const box = which === 'buy' ? $('#buyTimeline') : $('#renoTimeline');
+  box.innerHTML = data.map((s, idx) => {
+    const isDone = done.includes(s.id);
+    const traps = s.traps.map(t => '<div class="trap '+t.l+'"><b>🚨 '+esc(t.t)+'　<span class="pill '+t.l+'">'+LV[t.l]+'</span></b>'+t.d+'</div>').join('');
+    const checks = s.checks.map(c => '<div class="checkline">'+c+'</div>').join('');
+    const kv = which === 'buy'
+      ? '<div class="block"><h4>这一步 / 要带什么 / 花多少钱</h4><div class="kv"><span class="k">时机</span><span>'+esc(s.when)+'</span><span class="k">费用</span><span>'+esc(s.pay)+'</span><span class="k">要做</span><span>'+s.do+'</span><span class="k">材料</span><span>'+esc(s.docs)+'</span></div></div>'
+      : '<div class="block"><h4>依赖关系 / 产出物</h4><div class="kv"><span class="k">前置依赖</span><span>'+esc(s.pre)+'</span><span class="k">本步产出</span><span>'+esc(s.out)+'</span><span class="k">要做</span><span>'+s.do+'</span></div></div>';
+    return '<div class="step'+(isDone?' done':'')+'" id="step-'+s.id+'">'
+      + '<div class="dot"><span class="num">'+String(idx+1).padStart(2,'0')+'</span><span class="tick">✓</span></div>'
+      + '<div class="body"><div class="top" onclick="toggleStep(\''+s.id+'\')">'
+      + '<h3>'+esc(s.title)+'</h3><div class="meta"><span class="phase-tag">'+esc(s.phase)+'</span>'
+      + '<span class="pill '+(which==='buy'?'buy':'reno')+'">'+s.traps.length+' 个坑</span>'
+      + '<label class="mark" onclick="event.stopPropagation()"><input type="checkbox" '+(isDone?'checked':'')+' onchange="markDone(\''+which+'\',\''+s.id+'\',this.checked)"> 已完成</label>'
+      + '<span class="chev">›</span></div></div>'
+      + '<div class="content">'+kv
+      + '<div class="block"><h4>⚠️ 必须避开的坑</h4>'+traps+'</div>'
+      + '<div class="block"><h4>✅ 验收 / 带走的东西</h4>'+checks+'</div>'
+      + '</div></div></div>';
+  }).join('');
+  updateStat(which);
+}
+function toggleStep(id){ $('#step-'+id).classList.toggle('open'); }
+function markDone(which, id, val){
+  const k = 'mxz_' + which + '_done';
+  const a = LS.get(k, []).filter(x => x !== id);
+  if(val) a.push(id);
+  LS.set(k, a);
+  $('#step-'+id).classList.toggle('done', val);
+  updateStat(which);
+}
+function updateStat(which){
+  const data = which === 'buy' ? BUY_STEPS : RENO_STEPS;
+  const n = LS.get('mxz_' + which + '_done', []).length;
+  const el = which === 'buy' ? $('#buyStat') : $('#renoStat');
+  el.textContent = '已完成 ' + n + ' / ' + data.length;
+  el.style.background = n === data.length ? 'rgba(0,214,143,.18)' : '';
+  el.style.color = n === data.length ? 'var(--good)' : '';
+}
+function resetDone(which){ LS.set('mxz_' + which + '_done', []); renderTimeline(which); }
+
+/* ==================== 必须提前定 ==================== */
+let preFilter = '全部';
+function renderPre(){
+  const cats = ['全部', ...new Set(PRE.map(x => x.b))];
+  $('#preFilters').innerHTML = cats.map(c => '<button class="'+(preFilter===c?'on':'')+'" onclick="setPre(\''+c+'\')">'+esc(c)+'</button>').join('');
+  const list = PRE.filter(x => preFilter === '全部' || x.b === preFilter);
+  $('#preTable tbody').innerHTML = list.map(x =>
+    '<tr><td><b>'+esc(x.i)+'</b></td><td><span class="pill reno">'+esc(x.b)+'</span></td><td>'+x.w+'</td><td><small>'+esc(x.c)+'</small></td></tr>'
+  ).join('');
+}
+function setPre(c){ preFilter = c; renderPre(); }
+
+/* ==================== 坑速查 ==================== */
+let trapFilter = '全部';
+function allTraps(){
+  const a = [];
+  BUY_STEPS.forEach(s => s.traps.forEach(t => a.push({...t, from:'买房 · ' + s.title, phase:'买房'})));
+  RENO_STEPS.forEach(s => s.traps.forEach(t => a.push({...t, from:'装修 · ' + s.title, phase:'装修'})));
+  const order = {fatal:0, high:1, mid:2};
+  return a.sort((x,y) => order[x.l] - order[y.l]);
+}
+function renderTraps(){
+  const q = ($('#trapSearch').value || '').trim().toLowerCase();
+  const all = allTraps();
+  const fatal = all.filter(t => t.l === 'fatal').length;
+  $('#trapFilters').innerHTML = ['全部','致命 '+fatal,'买房','装修'].map(f =>
+    '<button class="'+(trapFilter===f.split(' ')[0]?'on':'')+'" onclick="setTrap(\''+f.split(' ')[0]+'\')">'+f+'</button>'
+  ).join('');
+  const list = all.filter(t => {
+    const okF = trapFilter === '全部' || (trapFilter === '致命' ? t.l === 'fatal' : t.phase === trapFilter);
+    const okQ = !q || (t.t + t.d + t.from).toLowerCase().includes(q);
+    return okF && okQ;
+  });
+  const colors = {fatal:'rgba(255,71,87,.16);color:var(--danger)', high:'rgba(255,201,60,.14);color:var(--warn)', mid:'rgba(168,121,255,.14);color:var(--purple)'};
+  $('#trapList').innerHTML = list.length ? list.map(t =>
+    '<div class="trap-item"><span class="lv" style="background:'+colors[t.l]+'">'+LV[t.l]+'</span><div><h4>'+esc(t.t)+'</h4><p>'+t.d+'</p><div class="from">📍 '+esc(t.from)+'</div></div></div>'
+  ).join('') : '<div class="card" style="text-align:center;color:var(--muted)">没找到匹配的坑，换个词试试</div>';
+}
+function setTrap(f){ trapFilter = f; renderTraps(); }
+$('#trapSearch').addEventListener('input', renderTraps);
+
+/* ==================== 备注帖 ==================== */
+function getNotes(){ return LS.get('mxz_notes', []); }
+function renderNotes(){
+  const custom = getNotes();
+  const all = [...NOTE_SEEDS, ...custom];
+  $('#noteList').innerHTML = all.map((n, i) =>
+    '<div class="note'+(n.seed?' seed':'')+'"><div class="txt"><span class="cat">📌 '+esc(n.c)+'</span>'+esc(n.t)+'<span class="date">'+esc(n.d)+(n.seed?' · 项目资料回填':' · 本地记录')+'</span></div>'
+    + (n.seed ? '' : '<button class="del" onclick="delNote('+(i - NOTE_SEEDS.length)+')" title="删除">×</button>') + '</div>'
+  ).join('');
+}
+function addNote(){
+  const t = $('#noteText').value.trim(); if(!t) return;
+  const a = getNotes();
+  a.unshift({c:$('#noteCat').value, t, d:new Date().toLocaleDateString('zh-CN')});
+  LS.set('mxz_notes', a); $('#noteText').value = ''; renderNotes();
+}
+$('#noteText').addEventListener('keydown', e => { if(e.key === 'Enter') addNote(); });
+function delNote(i){ const a = getNotes(); a.splice(i,1); LS.set('mxz_notes', a); renderNotes(); }
+function clearNotes(){ if(confirm('确定清空你自己添加的所有备注？（项目回填的种子条目会保留）')){ LS.set('mxz_notes', []); renderNotes(); } }
+function exportNotes(){
+  const lines = ['# 📌 设计想法备注帖（网页导出）', '', '> 导出时间：' + new Date().toLocaleString('zh-CN'), '> 把想同步进项目 `设计想法备注帖.md` 的条目发给 Buddy 即可。', ''];
+  getNotes().forEach(n => lines.push('## ' + n.c + ' · ' + n.d, '', n.t, ''));
+  if(!getNotes().length) lines.push('（暂无自定义备注）', '');
+  const blob = new Blob([lines.join('\n')], {type:'text/markdown;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = '设计想法备注帖-' + new Date().toISOString().slice(0,10) + '.md';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ==================== 导航 / 初始化 ==================== */
+renderTimeline('buy');
+renderTimeline('reno');
+renderPre();
+renderTraps();
+renderNotes();
+calcFees();
+
+const navLinks = [...document.querySelectorAll('#navInner a')];
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  $('#progress').style.width = (h > 0 ? window.scrollY / h * 100 : 0) + '%';
+  let cur = '';
+  navLinks.forEach(a => { const sec = document.querySelector(a.getAttribute('href')); if(sec && sec.getBoundingClientRect().top <= 120) cur = a.getAttribute('href'); });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === cur));
+}, {passive:true});
+</script>
+</body>
+</html>
