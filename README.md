@@ -9,7 +9,7 @@
 | 🏗 装修看板 | https://jiaweifengnn.github.io/zhuangxiu/ | 需密码登录。管理密码进共享数据模式，访客密码进模板模式 |
 | 📐 户型量化对决 | https://jiaweifengnn.github.io/zhuangxiu/huxing-duibi.html | 四户同框对比：嘉启 90 / 玖月 106 / 嘉悦 113 / 湖畔大观 A² 98。公开可访问 |
 | 🧭 买房 + 装修全流程 | https://jiaweifengnn.github.io/zhuangxiu/maifang-zhuangxiu.html | 买房 11 步 + 装修 20 步、费用计算器、坑速查、备注帖。公开可访问 |
-| 🛋 6.2m 横厅方案 | https://jiaweifengnn.github.io/zhuangxiu/hengting-weihe.html | 两侧打柜 + 中间围合式：6 个真实案例、比例俯视图、2 张渲染图、户型图尺寸校核。**待上线**（部署 token 失效） |
+| 🛋 6.2m 横厅方案 | https://jiaweifengnn.github.io/zhuangxiu/hengting-weihe.html | 两侧打柜 + 中间围合式：6 个真实案例、比例俯视图、2 张渲染图、户型图尺寸校核。2026-11-15 已上线，公开可访问 |
 
 ## 文件清单
 
