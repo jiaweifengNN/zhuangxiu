@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6.2m 横厅 · 两侧打柜 + 中间围合式布局</title>
+<style>
+:root{--ink:#1c1b1a;--muted:#6b6862;--line:#e6e2d9;--orange:#e8590c;--purple:#6741d9;--red:#c92a2a;--bg:#f7f5f0;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+header{background:var(--ink);color:#fff;padding:44px 0 38px;margin-bottom:28px}
+header .wrap{padding-bottom:0}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.2;margin:0 0 12px;letter-spacing:-1px}
+h1 em{font-style:normal;color:#ff922b}
+.sub{color:#c9c5bc;font-size:15px;margin:0 0 22px}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{background:#2c2a27;border:1px solid #45413b;border-radius:999px;padding:7px 15px;font-size:13px;color:#ffe8cc}
+.badge b{color:#ff922b;font-size:16px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 26px}
+nav a{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 14px;color:var(--ink);text-decoration:none;font-size:13px}
+nav a:hover{border-color:var(--orange);color:var(--orange)}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin-bottom:22px}
+h2{font-size:25px;margin:0 0 6px;letter-spacing:-.4px}
+h2 .n{color:var(--orange);font-size:15px;margin-right:10px;font-variant-numeric:tabular-nums}
+.lead{color:var(--muted);font-size:14px;margin:0 0 20px}
+h3{font-size:17px;margin:24px 0 10px}
+p{margin:0 0 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+figure{margin:0}
+figure img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.svgbox{background:#fcfbf8;border:1px solid var(--line);border-radius:12px;padding:10px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+th,td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:#f3f0e9;font-weight:600;white-space:nowrap}
+td b{color:var(--purple)}
+.warn{background:#fff4e6;border:1px solid #ffc078;border-left:5px solid var(--orange);border-radius:12px;padding:18px 20px;margin:18px 0}
+.warn h3{margin:0 0 8px;color:#a63e00;font-size:17px}
+.ok{background:#ebfbee;border:1px solid #b2f2bb;border-left:5px solid #2b8a3e;border-radius:12px;padding:16px 20px;margin:16px 0;font-size:14px}
+.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.case{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fdfcf9}
+.case .tag{display:inline-block;background:#eef0ff;color:var(--purple);border-radius:6px;padding:2px 8px;font-size:12px;margin-bottom:8px}
+.case h3{margin:0 0 6px;font-size:16px}
+.case p{font-size:13.5px;color:#4a4741;margin:0 0 8px}
+.case .use{font-size:13px;background:#fff;border-left:3px solid var(--orange);padding:8px 10px;color:#3d3a34}
+.case a{font-size:12.5px;color:var(--purple);text-decoration:none;word-break:break-all}
+.case a:hover{text-decoration:underline}
+.pill{display:inline-block;background:#f1f3f5;border-radius:6px;padding:1px 7px;font-size:12px;color:#495057;margin-right:4px}
+footer{color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:18px;margin-top:10px}
+footer a{color:var(--purple)}
+@media(max-width:760px){.grid2,.cases{grid-template-columns:1fr}section{padding:20px 16px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>6.2m 横厅 · <em>两侧打柜 + 中间围合式</em></h1>
+<p class="sub">案例检索 · 尺寸俯视图 · 效果渲染 · 户型图校核　｜　2026-11-15　｜　湖畔大观 A²</p>
+<div class="badges">
+<span class="badge">面宽 <b>6.2m</b></span>
+<span class="badge">净进深 <b>4.2m</b></span>
+<span class="badge">两侧柜各 <b>600</b></span>
+<span class="badge">中间净宽 <b>5.0m</b></span>
+<span class="badge">观看轴 <b>≈3.2m</b></span>
+<span class="badge">机器人环线 <b>≥600</b></span>
+</div>
+</div></header>
+
+<div class="wrap">
+<nav>
+<a href="#render">① 渲染图</a><a href="#plan">② 俯视图</a><a href="#check">③ 户型图校核</a><a href="#cases">④ 真实案例</a><a href="#tradeoff">⑤ 取舍与坑</a>
+</nav>
+
+<section id="render">
+<h2><span class="n">01</span>先看效果：两侧整墙柜夹着一组不靠墙的围合沙发</h2>
+<p class="lead">同一套布局的两个视角。左柜嵌电视，右柜做书柜 / 玻璃展示，中间沙发不靠任何墙，背后一张半高矮柜当「靠山」，两把高脚单椅 + 小圆茶几收成会客岛。全屋浅木通铺、无地毯、无门槛，扫地机器人可从岛外绕行一圈。</p>
+<div class="grid2">
+<figure><img src="images/Photorealistic_interior_design_2026-11-15T14-36-28.png" alt="6.2m 横厅人视效果图"><figcaption>人视透视：从北侧看向南向落地窗，两侧柜墙与中央围合岛的关系一目了然。</figcaption></figure>
+<figure><img src="images/Isometric_cutaway_architectura_2026-11-15T14-38-33.png" alt="6.2m 横厅斜俯视轴测图"><figcaption>斜俯视轴测：能看清沙发背后矮柜、环形通道、阳台与扫地机器人的位置。</figcaption></figure>
+</div>
+<div class="ok"><b>结论先给：</b>6.2m 面宽两侧各打 600 深柜，中间还剩 5.0m 净宽，横向余量非常够。真正的门槛依旧是<b>净进深 4.2m</b>（沙发长 2.2m + 前后各留约 0.9m 通道 / 单椅位）。这一版是「完整围合」成立的样子。</div>
+</section>
+
+<section id="plan">
+<h2><span class="n">02</span>俯视图 · 6.2m × 4.2m 按 84px = 1m 绘制</h2>
+<p class="lead">红虚线是扫地机器人绕岛环线，灰色带是 ≥900mm 连续主通道。柜子打在东西两堵短边墙上，南面 6.2m 全部留给采光。</p>
+<div class="svgbox">
+<svg viewBox="0 0 680 504" width="100%" role="img" xmlns="http://www.w3.org/2000/svg" style="min-width:640px">
+<title>6.2m 横厅两侧柜 + 中间围合式俯视图</title>
+<desc>面宽 6.2m、进深 4.2m 的横厅，东西两侧各 600mm 深整墙柜，中央一组不靠墙的围合式沙发、两把单椅与茶几，沙发背后 400mm 半高矮柜，四周 600mm 以上机器人环线，北侧 900mm 连续主通道，南侧为落地窗与阳台。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text x="340" y="30" text-anchor="middle" font-size="13" font-weight="500" fill="#1c1b1a">6.2m 面宽 · 两侧各 600 柜 → 中间净宽 5.0m</text>
+<path d="M 80 44 L 600 44" fill="none" stroke="#888780" stroke-width="0.5"/>
+<path d="M 80 39 L 80 49 M 600 39 L 600 49" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="80" y="60" width="520" height="353" rx="10" fill="#FFFFFF" stroke="#5F5E5A" stroke-width="0.5"/>
+<rect x="130" y="60" width="420" height="76" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<rect x="80" y="60" width="50" height="353" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+<rect x="550" y="60" width="50" height="353" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+<rect x="225" y="140" width="255" height="195" rx="12" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.5"/>
+<rect x="80" y="401" width="520" height="12" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<rect x="130" y="413" width="420" height="26" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<rect x="130" y="185" width="8" height="90" rx="2" fill="#2C2C2A"/>
+<rect x="350" y="145" width="84" height="185" rx="6" fill="#AFA9EC" stroke="#534AB7" stroke-width="0.5"/>
+<text x="392" y="240" text-anchor="middle" font-size="13" fill="#26215C">沙发</text>
+<rect x="434" y="170" width="34" height="135" rx="4" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+<rect x="250" y="210" width="50" height="50" rx="25" fill="#FFFFFF" stroke="#534AB7" stroke-width="0.5"/>
+<text x="275" y="239" text-anchor="middle" font-size="12" fill="#3C3489">茶几</text>
+<rect x="255" y="145" width="50" height="44" rx="6" fill="#AFA9EC" stroke="#534AB7" stroke-width="0.5"/>
+<text x="280" y="171" text-anchor="middle" font-size="12" fill="#26215C">椅</text>
+<rect x="255" y="280" width="50" height="44" rx="6" fill="#AFA9EC" stroke="#534AB7" stroke-width="0.5"/>
+<text x="280" y="306" text-anchor="middle" font-size="12" fill="#26215C">椅</text>
+<path d="M 170 135 L 490 135 L 490 355 L 170 355 Z" fill="none" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<path d="M 530 98 L 150 98" fill="none" stroke="#5F5E5A" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<text x="340" y="90" text-anchor="middle" font-size="12" fill="#444441">≥900 主通道 · 入户 → 卧室（不被围合岛切断）</text>
+<text x="105" y="205" text-anchor="middle" font-size="12" fill="#633806">电视</text>
+<text x="105" y="223" text-anchor="middle" font-size="12" fill="#633806">柜墙</text>
+<text x="575" y="205" text-anchor="middle" font-size="12" fill="#633806">书柜</text>
+<text x="575" y="223" text-anchor="middle" font-size="12" fill="#633806">墙</text>
+<text x="340" y="430" text-anchor="middle" font-size="12" fill="#0C447C">南向 6.2m 落地窗 + 阳台 · 窗前留 900 不放家具</text>
+<text x="44" y="238" font-size="12" fill="#5F5E5A">4.2m</text>
+<text x="44" y="254" font-size="12" fill="#5F5E5A">进深</text>
+<text x="80" y="462" font-size="12.5" fill="#2C2C2A">横向 6.2m = 左柜 600 + 电视前 1400 + 茶几 600 + 间距 600 + 沙发 1000 + 背后矮柜 400 + 环线 1000 + 右柜 600</text>
+<text x="80" y="484" font-size="12" fill="#5F5E5A">纵向 4.2m = 北通道 900 + 围合区 2400 + 窗前 900 · 单位 mm · 人体工学经验值，以量房实测复尺为准</text>
+</svg>
+</div>
+<table>
+<tr><th>部位</th><th>建议尺寸</th><th>为什么</th></tr>
+<tr><td>两侧整墙柜</td><td><b>各 600 深</b>，通顶，左嵌电视 / 右做书柜玻璃门</td><td>两面 4.2m 长柜 ≈ 21.8㎡ 柜门面积，四代宅收纳量一次吃满；封闭门板为主，开放格 ≤ 2 成</td></tr>
+<tr><td>中间净宽</td><td>6.2 − 0.6×2 = <b>5.0m</b></td><td>横向观看轴只需约 3.2m，还有 1.8m 余量，所以两侧打柜不会挤</td></tr>
+<tr><td>电视 → 沙发</td><td><b>3.0–3.3m</b></td><td>65–75 寸合适；别硬把电视挂到 6.2m 长边墙，视距会变 5m+</td></tr>
+<tr><td>沙发背后</td><td>1.0–1.1m 高<b>半高矮柜 400 深</b> + 背后 ≥900 通道</td><td>给「浮」着的沙发一个靠山，兼做客餐分界、收纳、老人起身借力</td></tr>
+<tr><td>机器人环线</td><td>岛四周 <b>≥600</b>，主通道 <b>≥900</b></td><td>红虚线必须闭合，否则会客岛中间会变成永久死角</td></tr>
+</table>
+</section>
+
+<section id="check">
+<h2><span class="n">03</span>你发的户型图：先把尺寸口径对齐</h2>
+<p class="lead">这张图比之前那版精确得多（带完整尺寸链），已读出的数字如下。</p>
+<table>
+<tr><th>项目</th><th>图上标注</th></tr>
+<tr><td>客餐厅</td><td><b>24.31㎡</b>（不是之前缩略图看成的 33㎡）</td></tr>
+<tr><td>阳台 / 厨房</td><td>6.97㎡ / 4.64㎡</td></tr>
+<tr><td>三间卧室</td><td>13.61㎡ / 8.23㎡ / 7.25㎡</td></tr>
+<tr><td>两个卫生间</td><td>3.39㎡ / 4㎡</td></tr>
+<tr><td>顶部横向尺寸链</td><td>1634 + 2698 + 1762 + 1833 + 1708 = <b>9635mm</b></td></tr>
+<tr><td>底部横向尺寸链</td><td>2507 + 1370 + 5011 + 748 = <b>9636mm</b>（其中 5011 对应阳台宽约 5.0m）</td></tr>
+<tr><td>左侧纵向尺寸链</td><td>527 + 855 + 1760 + 4187 + 671 = <b>8000mm</b></td></tr>
+<tr><td>右侧纵向尺寸链</td><td>1473 + 7692 + 905 + 693</td></tr>
+</table>
+<div class="warn">
+<h3>⚠️ 有个口径要先确认，不然方案会跑偏</h3>
+<p>按图中比例，客餐厅是一个<b>南北长条</b>（约 3.4m 宽 × 6.9m 深，24.31㎡ 也吻合），并不是 6.2m 的横向面宽。所以「6.2m 横厅」有两种可能，我把两种并列留着，不替你拍板：</p>
+<p><b>口径 A · 打通后</b>：拆掉相邻 8.23㎡ 房间并入客厅，3.4 + 2.8 ≈ <b>6.2m</b> 变成横厅。这正好接上项目里已有的「客厅魔变」打通方案，本页俯视图与渲染图按这个口径画。<b>前提</b>：先查剪力墙 / 承重墙 + 走物业审批。</p>
+<p><b>口径 B · 6.2m 指长边进深</b>：不拆墙，现状净宽只有约 3.4m，两侧各打 600 柜后只剩 <b>2.2m</b>，围合式做不了，应改一字型 / L 型 + 可移动单椅。</p>
+<p style="margin-bottom:0">量房时请一并拿到：客餐厅<b>净宽 / 净进深</b>、剪力墙位置、梁高、南向窗台与阳台推拉门形式。本页所有尺寸在实测前都算方案级判断。</p>
+</div>
+</section>
+
+<section id="cases">
+<h2><span class="n">04</span>找得到的真实案例（6 个，附链接）</h2>
+<p class="lead">按「横厅 + 沙发不靠墙 / 围合 + 柜子」筛的，尺寸最接近的是 6.8m 与 6.32m 两例。案例文字来自公开检索摘要，图片与细节建议点开原链接核对。</p>
+<div class="cases">
+<div class="case"><span class="tag">最接近 · 6.8m</span><h3>有娃家庭 6.8m 横厅 · 满墙柜 + 弧形沙发围合</h3>
+<p>套内 160㎡，横厅宽 6.8m。沙发背景墙 3.6m 做满墙柜，圆弧造型与柜体穿插，半开放层用玻璃柜门减清洁量；<b>3.4m 皮质弧形沙发不靠墙、不靠茶台，围合式布局</b>，孩子留出充足活动区。</p>
+<div class="use">可借鉴：整墙柜用「圆弧穿插 + 玻璃门」破压迫感；皮沙发好打理，和去家务化同频。</div>
+<a href="https://www.toutiao.com/article/7672272697920913963" target="_blank">toutiao.com/article/7672272697920913963</a></div>
+
+<div class="case"><span class="tag">双沙发围合</span><h3>140㎡ 大横厅 · 两张长沙发对围 + 沙发墙整排柜</h3>
+<p>屋主坚持沙发不靠墙，两张长沙发把茶几围在中间，铺整面灰色地毯界定会客区；空出来的沙发墙做成一整面开放格储物；电视墙艺术涂料 + 石材地台；无主灯。</p>
+<div class="use">可借鉴：双沙发是最完整的围合形态。<b>⚠️ 但「整面地毯」与你的总结 #1 直接冲突</b>，要围合就得换成无地毯 / 可机洗短绒。</div>
+<a href="https://www.163.com/dy/article/IJ3JIDGF0540A6F8.html" target="_blank">163.com/dy/article/IJ3JIDGF0540A6F8.html</a></div>
+
+<div class="case"><span class="tag">小面积也能做 · 6m</span><h3>北京 90㎡ · 6m 小横厅，沙发居中 + 双洄游动线</h3>
+<p>建面 90㎡ / 套内 80㎡，客餐厅宽 4.7m、进深 6m。沙发不靠墙居中，与可拉伸餐岛形成<b>两条洄游动线</b>，顺带隔出完整电视墙；取消大茶几改用角几；浴室柜下预留扫地机上下水与电位。</p>
+<div class="use">可借鉴：小几替代大茶几、机器人基站水电同步定点 —— 这两条跟你总结 #1 几乎是同一套思路。</div>
+<a href="http://mp.weixin.qq.com/s?__biz=MzkzOTIzOTU5OA==&mid=2247492259&idx=1&sn=5841cbcf037055eac3cfa019dc8776ff" target="_blank">颜居设计 · 微信公众号案例</a></div>
+
+<div class="case"><span class="tag">6.32m · 拆墙换横厅</span><h3>恒田设计 6.32m 大横厅 · 餐桌居中 + 水吧台</h3>
+<p>拆掉厨房与书房之间一半隔墙，餐桌挪到横厅中央、四面都能走人，吃饭 / 聊天 / 写作业共用；对面嵌一组水吧台，把原本「从玄关到主卧一条纯走廊」的浪费面积盘活。</p>
+<div class="use">可借鉴：横厅中心不一定是沙发，餐桌 / 岛台也能当围合核心；也印证「打通换横厅」是可行路径。</div>
+<a href="https://post.m.smzdm.com/p/aww7v9z2" target="_blank">post.m.smzdm.com/p/aww7v9z2</a></div>
+
+<div class="case"><span class="tag">打通实操</span><h3>一兜糖 · 打开西面房间改大横厅，客餐岛回形动线</h3>
+<p>把西面房间打开、合并过道改成大横厅；餐边柜 + 岛台 + 餐桌做成<b>回形动线围合式</b>；大梁用弧形吊顶内嵌线性灯弱化；无主灯 + 轨道灯。</p>
+<div class="use">可借鉴：与项目里的「客厅魔变」打通方案是同一思路，重点看它怎么处理拆墙后的梁与柜体收口。</div>
+<a href="https://www.yidoutang.com/case-2303265.html" target="_blank">yidoutang.com/case-2303265.html</a></div>
+
+<div class="case"><span class="tag">反向忠告 · 必看</span><h3>南京大平层横厅 · 别把两面墙都做满柜</h3>
+<p>定制方明确点名横厅两大错误：<b>整面墙做满柜，通透感立刻打折</b>；沙发靠墙导致中间空一大块。他们的做法是沙发不靠墙、背后留通道 + 矮柜或半高书柜；电视墙柜厚控制在 <b>30cm 内</b>、浅色、开放格与封闭门交替；不放大茶几，改小边几 / 移动推车。</p>
+<div class="use">可借鉴：这正是「两边都要打柜」最大的风险。建议一侧 600 深（真收纳）、另一侧 350 薄柜，或两面都留一段留白。</div>
+<a href="https://m.toutiao.com/article/7667212509627073033" target="_blank">m.toutiao.com/article/7667212509627073033</a></div>
+</div>
+<h3>顺手记下的经验值（来自同一批资料，不是硬规范）</h3>
+<p><span class="pill">≥6m 横厅</span>沙发离墙 60–80cm，靠背高度 &lt;85cm 免挡视线　<span class="pill">7.4m×5.2m 案例</span>沙发居中后与餐桌留 2.5m 通道　<span class="pill">中小户型</span>沙发背后只留 25–35cm 做薄书架，通道需 ≥80cm　<span class="pill">6m 以上</span>餐厅可考虑餐岛一体</p>
+</section>
+
+<section id="tradeoff">
+<h2><span class="n">05</span>柜深取舍 + 和你已定原则的冲突</h2>
+<table>
+<tr><th>方案</th><th>柜深</th><th>中间净宽</th><th>代价</th></tr>
+<tr><td>两侧都 600（本页渲染图）</td><td>600 + 600</td><td><b>5.0m</b></td><td>收纳最大，但两面顶天立地柜最容易显堵 → 必须浅色 + 无把手 + 至少一侧留开放格 / 玻璃门</td></tr>
+<tr><td>电视侧 350 + 沙发侧 600</td><td>350 + 600</td><td><b>5.25m</b></td><td>推荐折中：电视墙做薄柜弱化体量，重收纳集中到沙发侧</td></tr>
+<tr><td>两侧都 350</td><td>350 + 350</td><td><b>5.5m</b></td><td>最通透，但收纳量近乎减半，四代宅慎选</td></tr>
+</table>
+<div class="warn">
+<h3>⚠️ 与「去家务化」总结 #1 的口径冲突（并列保留，待拍板）</h3>
+<p>围合式的标配 —— <b>大地毯 + 细腿单椅 + 落地灯 + 边几</b> —— 正好是扫地机器人的四大障碍，沙发悬空还会形成机器人绕不进去的孤岛。若确定做围合：</p>
+<p>① 取消地毯（或可机洗短绒、边缘不翘）；② 单椅 / 茶几统一「抬高 ≥12cm 支脚」且可挪，落地灯改壁灯或吊顶；③ 岛四周留 ≥600mm 回转宽度（俯视图红虚线）；④ 柜子要么全落地封底、要么底部留 ≥12cm，<b>最忌 3–8cm 半吊子缝</b>。这与 09 区「全落地封底 vs 抬高支脚」是同一个决定。</p>
+<p style="margin-bottom:0">适老向：沙发背后悬空，老人起坐没支撑、背后有人经过易受惊 → 1.0–1.1m 半高矮柜正好当靠山兼借力；地面别加地毯卷边（防绊倒），与「全屋无高差」一致。</p>
+</div>
+<div class="ok"><b>一句话建议：</b>先确认 6.2m 是不是打通后的面宽（口径 A）。是 → 按本页做，两侧柜别都做 600 满，电视侧压到 350；不是 → 现状 3.4m 净宽别硬做围合，改 L 型 / 一字型 + 可移动单椅，把预算放到打通方案的可行性核查上。</div>
+</section>
+
+<footer>
+<p><b>数据来源</b>：户型尺寸与面积来自用户 2026-11-15 提供的户型图标注（放大读数，个别数字需以开发商 CAD / 量房实测为准）；案例来自今日头条、网易、什么值得买、一兜糖、颜居设计公众号的公开检索摘要；人体工学尺寸为行业经验建议值，非国家标准。渲染图与俯视图为 AI 生成的方案示意，不作为施工图。</p>
+<p>本页为「从零到百魔法装修攻略」项目的方案页 · 配套：<a href="maifang-zhuangxiu.html">买房+装修全流程手册</a> · <a href="huxing-duibi.html">户型对比</a> · <a href="设计想法备注帖.md">设计想法备注帖</a></p>
+</footer>
+</div>
+</body>
+</html>
