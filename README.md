@@ -10,6 +10,7 @@
 | 📐 户型量化对决 | https://jiaweifengnn.github.io/zhuangxiu/huxing-duibi.html | 四户同框对比：嘉启 90 / 玖月 106 / 嘉悦 113 / 湖畔大观 A² 98。公开可访问 |
 | 🧭 买房 + 装修全流程 | https://jiaweifengnn.github.io/zhuangxiu/maifang-zhuangxiu.html | 买房 11 步 + 装修 20 步、费用计算器、坑速查、备注帖。公开可访问 |
 | 🛋 6.2m 横厅方案 | https://jiaweifengnn.github.io/zhuangxiu/hengting-weihe.html | 两侧打柜 + 中间围合式：6 个真实案例、比例俯视图、2 张渲染图、户型图尺寸校核。2026-11-15 已上线，公开可访问 |
+| 🗓 采购时机 × 装修窗口 | https://jiaweifengnn.github.io/zhuangxiu/caigou-shijianbiao.html | 2027 作战地图：三条时间轴（定型号/下单锁价/实物进场）、2026 行情雷达（存储涨 vs OLED 跌）、武汉 12 个月施工窗口、三个开工方案甘特图、17 品类采购表、促销节点、湖北国补 |
 
 ## 文件清单
 
@@ -20,6 +21,7 @@
 - **设计想法备注帖.md** —— 2026-11-12 新增。找设计师之前的想法沉淀区；以后跟 Buddy 说的每一条装修想法都会归类追加到这里，网页「📌 备注帖」板块同步。
 - **hengting-weihe.html** —— 2026-11-15 新增。6.2m 横厅「两侧各 600 柜 + 中间围合」方案页：6 个带链接的真实案例、6.2×4.2m 比例俯视 SVG（含机器人环线与主通道）、2 张渲染图、柜深取舍表、户型图尺寸链校核、去家务化 / 适老冲突提示。
 - **maifang-zhuangxiu.html 的 NOTE_SEEDS** —— 与备注帖双向维护，改内容只改数组。
+- **caigou-shijianbiao.html** —— 2026-11-21 新增。采购时机 × 装修窗口作战图：三条时间轴、行情雷达（内存 +300% vs OLED -40%）、武汉 12 个月施工窗口与关键工序气候窗口、2027 三个开工方案甘特图、17 品类采购表（可筛选 + 国补标注）、9 个促销节点、湖北国补细则与叠加顺序、提前买 4 个代价与 3 个正确姿势、6 条避坑。数据驱动，改内容只改 `KPI / TIERS / RADAR / MONTHS / CRAFT / PLANS / ITEMS / PROMOS / GRANTS / TODOS` 数组。
 - **images/** —— 四张户型图 + 2 张 6.2m 横厅围合式渲染图（人视透视 / 斜俯视轴测）。
 
 ## 数据说明
