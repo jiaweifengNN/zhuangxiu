@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>采购时机 × 装修窗口 · 2027 武汉作战地图</title>
+<style>
+:root{
+  --bg:#080b12;--card:#111827;--card2:#161f33;
+  --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);
+  --tx:#e8edf7;--tx2:#9aa8c0;--tx3:#6b7a94;
+  --up:#ff4d5e;--down:#00e5a0;--warn:#ffb020;--pick:#8b5cf6;--info:#3b9eff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font:15px/1.65 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:99;background:linear-gradient(90deg,var(--down),var(--info),var(--pick))}
+a{color:var(--info);text-decoration:none}
+.hero{position:relative;padding:86px 0 54px;background:radial-gradient(900px 420px at 18% -10%,rgba(139,92,246,.20),transparent 70%),radial-gradient(760px 380px at 88% 4%,rgba(0,229,160,.13),transparent 70%),var(--bg)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.08em;color:var(--tx2);border:1px solid var(--line2);border-radius:999px;padding:5px 13px;margin-bottom:22px;text-transform:uppercase}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--down);box-shadow:0 0 10px var(--down);font-style:normal}
+h1{font-size:clamp(34px,6.2vw,66px);line-height:1.04;letter-spacing:-.03em;font-weight:800}
+h1 .x{color:var(--pick);font-weight:400}
+h1 em{font-style:normal;background:linear-gradient(96deg,var(--down),var(--info));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:16px;font-size:clamp(15px,1.6vw,18px);color:var(--tx2);max-width:780px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:34px}
+.kpi{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:12px;padding:15px 16px}
+.kpi.up{border-left-color:var(--up)}.kpi.down{border-left-color:var(--down)}
+.kpi.warn{border-left-color:var(--warn)}.kpi.pick{border-left-color:var(--pick)}
+.kpi b{display:block;font-size:clamp(24px,3.4vw,34px);line-height:1.1;letter-spacing:-.02em}
+.kpi.up b{color:var(--up)}.kpi.down b{color:var(--down)}.kpi.warn b{color:var(--warn)}.kpi.pick b{color:var(--pick)}
+.kpi span{display:block;margin-top:6px;font-size:12.5px;color:var(--tx3);line-height:1.45}
+.verdict{margin-top:30px;display:grid;gap:10px}
+.vd{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.vd i{flex:0 0 22px;height:22px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;margin-top:1px}
+.vd.up i{background:rgba(255,77,94,.16);color:var(--up)}
+.vd.down i{background:rgba(0,229,160,.14);color:var(--down)}
+.vd.warn i{background:rgba(255,176,32,.15);color:var(--warn)}
+.vd p{font-size:14px;color:var(--tx2)}
+.vd b{color:var(--tx)}
+nav{position:sticky;top:0;z-index:50;background:rgba(8,11,18,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav .wrap{display:flex;gap:4px;padding:9px 20px;white-space:nowrap}
+nav a{color:var(--tx2);font-size:13px;padding:6px 12px;border-radius:8px;transition:.18s}
+nav a:hover{color:var(--tx);background:rgba(255,255,255,.06)}
+section{padding:60px 0;border-bottom:1px solid var(--line)}
+.sh{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.sh .num{font:700 13px/1 system-ui;color:var(--pick);border:1px solid rgba(139,92,246,.4);border-radius:7px;padding:5px 8px}
+h2{font-size:clamp(21px,3vw,30px);letter-spacing:-.02em;font-weight:750}
+.lead{color:var(--tx2);font-size:14.5px;max-width:920px;margin-bottom:26px}
+.lead b{color:var(--tx)}
+.tiers{display:grid;gap:12px}
+.tier{display:grid;grid-template-columns:64px 1fr;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;transition:.22s}
+.tier:hover{border-color:var(--line2);transform:translateX(3px)}
+.tier .k{font:800 22px/1 system-ui;color:var(--pick);align-self:start;padding-top:2px}
+.tier .k small{display:block;font:400 10.5px/1.4 system-ui;color:var(--tx3);margin-top:6px;letter-spacing:.06em}
+.tier h3{font-size:16.5px;margin-bottom:4px}
+.tier .when{font-size:12.5px;color:var(--warn);margin-bottom:10px}
+.tier ul{list-style:none;display:grid;gap:5px;margin-bottom:10px}
+.tier li{font-size:13.5px;color:var(--tx2);padding-left:15px;position:relative}
+.tier li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--down)}
+.tier .risk{font-size:12.5px;color:var(--up);background:rgba(255,77,94,.08);border-left:2px solid var(--up);border-radius:0 7px 7px 0;padding:8px 11px}
+.radar{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:12px}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px;position:relative;overflow:hidden}
+.rc::before{content:'';position:absolute;inset:0 0 auto 0;height:2px}
+.rc.up::before{background:var(--up)}.rc.down::before{background:var(--down)}
+.rc.warn::before{background:var(--warn)}.rc.info::before{background:var(--info)}
+.rc .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-bottom:10px}
+.rc.up .tag{background:rgba(255,77,94,.15);color:var(--up)}
+.rc.down .tag{background:rgba(0,229,160,.14);color:var(--down)}
+.rc.warn .tag{background:rgba(255,176,32,.15);color:var(--warn)}
+.rc.info .tag{background:rgba(59,158,255,.15);color:var(--info)}
+.rc h4{font-size:15px;margin-bottom:8px}
+.rc ul{list-style:none;display:grid;gap:7px}
+.rc li{font-size:13px;color:var(--tx2);line-height:1.55}
+.rc li b{color:var(--tx)}
+.rc .adv{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line2);font-size:12.5px;color:var(--down)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:12.5px;color:var(--tx2)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.mgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.mo{border-radius:11px;padding:13px 12px;border:1px solid var(--line);background:var(--card);transition:.2s}
+.mo:hover{transform:translateY(-3px);border-color:var(--line2)}
+.mo .m{font:800 19px/1 system-ui;letter-spacing:-.02em}
+.mo .m em{font-style:normal;font-size:11px;font-weight:400;color:var(--tx3);margin-left:3px}
+.mo .s{font-size:12.5px;font-weight:600;margin:7px 0 5px}
+.mo .d{font-size:11.5px;color:var(--tx3);line-height:1.5}
+.mo.best{background:rgba(0,229,160,.10);border-color:rgba(0,229,160,.40)}.mo.best .s{color:var(--down)}
+.mo.good{background:rgba(0,229,160,.05);border-color:rgba(0,229,160,.22)}.mo.good .s{color:#6ff0c0}
+.mo.mid{background:rgba(255,176,32,.06);border-color:rgba(255,176,32,.26)}.mo.mid .s{color:var(--warn)}
+.mo.cheap{background:rgba(59,158,255,.07);border-color:rgba(59,158,255,.28)}.mo.cheap .s{color:var(--info)}
+.mo.ok{background:rgba(255,176,32,.04);border-color:rgba(255,176,32,.18)}.mo.ok .s{color:#e8c37a}
+.mo.bad{background:rgba(255,77,94,.07);border-color:rgba(255,77,94,.28)}.mo.bad .s{color:var(--up)}
+.craft{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:10px;margin-top:14px}
+.cf{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:13px 14px}
+.cf h5{font-size:13.5px;margin-bottom:5px;color:var(--tx)}
+.cf p{font-size:12.5px;color:var(--tx2);line-height:1.55}
+.cf .win{color:var(--down);font-weight:600}
+h3.mid{font-size:15px;margin:28px 0 14px}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:20px;margin-bottom:14px}
+.plan.top{border-color:rgba(0,229,160,.42);box-shadow:inset 0 0 0 1px rgba(0,229,160,.10)}
+.plan .ph{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.plan .pt{font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.badge.a{background:rgba(0,229,160,.15);color:var(--down)}
+.badge.b{background:rgba(59,158,255,.15);color:var(--info)}
+.badge.c{background:rgba(255,176,32,.15);color:var(--warn)}
+.plan .pd{font-size:13px;color:var(--tx2);max-width:620px}
+.gantt{display:grid;gap:6px}
+.grow{display:grid;grid-template-columns:104px 1fr;gap:11px;align-items:center}
+.grow .gl{font-size:11.5px;color:var(--tx3);text-align:right;line-height:1.3}
+.gtrack{position:relative;height:19px;background:rgba(255,255,255,.035);border-radius:5px;overflow:hidden}
+.gbar{position:absolute;top:0;bottom:0;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden}
+.gbar.s{background:#8b5cf6;color:#fff}
+.gbar.w{background:#00e5a0;color:#06120c}
+.gbar.m{background:#3b9eff;color:#04121f}
+.gbar.p{background:#ffb020;color:#2a1a00}
+.gbar.f{background:rgba(255,255,255,.14);color:var(--tx2)}
+.gbar.buy{background:#ff4d5e;color:#fff}
+.gaxis{display:grid;grid-template-columns:104px 1fr;gap:11px;margin-top:9px}
+.gax{display:flex;justify-content:space-between;font-size:10.5px;color:var(--tx3)}
+.plan .note{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.plan .note div{font-size:12.5px;padding:10px 12px;border-radius:9px;line-height:1.55}
+.plan .note .good{background:rgba(0,229,160,.07);border-left:2px solid var(--down);color:var(--tx2)}
+.plan .note .bad{background:rgba(255,77,94,.07);border-left:2px solid var(--up);color:var(--tx2)}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.fb{font:inherit;font-size:12.5px;padding:6px 13px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--tx2);cursor:pointer;transition:.16s}
+.fb:hover{color:var(--tx);border-color:var(--tx3)}
+.fb.on{background:var(--tx);color:#080b12;border-color:var(--tx);font-weight:700}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--card)}
+table{width:100%;border-collapse:collapse;min-width:960px}
+th,td{text-align:left;padding:12px 14px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;letter-spacing:.05em;color:var(--tx3);font-weight:600;text-transform:uppercase;background:#0e1523}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-weight:650;color:var(--tx);min-width:140px}
+td.n small{display:block;font-weight:400;font-size:11px;color:var(--tx3);margin-top:3px}
+td.dead{color:var(--warn);font-weight:600;min-width:106px}
+td.buy{color:var(--down);font-weight:600;min-width:112px}
+td.arr{color:var(--info);min-width:98px}
+td.ver{color:var(--tx2);min-width:270px}
+td.ver b{color:var(--tx)}
+.pill{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:999px;white-space:nowrap;margin-top:5px}
+.pill.y{background:rgba(0,229,160,.14);color:var(--down)}
+.pill.n{background:rgba(255,255,255,.07);color:var(--tx3)}
+.pill.m{background:rgba(255,176,32,.14);color:var(--warn)}
+.promos{display:grid;gap:8px}
+.pr{display:grid;grid-template-columns:126px 1fr auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 15px;transition:.18s}
+.pr:hover{border-color:var(--line2);background:var(--card2)}
+.pr .pw{font-size:12.5px;font-weight:700;color:var(--warn)}
+.pr .pn{font-size:13.5px}
+.pr .pn small{display:block;font-size:12px;color:var(--tx3);margin-top:3px;font-weight:400}
+.pr .ps{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.ps.s1{background:rgba(255,77,94,.16);color:var(--up)}
+.ps.s2{background:rgba(0,229,160,.14);color:var(--down)}
+.ps.s3{background:rgba(59,158,255,.14);color:var(--info)}
+.ps.s4{background:rgba(255,176,32,.15);color:var(--warn)}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:12px;margin-bottom:18px}
+.gc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:17px}
+.gc h4{font-size:14.5px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.gc h4 span{font-size:11px;color:var(--down);font-weight:600;white-space:nowrap}
+.gc ul{list-style:none;display:grid;gap:6px}
+.gc li{font-size:12.5px;color:var(--tx2);padding-left:14px;position:relative;line-height:1.5}
+.gc li::before{content:'';position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:var(--info)}
+.flow{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:18px}
+.flow h4{font-size:14px;margin-bottom:13px}
+.fsteps{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.fs{font-size:12.5px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:8px;padding:7px 11px}
+.fs.last{background:rgba(0,229,160,.13);border-color:rgba(0,229,160,.4);color:var(--down);font-weight:700}
+.arrow{color:var(--tx3);font-size:12px}
+.flow p{font-size:12.5px;color:var(--tx2);margin-top:12px;line-height:1.6}
+.flow p b{color:var(--warn)}
+.avs{display:grid;grid-template-columns:repeat(auto-fit,minmax(292px,1fr));gap:11px}
+.av{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--up);border-radius:11px;padding:14px 16px}
+.av h5{font-size:13.5px;margin-bottom:6px}
+.av p{font-size:12.5px;color:var(--tx2);line-height:1.55}
+.av p b{color:var(--tx)}
+.av.good{border-left-color:var(--down)}
+.av.good h5{color:var(--down)}
+.todos{display:grid;gap:9px}
+.td{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.td i{flex:0 0 6px;height:6px;border-radius:50%;background:var(--warn);margin-top:9px;font-style:normal}
+.td p{font-size:13px;color:var(--tx2);line-height:1.55}
+.td b{color:var(--tx)}
+footer{padding:44px 0 60px;color:var(--tx3);font-size:12.5px;line-height:1.8;border-top:1px solid var(--line)}
+footer b{color:var(--tx2)}
+footer .src{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--tx3);line-height:1.85}
+@media(max-width:820px){
+  .mgrid{grid-template-columns:repeat(3,1fr)}
+  .plan .note{grid-template-columns:1fr}
+  .pr{grid-template-columns:1fr;gap:6px}
+  .pr .ps{justify-self:start}
+  .grow,.gaxis{grid-template-columns:78px 1fr}
+  section{padding:44px 0}
+  .gbar{font-size:10px;padding:0 5px}
+}
+@media(max-width:520px){
+  .mgrid{grid-template-columns:repeat(2,1fr)}
+  .tier{grid-template-columns:1fr;gap:9px}
+  .tier .k{font-size:16px}
+  .tier .k small{display:inline;margin-left:6px}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><i></i>湖畔大观 A² 98㎡ · 湖北武汉 · 行情核实至 2026-11-21</div>
+    <h1>采购时机 <span class="x">×</span> <em>装修窗口</em></h1>
+    <p class="sub">2027 年作战地图：家电、数码、DIY 主机什么时候买，武汉几月开工最稳。核心只有一句话——<b style="color:var(--tx)">「定型号」和「买实物」是两个完全不同的时间点</b>，混在一起大概率亏钱。</p>
+    <div class="kpis" id="kpis"></div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <a href="#s1">① 三条时间轴</a>
+  <a href="#s2">② 行情雷达</a>
+  <a href="#s3">③ 武汉 12 个月</a>
+  <a href="#s4">④ 2027 两个方案</a>
+  <a href="#s5">⑤ 品类采购表</a>
+  <a href="#s6">⑥ 促销节点</a>
+  <a href="#s7">⑦ 湖北国补</a>
+  <a href="#s8">⑧ 提前买 / 避坑</a>
+  <a href="#s9">⑨ 待确认</a>
+</div></nav>
+
+<main>
+<section id="s1"><div class="wrap">
+  <div class="sh"><span class="num">01</span><h2>先分清三条时间轴</h2></div>
+  <p class="lead">装修里最容易亏钱的动作，是把「我定好型号了」「我下单了」「我收货了」当成一件事。其实是三件，卡在三个完全不同的节点上。真正不可逆的只有 <b>T1</b>——型号尺寸一旦影响水电和柜体开孔，改不动。</p>
+  <div class="tiers" id="tiers"></div>
+</div></section>
+
+<section id="s2"><div class="wrap">
+  <div class="sh"><span class="num">02</span><h2>2026 年底行情雷达：两条相反的曲线</h2></div>
+  <p class="lead">这一年最反直觉的事实：<b>内存、SSD、显卡、CPU、LCD 显示器全在涨</b>，唯独 <b>OLED 显示器在暴跌</b>。原因不是需求，是产能去向——存储厂把 70–80% 先进产能转去做 AI 用的 HBM，而 OLED 面板产线在放量满产。所以「等等再买」这句话，对不同品类的结论完全相反。</p>
+  <div class="radar" id="radar"></div>
+</div></section>
+
+<section id="s3"><div class="wrap">
+  <div class="sh"><span class="num">03</span><h2>武汉一年 12 个月，哪个月能开工</h2></div>
+  <p class="lead">武汉的特殊性：<b>没有集中供暖</b>，冬天靠自然温度；<b>6 月中–7 月上旬梅雨</b>湿度长期 80% 以上；<b>3–4 月回南天</b>墙地出水。所以真正的判断标准不是「几月开工」，而是<b>湿作业（防水、泥瓦、腻子、油漆、木作）落在哪个季节</b>——装修要跨 3–4 个月，一定会跨季节。</p>
+  <div class="legend">
+    <span><i style="background:rgba(0,229,160,.75)"></i>全年最佳</span>
+    <span><i style="background:rgba(0,229,160,.35)"></i>适合开工</span>
+    <span><i style="background:rgba(255,176,32,.6)"></i>可做但要盯</span>
+    <span><i style="background:rgba(59,158,255,.6)"></i>淡季最便宜</span>
+    <span><i style="background:rgba(255,77,94,.6)"></i>尽量别开工</span>
+  </div>
+  <div class="mgrid" id="mgrid"></div>
+  <h3 class="mid">关键工序气候窗口（比开工月份更重要）</h3>
+  <div class="craft" id="craft"></div>
+</div></section>
+
+<section id="s4"><div class="wrap">
+  <div class="sh"><span class="num">04</span><h2>假设 2027 年，两个开工方案</h2></div>
+  <p class="lead">同一套房，开工时间差半年，住进去的时间也差半年，风险和成本差不少。<b>方案 A 是气候最优解，方案 B 是时间最优解</b>。选哪个取决于你什么时候交房、能不能接受冬天多等两个月。</p>
+  <div id="plans"></div>
+</div></section>
+
+<section id="s5"><div class="wrap">
+  <div class="sh"><span class="num">05</span><h2>17 个品类，各自的三个时间点</h2></div>
+  <p class="lead">「定型号」是死线——过了这条线，柜子和管线就得返工。「下单」是最省钱的窗口，跟装修进度不一定同步，所以要用 <b>延后发货</b> 把两个时间点拆开。国补按湖北 2026 年口径标注，2027 细则要等年初官方方案。</p>
+  <div class="filters" id="filters"></div>
+  <div class="tw"><table>
+    <thead><tr><th>品类</th><th>定型号（死线）</th><th>下单最佳窗口</th><th>实物进场</th><th>2027 怎么定</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+  <p style="font-size:12.5px;color:var(--tx3);margin-top:12px">※「国补」标注：<span class="pill y">可补</span> 湖北 2026 年可领 15% 补贴的品类；<span class="pill m">看型号</span> 需满足一级能效或「智能」定义才认；<span class="pill n">不可补</span> 不在补贴清单内。</p>
+</div></section>
+
+<section id="s6"><div class="wrap">
+  <div class="sh"><span class="num">06</span><h2>一年里的促销节点，按力度排序</h2></div>
+  <p class="lead">家电全年最低不在「11 月 11 日当天」，而在<b>预售尾款日</b>和<b>11 月 10 日晚 8 点</b>——好价和库存往往提前卖空。装修报价最低则不在大促，而在<b>旺季前的交界期</b>（2 月底、8 月底）。</p>
+  <div class="promos" id="promos"></div>
+</div></section>
+<section id="s7"><div class="wrap">
+  <div class="sh"><span class="num">07</span><h2>湖北国补：2026 实况 + 2027 预判</h2></div>
+  <p class="lead">湖北执行的是<b>年度制</b>（2026-01-01 至 2026-12-31），且每年名额重置——2025 领过的，2026 同类还能再领。多家行业媒体判断 <b>2027 年政策大概率延续，但属于「最后的红利窗口期」</b>，边际效应递减。<b>这条是预判，不是官方文件，年初必须重新核对。</b></p>
+  <div class="g3" id="grants"></div>
+  <div class="flow">
+    <h4>叠加顺序（错一步就少拿钱）</h4>
+    <div class="fsteps" id="fsteps"></div>
+    <p>⚠️ 国补基数 = <b>前面所有优惠扣完后的实付价</b> × 15%，不是商品标价。所以优惠券该领就领，不会「吃掉」国补，只是基数变小、总到手价更低。另外<b>一级能效/水效是硬门槛</b>，二级三级完全不参与，认准商品页「国补可享」标识，自营优先。</p>
+  </div>
+</div></section>
+
+<section id="s8"><div class="wrap">
+  <div class="sh"><span class="num">08</span><h2>能不能提前买？能，但要按规矩来</h2></div>
+  <p class="lead">提前买最大的隐性成本不是仓储，是<b>保修期从发票/签收日算</b>。大家电整机通常 1 年、主要部件 3 年，提前 6 个月收货等于白扔半年保修，而 7 天无理由也早就过期——开箱发现坏点、色斑都退不了。</p>
+  <div class="avs" id="avs1"></div>
+  <h3 class="mid">三个正确的提前买姿势</h3>
+  <div class="avs" id="avs2"></div>
+  <h3 class="mid">踩过的坑，别再踩</h3>
+  <div class="avs" id="avs3"></div>
+</div></section>
+
+<section id="s9"><div class="wrap">
+  <div class="sh"><span class="num">09</span><h2>还需要你确认的 6 件事</h2></div>
+  <p class="lead">下面这几条决定了方案 A 还是 B，也决定了家电是今年双 11 买还是明年。</p>
+  <div class="todos" id="todos"></div>
+</div></section>
+</main>
+<footer><div class="wrap">
+  <p><b>采购时机 × 装修窗口 · 2027 武汉作战地图</b>　|　湖畔大观 A² 约 98㎡ · 湖北武汉　|　行情核实至 <b>2026-11-21</b></p>
+  <p style="margin-top:8px">本页是决策辅助，不构成购买或施工依据。<b>价格随时波动、国补按年度与地方细则执行</b>，下单前请以商品页与官方政策页面为准。</p>
+  <div class="src">
+    <b>主要依据</b><br>
+    · 存储：证券时报 2026 年存储涨价报道（32GB DDR5 由约 900 元涨至近 4000 元、1TB SSD 由 410 元至 950 元）；十铨 CEO 财报电话会（16GB DDR5 合约价 8.70→48 美元）；RAM Source Direct / TrendForce 口径（新增产能 2027 下半年释放、2028 年回落）<br>
+    · 显示器：洛图科技 2026 Q3 线上显示器均价 1001 元（同比 +6.4%）；群智咨询 2026 年 11 月面板价格预测；TrendForce 与京东方口径（OLED 显示器面板 2026 出货 610 万片 +79%、2027 约 750 万片）<br>
+    · 家电与国补：湖北省商务厅《2026 年湖北省家电以旧换新和数码智能产品购新补贴公告》及 2026-10-01 智能家居品类调整；湖北政务服务网申报要点；国家发改委、财政部 2026 年消费品以旧换新通知（6 类家电 15%、单件≤1500 元）；湖北日报 / 慧聪家电网对 2027 年政策延续的行业判断（<b>预判，非官方</b>）<br>
+    · 装修季节：武汉多家本地装饰公司关于梅雨、回南天、低温施工的公开说明交叉印证<br>
+    · 促销节点：2026 年双 11 / 618 公开活动信息（预售尾款日、11 月 10 日 20:00 为低价集中点）
+  </div>
+</div></footer>
+
+<script>
+const KPI = [
+  {v:'-40%', l:'27 英寸 2K OLED 显示器年内降幅，已跌破 2000 元', c:'down'},
+  {v:'+300%', l:'32GB DDR5 套装一年涨幅（约 900 → 近 4000 元）', c:'up'},
+  {v:'15%', l:'湖北国补比例（一级能效，单件封顶 1500 元）', c:'warn'},
+  {v:'9 月初', l:'2027 年武汉最佳开工窗口（方案 A）', c:'pick'}
+];
+
+const VERDICT = [
+  {c:'up', i:'!', t:'<b>DIY 主机：2027 年别等，等不来。</b>内存合约价一年涨 550%，机构判断 2027 下半年才趋稳、2028 才回落。要么现在买，要么等到 2028 年中，中间这段没有更便宜的窗口。'},
+  {c:'down', i:'✓', t:'<b>显示器：2027 是近三年最好的窗口。</b>OLED 面板出货 2026 年 +79%、2027 年再涨到 750 万片，价格还在往下走；但 LCD 在涨（驱动 IC 涨 10–25%），别买错方向。'},
+  {c:'warn', i:'!', t:'<b>装修：2027 年 9 月初开工最稳。</b>湿作业全部落在武汉的黄金秋季；2 月底开工是次优解，但要抢在 6 月中旬梅雨前做完油漆。'}
+];
+const TIERS = [
+  {k:'T1', s:'不可逆', t:'定型号', when:'平面方案 / 水电交底前',
+   do:['只定型号 + 拿<b>官方安装开孔图</b>（不是商品页外形尺寸）','确认尺寸、插座位置、上下水、散热与开门空间','把预埋点位一次定死：空调孔、燃气、上下水、强电回路'],
+   risk:'错过这条线的代价：插座被柜子挡住、电器塞不进柜体、后期砸墙改管。这一层花钱最少、影响最大。'},
+  {k:'T2', s:'可等窗口', t:'下单锁价', when:'复尺前 1–2 个月 / 大促或国补窗口',
+   do:['在<b>双 11 或 618</b> 下单，叠加国补与以旧换新','备注<b>「延后 3–6 个月配送安装」</b>','发票开在政策年度内，实物等硬装完成再收'],
+   risk:'别把「下单」当「收货」。这一层的价值就是让价格落在最低点，同时不让保修从施工期开始流失。'},
+  {k:'T3', s:'最后一步', t:'实物进场', when:'硬装完成 + 保洁后',
+   do:['大件最后进场：冰箱、电视、洗衣机、显示设备','避免施工灰尘、磕碰、被工人临时借用','开箱当场验机：坏点、色斑、暗部层次、外观划伤'],
+   risk:'提前进场 = 拿新房当仓库。灰尘进散热孔、包装被拆、磕碰扯皮，都是这一步急出来的。'}
+];
+
+const RADAR = [
+  {c:'up', tag:'涨', h:'内存 / SSD / 显卡 / CPU',
+   li:['<b>32GB DDR5 套装</b>：去年约 900 元 → 今年近 4000 元，涨幅超 300%','<b>16GB DDR5 合约价</b>：8.70 → 48 美元，一年涨超 550%','<b>1TB 主流 SSD</b>：410 → 950 元（+132%）','原因：三星 / 海力士 / 美光把 70–80% 先进产能转去做 AI 的 HBM'],
+   adv:'结论：越等越贵，2027 年底前难见大幅回落'},
+  {c:'down', tag:'跌', h:'OLED 显示器',
+   li:['<b>27 英寸 2K 240Hz</b>：年内降幅超 40%，到手已破 2000 元','<b>32 英寸 4K 高刷</b>：约 4000 元区间，比去年同规格省 1000+','面板出货 2026 年 610 万片（+79%），<b>2027 年冲 750 万片</b>','原因：产线满产放量，规模越大单片成本越低'],
+   adv:'结论：2027 是窗口期，618 / 双 11 蹲'},
+  {c:'warn', tag:'跌', h:'大家电（空调 / 冰箱 / 电视）',
+   li:['空调全渠道零售额同比 <b>-33.9%</b>，冰箱 <b>-26.4%</b>，品牌在打价格战','<b>65 英寸 Mini LED</b> 集体跌破 3100 元','洗碗机从 6000 档腰斩到约 2900 元','低价集中在预售尾款日与 11 月 10 日晚 8 点'],
+   adv:'结论：双 11 最狠，但要盯型号有没有做减法'},
+  {c:'info', tag:'涨', h:'LCD 显示器',
+   li:['Q3 线上显示器均价 <b>1001 元，同比 +6.4%</b>，多年下行周期终结','戴尔 10 月起中高端上调 3–5%，AOC 8 月起全系涨','显示驱动 IC 涨 10–20%，康宁玻璃基板涨 15%+','京东方、TCL 华星、惠科三家已发调价函'],
+   adv:'结论：别等 LCD 降价，等不来'}
+];
+const MONTHS = [
+  {m:1, lv:'bad', s:'低温 + 春节', d:'低于 5℃ 砂浆固化慢，工人返乡易跨年停工'},
+  {m:2, lv:'ok', s:'2 月底可开工', d:'开年首单优惠大，注意倒春寒与连续阴雨'},
+  {m:3, lv:'mid', s:'回南天', d:'墙地出水，板材进场易受潮；旺季报价上浮'},
+  {m:4, lv:'mid', s:'回南天尾声', d:'月底起湿度回落，可开始水电与防水'},
+  {m:5, lv:'good', s:'湿度回落', d:'防水、闭水试验、泥瓦的理想窗口'},
+  {m:6, lv:'bad', s:'梅雨', d:'湿度长期 >80%，腻子不干、墙漆发霉，返工最贵'},
+  {m:7, lv:'cheap', s:'淡季最便宜', d:'议价空间 5–15%，但高温 + 梅雨尾，防潮压力最大'},
+  {m:8, lv:'good', s:'8 月底黄金期', d:'梅雨已过、湿度回落，报价还能谈，工人不扎堆'},
+  {m:9, lv:'best', s:'全年最佳', d:'15–28℃、湿度 40–60%，腻子乳胶漆固化最理想'},
+  {m:10, lv:'best', s:'全年最佳', d:'秋高气爽，泥瓦、木作、油漆都好做'},
+  {m:11, lv:'good', s:'干燥好施工', d:'赶在入冬前完成湿作业；顺手把双 11 家电下了'},
+  {m:12, lv:'bad', s:'低温 + 年底', d:'低于 5℃ 固化慢，工人返乡，湿作业必须收尾'}
+];
+
+const CRAFT = [
+  {h:'拆改 / 水电', p:'全年可做，唯一要避开的是<b>春节前后</b>与极端低温。这段时间最该盯的是点位是否按 T1 定死。', w:'全年 · 避春节'},
+  {h:'防水 + 闭水试验', p:'闭水 24h 以上（建议 48h），低温与高湿都会拖慢成膜。淋浴区返高 ≥1.8m。', w:'5 月 / 9–10 月'},
+  {h:'泥瓦贴砖', p:'需要 5℃ 以上环境，梅雨期砂浆含水高、干得慢，空鼓率上升。', w:'9–11 月'},
+  {h:'木作 / 定制柜安装', p:'板材怕潮，湿度 >80% 进场易吸湿起翘；安装后要留伸缩缝。', w:'9–11 月'},
+  {h:'腻子 / 油漆', p:'最挑气候的工序。湿度大则返潮鼓包，低于 5℃ 则干不透，返工成本最高的一环。', w:'9–11 月（次选 4 月底–5 月）'},
+  {h:'地板铺装', p:'要求湿度 40–60%，铺前做地面含水率检测，留 8–10mm 伸缩缝。', w:'9–11 月'},
+  {h:'通风散味', p:'甲醛释放随温度升高而加快，<b>夏天高温通风效率最高</b>，配新风或工业风扇更有效。', w:'7–8 月最佳'},
+  {h:'CMA 检测 + 入住', p:'按 GB/T 18883 密闭 12 小时后检测，别在刚通风完就测。', w:'入住前 1 个月'}
+];
+const PLANS = [
+  {top:true, badge:'a', tag:'方案 A · 气候最优', title:'2027-08-25 ~ 09-05 开工', desc:'湿作业全部落在黄金秋季，入住时机卡在 2028 年梅雨前。适合交房在 2027 年 6 月以后的情况。', months:9,
+   axis:['2027-09','10','11','12','2028-01','02','03','04','05'],
+   rows:[
+    {label:'拆改 + 水电', from:0, span:1.2, cls:'s', text:'9 月'},
+    {label:'防水 + 闭水', from:1.2, span:0.6, cls:'w', text:'10 月'},
+    {label:'泥瓦', from:1.8, span:1.4, cls:'m', text:'10–11 月'},
+    {label:'木作 / 吊顶', from:2.6, span:1.1, cls:'m', text:'11 月'},
+    {label:'腻子 + 油漆', from:3.5, span:1.3, cls:'w', text:'12 月上中旬前完'},
+    {label:'定制柜生产', from:2.4, span:3.4, cls:'f', text:'复尺到安装 30–45 天'},
+    {label:'家电下单', from:2.2, span:0.5, cls:'buy', text:'双 11'},
+    {label:'冬季通风', from:5.0, span:3.0, cls:'f', text:'跨春节 · 配新风'},
+    {label:'软装 + 大件进场', from:7.4, span:1.4, cls:'p', text:'3–4 月'},
+    {label:'入住', from:8.4, span:0.6, cls:'w', text:'5 月'}
+   ],
+   good:'湿作业全在 15–28℃、湿度 40–60% 的窗口，腻子油漆返工率最低；跨双 11 下单家电最省钱；2028 年 5 月入住刚好赶在梅雨前。',
+   bad:'空窗期最长（2027 年 9 月到 2028 年 5 月约 8 个月）；冬季通风慢，要靠新风或工业风扇顶，别指望自然散味。'},
+
+  {badge:'b', tag:'方案 B · 时间最优', title:'2027-02-25 ~ 03-05 开工', desc:'早半年住进去，还能吃满 2027 全年国补。代价是 4–6 月的湿度压力，油漆必须抢在 6 月中旬梅雨前收尾。', months:8,
+   axis:['2027-03','04','05','06','07','08','09','10'],
+   rows:[
+    {label:'拆改 + 水电', from:0, span:1.0, cls:'s', text:'3 月'},
+    {label:'防水 + 闭水', from:0.9, span:0.7, cls:'w', text:'4 月'},
+    {label:'泥瓦', from:1.5, span:1.3, cls:'m', text:'4–5 月'},
+    {label:'木作 / 吊顶', from:2.5, span:0.9, cls:'m', text:'5 月'},
+    {label:'腻子 + 油漆', from:3.1, span:1.0, cls:'w', text:'6 月中前必须完'},
+    {label:'定制柜生产', from:1.8, span:3.2, cls:'f', text:'复尺到安装'},
+    {label:'家电下单', from:2.7, span:0.5, cls:'buy', text:'618'},
+    {label:'夏季通风', from:4.0, span:2.2, cls:'f', text:'7–8 月高温效率最高'},
+    {label:'软装 + 大件进场', from:5.9, span:1.4, cls:'p', text:'9–10 月'},
+    {label:'入住', from:7.3, span:0.6, cls:'w', text:'10–11 月'}
+   ],
+   good:'早住半年；7–8 月高温通风散味效率最高；能用满 2027 全年国补（12 月 31 日前开票）。',
+   bad:'3–4 月回南天，板材必须垫高、不进潮料；油漆一旦拖到 6 月中旬就是撞梅雨，必须留 1–2 周缓冲。'},
+
+  {badge:'c', tag:'方案 C · 最省钱', title:'2027-07 开工（淡季）', desc:'装修淡季议价空间 5–15%，15 万预算可能省 0.75–2.25 万。但高温 + 梅雨尾，防潮与养护压力最大。', months:8,
+   axis:['2027-07','08','09','10','11','12','2028-01','02'],
+   rows:[
+    {label:'拆改 + 水电', from:0, span:1.0, cls:'s', text:'7 月'},
+    {label:'防水 + 泥瓦', from:1.0, span:1.5, cls:'m', text:'8–9 月'},
+    {label:'木作 + 油漆', from:2.5, span:1.6, cls:'w', text:'9–10 月'},
+    {label:'家电下单', from:3.2, span:0.5, cls:'buy', text:'双 11'},
+    {label:'定制柜 + 收尾', from:4.1, span:1.6, cls:'f', text:'11–12 月'},
+    {label:'冬季通风', from:5.7, span:2.0, cls:'f', text:'跨春节'},
+    {label:'入住', from:7.2, span:0.6, cls:'w', text:'2028 春'}
+   ],
+   good:'报价可谈 5–15%，工人和监理资源充足、不扎堆，工期最可控；高温还能加速甲醛释放。',
+   bad:'7 月正午高温不宜施工，板材存放与铝框打胶都要避开烈日；湿作业仍要看梅雨尾巴。'}
+];
+const ITEMS = [
+  {n:'中央空调 / 新风 / 地暖 / 全屋净水', sub:'需要预埋管线', cat:'预埋', dead:'平面方案前', buy:'定完立即安排', arr:'水电 → 吊顶前', gr:'m', grt:'看型号',
+   ver:'<b>这类没有「大促窗口」</b>，比价靠品牌活动与团购，别为等促销延后工期。管线和风口位置定死就改不动。'},
+  {n:'智能开关 / 网关 / 传感器', sub:'米家全屋', cat:'预埋', dead:'水电交底前', buy:'双 11 / 618', arr:'开关面板安装期', gr:'n', grt:'不可补',
+   ver:'开关底盒必须<b>拉零线 + 加深盒</b>，网关位置与弱电箱同时定。型号可以后买，点位不能后补。'},
+  {n:'扫地机（自动上下水机型）', sub:'基站需要水电', cat:'预埋', dead:'水电交底前', buy:'双 11', arr:'入住前', gr:'y', grt:'可补',
+   ver:'没预留上下水而后期改管，<b>改管费用比机器还贵</b>。提前定机型，按官方安装要求留回充净空。'},
+  {n:'智能马桶', sub:'坑距 + 插座 + 水压', cat:'预埋', dead:'水电交底前', buy:'双 11', arr:'卫浴安装期', gr:'y', grt:'可补',
+   ver:'先量坑距（305 / 400mm）再选型；无水箱机型要确认水压。属湖北智能家居补贴品类。'},
+  {n:'嵌入式洗碗机', sub:'橱柜开孔 + 上下水', cat:'嵌入厨电', dead:'水电交底前 · 复尺前拿开孔图', buy:'双 11 / 618', arr:'与橱柜安装同步', gr:'m', grt:'看型号',
+   ver:'要走<b>「智能洗碗机」</b>定义才吃湖北智能家居补贴；开孔按官方安装图，别按商品页外形尺寸。'},
+  {n:'嵌入式蒸烤箱 / 微蒸烤一体机', sub:'16A 插座 + 散热', cat:'嵌入厨电', dead:'水电前 + 橱柜复尺前', buy:'双 11', arr:'与橱柜同步', gr:'m', grt:'看型号',
+   ver:'需要 16A 独立回路与散热间隙；嵌高柜要确认开门角度与蒸汽排放路径。'},
+  {n:'油烟机 + 燃气灶 / 集成灶', sub:'烟道 + 燃气', cat:'嵌入厨电', dead:'橱柜设计前', buy:'双 11', arr:'与橱柜同步', gr:'y', grt:'可补',
+   ver:'烟道位置、烟管走向、燃气管道都要在橱柜图之前定死。湖北「智能吸油烟机（含燃气灶/集成灶）」可补。'},
+  {n:'嵌入式 / 零嵌冰箱', sub:'散热 + 深度 600', cat:'嵌入厨电', dead:'橱柜复尺前', buy:'硬装完成前 1–2 个月', arr:'保洁后', gr:'y', grt:'可补',
+   ver:'<b>不用太早买。</b>冰箱降价快、保修从签收算，等硬装完成前 1–2 个月的大促再下，型号和尺寸先定死。'},
+  {n:'洗衣机 / 干衣机 / 洗烘套装', sub:'上下水 + 地漏', cat:'大家电', dead:'水电交底前', buy:'双 11 或进场前 1 个月', arr:'保洁后', gr:'y', grt:'可补',
+   ver:'叠放还是并排、要不要地漏、插座高度，都在水电阶段定。洗衣机单独占一个国补名额，套装要确认烘干机是否同品类。'}
+  ,{n:'电视', sub:'视距决定尺寸', cat:'大家电', dead:'客厅方案阶段（定尺寸）', buy:'入住前 1 个月 · 双 11', arr:'最后进场', gr:'y', grt:'可补',
+   ver:'<b>全年降价最快的品类，越晚买越好。</b>75 寸要 3.2–3.8m 视距；大屏在双 11 最容易吃满 1500 元封顶补贴。'},
+  {n:'空调（挂机 / 柜机）', sub:'孔位 + 外机位', cat:'大家电', dead:'水电交底前（孔位）', buy:'3–4 月换季 或 双 11', arr:'硬装完成后', gr:'y', grt:'可补',
+   ver:'换季清旧款往往比双 11 更便宜，适合买 1–2 台。一级能效才补，安装支架与高空费另计。'},
+  {n:'燃气 / 电热水器', sub:'燃气管道 + 排烟', cat:'大家电', dead:'水电交底前', buy:'双 11', arr:'硬装后期', gr:'y', grt:'可补',
+   ver:'燃气表位、排烟管走向、检修空间要在水电阶段定；一级水效才补。零冷水机型要预埋回水管。'},
+  {n:'电脑整机 / 笔记本', sub:'不受装修约束', cat:'数码办公', dead:'—', buy:'真要买就现在，别等 2027', arr:'随时', gr:'m', grt:'看型号',
+   ver:'内存与 SSD 在涨，2027 全年难回落。<b>走「家电」档比「数码」档划算</b>：上限 1500 元 vs 500 元，且名额独立。'},
+  {n:'DIY 组装主机', sub:'内存 / SSD / 显卡', cat:'数码办公', dead:'—', buy:'现在 / 2028 年中', arr:'随时', gr:'n', grt:'不可补',
+   ver:'<b>2027 年不是好时机，而且等不来。</b>策略：先买不涨的（机箱、电源、散热、显示器），核心件等 2028；或直接买品牌整机，厂商有长约价格更稳。'},
+  {n:'显示器', sub:'27 英寸 2K / 32 英寸 4K', cat:'数码办公', dead:'书房/书桌方案阶段', buy:'618 / 双 11（2027）', arr:'随时', gr:'n', grt:'不可补',
+   ver:'<b>2027 是近三年最佳窗口，且要买 OLED 不要买 LCD。</b>选型三看：全屏亮度（不是峰值）、烧屏保修条款、接口带宽。'},
+  {n:'台式电蒸锅 / 空气炸锅等小厨电', sub:'无装修依赖', cat:'小家电', dead:'—', buy:'双 11 最便宜', arr:'入住后慢慢添', gr:'n', grt:'不可补',
+   ver:'<b>最不需要计划的品类。</b>入住后按做饭习惯再买，先买容易变成吃灰。嵌入款蒸烤箱另算，见上表。'},
+  {n:'智能门锁 / 洗地机 / 擦窗机', sub:'软装期采购', cat:'小家电', dead:'门体尺寸（门锁）/ 无（清洁）', buy:'双 11', arr:'入住前', gr:'y', grt:'可补',
+   ver:'智能门锁、智能清洁设备都在湖北智能家居 10 类里，各占一个名额，共 15%、单件 ≤1500。门锁要先确认门厚与开孔。'}
+];
+
+const PROMOS = [
+  {w:'3 月中', n:'3.15 品质节 + 春季家装节', d:'建材、家电首轮活动，装修旺季开始', s:'s3', t:'一般'},
+  {w:'3–4 月', n:'空调换季清仓', d:'旧款一级能效最便宜，买 1–2 台比双 11 更划算', s:'s1', t:'很狠'},
+  {w:'5 月', n:'五一', d:'建材家电中促，适合定橱柜与瓷砖', s:'s3', t:'一般'},
+  {w:'6 月', n:'618', d:'上半年最大：数码、显示器、家电主战场；看 5 月底预售与尾款日', s:'s1', t:'很狠'},
+  {w:'6 月中–7 月上旬', n:'梅雨期（避雷）', d:'不安排湿作业，用来比价、定方案、谈报价正合适', s:'s4', t:'避雷'},
+  {w:'8 月底–9 月初', n:'装修报价黄金交界期', d:'旺季前，装修公司抢客户，议价空间 5–15%', s:'s2', t:'最划算'},
+  {w:'10 月 30 日 20:00', n:'京东家电巅峰场', d:'全年底价现货，可提前预约安装避开双 11 排队', s:'s1', t:'很狠'},
+  {w:'11 月 10 日 20:00', n:'双 11 最狠点', d:'不是 11 号当天——好价和库存常提前卖空', s:'s1', t:'最狠'},
+  {w:'12 月', n:'年末清库 + 国补年度截止', d:'发票须在 12-31 前开，别卡最后一天抢券', s:'s4', t:'注意'}
+];
+const GRANTS = [
+  {h:'6 类家电 <span>15% · 单件≤1500</span>', li:['冰箱、洗衣机、电视、空调、<b>电脑</b>、热水器','必须 <b>1 级能效 / 水效</b>，二级三级不参与','每人每类 1 件；6 类名额互不占用','湖北 2026 执行期：01-01 至 12-31']},
+  {h:'4 类数码 <span>15% · 单件≤500</span>', li:['手机、平板、智能手表手环、智能眼镜','单件销售价 ≤6000 元','每件封顶只有 500 元，比家电档低','买整机走家电档更划算']},
+  {h:'智能家居 10 类 <span>15% · 单件≤1500</span>', li:['智能清洁设备（扫洗地机、擦窗机器人）','智能厨电（含<b>智能洗碗机</b>、消毒柜）、智能吸油烟机（含燃气灶/集成灶）','智能马桶、智能门锁、智能耳机、智能家具','数码相机（含无人机）、适老化产品、智能服务机器人','湖北 2026-10-01 起调整：取消了智能音箱、空气净化器、呼吸机']}
+];
+
+const FSTEPS = ['原价直降 / 品牌降价','店铺券','家电品类券','会员券（PLUS / 88VIP）','以旧换新抵扣','红包 / 礼金','×15% 国补（最后算）'];
+
+const AV1 = [
+  {h:'保修从签收那天开始', p:'大家电整机通常 1 年、主要部件 3 年。提前 6 个月收货，等于白扔半年保修——而装修期恰恰是最用不上的半年。'},
+  {h:'七天无理由会过期', p:'提前买放着，等发现坏点、色斑、屏幕不均匀时早已过了 15 天换新期，只能走维修。'},
+  {h:'拿新房当仓库', p:'灰尘进散热孔、包装被拆、被工人临时借用、搬运磕碰扯皮，全在这一段。'},
+  {h:'型号降价', p:'电视、OLED 显示器、显卡掉价最快。提前半年买，等于替厂商承担库存。'}
+];
+
+const AV2 = [
+  {h:'① 只锁型号，不付钱', p:'向商家要<b>官方安装开孔图 / 尺寸图</b>，免费。你要的是尺寸和接口，不是货。把型号写进橱柜图和水电图，钱留到 T2 再付。'},
+  {h:'② 延后发货 + 卡开票时机', p:'大促下单时备注「延后 3–6 个月配送安装」。湖北 2026 政策要求<b>交易发票在 12-31 前开具</b>，而配送安装可延至次年 1-31——说明政策本身就允许把「开票」和「收货」拆开。'},
+  {h:'③ 优先可退定金', p:'预售期常见 100 抵 500 / 800 的定金膨胀，选<b>能退的</b>。方案没定死之前，别付不可退的大额定金。'}
+];
+
+const AV3 = [
+  {h:'嵌入类只看官方开孔图', p:'商品页写的「外形尺寸」不等于安装开孔尺寸，散热间隙、门板厚度、踢脚位置都不在里面。'},
+  {h:'一级能效是硬门槛', p:'二级三级完全不参与国补。认准商品页「国补可享」标识，<b>自营优先</b>，第三方店铺大多不支持。'},
+  {h:'名额按「类」占用', p:'洗碗机、油烟机、门锁各占一个智能家居名额；同品类买两件只补一件。'},
+  {h:'别为等促销延后工期', p:'中央空调、新风、地暖这类没有大促窗口，比价靠品牌活动。为省几千块让工地停两周，成本更高。'},
+  {h:'自动上下水必须预埋', p:'扫地机基站没留上下水，后期改管比机器还贵；排水还要存水弯防返味。'},
+  {h:'双 11 别等 11 号当天', p:'低价集中在预售尾款日和 11 月 10 日晚 8 点，11 号当天好价与库存常已被扫空。'}
+];
+
+const TODOS = [
+  {t:'<b>交房时间</b>：2027 年几月拿钥匙？', p:'决定走方案 A（9 月开工）还是方案 B（2 月底开工）。交房在 6 月前，B 才来得及。'},
+  {t:'<b>2027 年湖北国补是否延续</b>', p:'行业判断会延续但属「最后的红利窗口期」。年初盯湖北省商务厅公告，别按 2026 细则直接下单。'},
+  {t:'<b>DIY 主机是刚需还是可以等</b>', p:'现在就用来干活 → 现在买；只是想要 → 等 2028 年中。中间一年内存不会便宜。'},
+  {t:'<b>显示器选 OLED 还是 MiniLED</b>', p:'房间白天光线强、或长期固定界面办公 → <b>别上 OLED</b>（全屏亮度仅约 300 尼特、有烧屏风险），选 MiniLED 或高刷 IPS。'},
+  {t:'<b>家里有没有旧家电可换新</b>', p:'以旧换新抵扣能和国补叠加，旧机估价普遍不低，是白捡的一笔。'},
+  {t:'<b>定制柜 vs 成品柜的最终分工</b>', p:'备注帖 10 区已有建议，但这直接影响柜体复尺时间和嵌入式电器的开孔图节点。'}
+];
+const $ = s => document.querySelector(s);
+const el = (id, h) => { const n = document.getElementById(id); if (n) n.innerHTML = h; };
+
+el('kpis', KPI.map(k => '<div class="kpi ' + k.c + '"><b>' + k.v + '</b><span>' + k.l + '</span></div>').join(''));
+el('verdict', VERDICT.map(v => '<div class="vd ' + v.c + '"><i>' + v.i + '</i><p>' + v.t + '</p></div>').join(''));
+
+el('tiers', TIERS.map(t =>
+  '<div class="tier"><div class="k">' + t.k + '<small>' + t.s + '</small></div><div>' +
+  '<h3>' + t.t + '</h3><div class="when">' + t.when + '</div>' +
+  '<ul>' + t.do.map(d => '<li>' + d + '</li>').join('') + '</ul>' +
+  '<div class="risk">' + t.risk + '</div></div></div>'
+).join(''));
+
+el('radar', RADAR.map(r =>
+  '<div class="rc ' + r.c + '"><span class="tag">' + r.tag + '</span><h4>' + r.h + '</h4>' +
+  '<ul>' + r.li.map(x => '<li>' + x + '</li>').join('') + '</ul>' +
+  '<div class="adv">' + r.adv + '</div></div>'
+).join(''));
+
+el('mgrid', MONTHS.map(m =>
+  '<div class="mo ' + m.lv + '"><div class="m">' + m.m + '<em>月</em></div>' +
+  '<div class="s">' + m.s + '</div><div class="d">' + m.d + '</div></div>'
+).join(''));
+
+el('craft', CRAFT.map(c =>
+  '<div class="cf"><h5>' + c.h + '</h5><p>' + c.p + '</p><p style="margin-top:6px"><span class="win">' + c.w + '</span></p></div>'
+).join(''));
+
+el('plans', PLANS.map(p => {
+  const rows = p.rows.map(r => {
+    const lf = (r.from / p.months * 100).toFixed(2);
+    const wd = (r.span / p.months * 100).toFixed(2);
+    return '<div class="grow"><div class="gl">' + r.label + '</div><div class="gtrack">' +
+      '<div class="gbar ' + r.cls + '" style="left:' + lf + '%;width:' + wd + '%">' + (r.text || '') + '</div></div></div>';
+  }).join('');
+  const ax = '<div class="gaxis"><div></div><div class="gax">' + p.axis.map(a => '<span>' + a + '</span>').join('') + '</div></div>';
+  return '<div class="plan' + (p.top ? ' top' : '') + '">' +
+    '<div class="ph"><div><div class="pt"><span class="badge ' + p.badge + '">' + p.tag + '</span>' + p.title + '</div>' +
+    '<div class="pd" style="margin-top:7px">' + p.desc + '</div></div></div>' +
+    '<div class="gantt">' + rows + '</div>' + ax +
+    '<div class="note"><div class="good">优势：' + p.good + '</div><div class="bad">风险：' + p.bad + '</div></div></div>';
+}).join(''));
+
+const CATS = ['全部'].concat(ITEMS.map(i => i.cat).filter((v, i, a) => a.indexOf(v) === i));
+const pillCls = { y: 'y', m: 'm', n: 'n' };
+function renderTable(cat) {
+  const list = ITEMS.filter(i => cat === '全部' || i.cat === cat);
+  el('tbody', list.map(i =>
+    '<tr><td class="n">' + i.n + '<small>' + i.sub + '</small></td>' +
+    '<td class="dead">' + i.dead + '</td><td class="buy">' + i.buy + '</td><td class="arr">' + i.arr + '</td>' +
+    '<td class="ver">' + i.ver + '<span class="pill ' + (pillCls[i.gr] || 'n') + '">' + (i.gr === 'y' ? '国补 可补' : i.gr === 'm' ? '国补 看型号' : '国补 不可补') + '</span></td></tr>'
+  ).join(''));
+}
+el('filters', '');
+document.getElementById('filters').innerHTML = CATS.map((c, i) =>
+  '<button class="fb' + (i === 0 ? ' on' : '') + '" data-c="' + c + '">' + c + (c === '全部' ? ' ' + ITEMS.length : ' ' + ITEMS.filter(x => x.cat === c).length) + '</button>'
+).join('');
+document.querySelectorAll('.fb').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.fb').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  renderTable(b.dataset.c);
+}));
+renderTable('全部');
+
+el('promos', PROMOS.map(p =>
+  '<div class="pr"><div class="pw">' + p.w + '</div><div class="pn">' + p.n + '<small>' + p.d + '</small></div>' +
+  '<div class="ps ' + p.s + '">' + p.t + '</div></div>'
+).join(''));
+
+el('grants', GRANTS.map(g =>
+  '<div class="gc"><h4>' + g.h + '</h4><ul>' + g.li.map(x => '<li>' + x + '</li>').join('') + '</ul></div>'
+).join(''));
+
+el('fsteps', FSTEPS.map((f, i) =>
+  (i ? '<span class="arrow">→</span>' : '') + '<span class="fs' + (i === FSTEPS.length - 1 ? ' last' : '') + '">' + f + '</span>'
+).join(''));
+
+el('avs1', AV1.map(a => '<div class="av"><h5>' + a.h + '</h5><p>' + a.p + '</p></div>').join(''));
+el('avs2', AV2.map(a => '<div class="av good"><h5>' + a.h + '</h5><p>' + a.p + '</p></div>').join(''));
+el('avs3', AV3.map(a => '<div class="av"><h5>' + a.h + '</h5><p>' + a.p + '</p></div>').join(''));
+el('todos', TODOS.map(t => '<div class="td"><i></i><p>' + t.t + '<br><span style="color:var(--tx3)">' + t.p + '</span></p></div>').join(''));
+
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const p = h > 0 ? (window.scrollY / h) * 100 : 0;
+  document.getElementById('bar').style.width = p.toFixed(1) + '%';
+}, { passive: true });
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
